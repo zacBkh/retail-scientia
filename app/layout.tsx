@@ -12,7 +12,6 @@ export const metadata: Metadata = {
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
 })
 
 export default function RootLayout({
@@ -21,9 +20,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={inter.className}>
       <head />
-      <body className={`!font-mono ${inter.variable}`}>{children}</body>
+      <body>{children}</body>
     </html>
   )
 }
