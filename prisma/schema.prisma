@@ -18,13 +18,25 @@ model Product {
   description String @unique
   size        Int
 
+  img String @default("https://res.cloudinary.com/dnrknpiiz/image/upload/v1697691367/products_pictures/hermes/terre/jewsxivfldl21j7mz7w3.webp")
+
   isSet     Boolean @default(false)
   category1 String
   category2 String
 
   regularPrice Float
 
+  gender Gender
+
+  timePeriod String
+
   sales Sale[] // product has many sales (disambiguating relations)
+}
+
+enum Gender {
+  UNISEX
+  MEN
+  WOMEN
 }
 
 model Sale {
