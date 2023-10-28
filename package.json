@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@prisma/client": "^5.4.2",
+    "@types/react-datepicker": "^4.19.1",
     "next": "^14.0.0",
     "react": "^18.2.0",
+    "react-datepicker": "^4.21.0",
     "react-dom": "^18.2.0",
     "ts-node": "^10.9.1"
   },
