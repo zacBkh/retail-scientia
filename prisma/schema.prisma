@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id Int @id @default(autoincrement())
+
+  reference   String @unique
+  ean         String @unique
+  description String @unique
+  size        Int
+
+  img String @default("https://res.cloudinary.com/dnrknpiiz/image/upload/v1697691367/products_pictures/hermes/terre/jewsxivfldl21j7mz7w3.webp")
+
+  isSet     Boolean @default(false)
+  category1 String
+  category2 String
+
+  regularPrice Float
+
+  gender Gender
+
+  timePeriod String
+
+  sales Sale[] // product has many sales (disambiguating relations)
+}
+
+enum Gender {
+  UNISEX
+  MEN
+  WOMEN
+}
+
+model Sale {
+  id Int @id @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  date      DateTime @db.Date
+
+  productId   Int
+  productSold Product @relation(fields: [productId], references: [id]) // connecting each sale to a product 
+
+  sellerId Int
+  seller   User @relation(fields: [sellerId], references: [id]) // connecting each sale to a seller '(user) 
+
+  quantity  Int
+  priceSold Float
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  name     String
+  email    String @unique
+  password String
+
+  country     String
+  pointOfSale String
+
+  sales Sale[] // a user has many sales (disambiguating relations)
+
+  isAdmin Boolean @default(false)
+}
