@@ -4,13 +4,12 @@ import { useEffect, useState, forwardRef, Ref } from 'react'
 import DatePicker, { ReactDatePickerProps } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
-import { format } from 'date-fns'
-
 interface CustomInputProps {
   value?: string
   onClick?: () => void
 }
 
+// eslint-disable-next-line react/display-name
 const ProductCard = ({}) => {
   const [startDate, setStartDate] = useState<Date>(new Date())
 
