@@ -10,7 +10,7 @@ interface CustomInputProps {
 }
 
 // eslint-disable-next-line react/display-name
-const ProductCard = ({}) => {
+const DateSelector = ({}) => {
   const [startDate, setStartDate] = useState<Date>(new Date())
 
   const CustomInput = forwardRef(
@@ -46,4 +46,4 @@ const ProductCard = ({}) => {
   )
 }
 
-export default ProductCard
+export default DateSelector
