@@ -31,7 +31,8 @@ const ProductCard = ({}) => {
     if (!(startDate instanceof Date)) {
       return
     }
-    localStorage.setItem('date', format(startDate, 'dd/MM/yyyy'))
+    // localStorage.setItem('date', format(startDate, 'dd/MM/yyyy'))
+    localStorage.setItem('date', startDate.toISOString())
   }, [startDate])
 
   return (
@@ -39,7 +40,7 @@ const ProductCard = ({}) => {
       disabled={false}
       customInput={<CustomInput />}
       maxDate={new Date()}
-      dateFormat="dd/MM/yyyy"
+      // dateFormat="dd/MM/yyyy"
       selected={startDate}
       onChange={(date) => setStartDate(date as Date)}
     />

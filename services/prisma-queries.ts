@@ -25,10 +25,17 @@ export const getAllProducts = async () => {
   return allProducts
 }
 
-// Fetch all
-export const addSale = async (details: Sale) => {
-  console.log('details from api', details)
+export const addSales = async (date: Date, productIDs: number[]) => {
+  // Changing the shape
+  const finalObject = productIDs.map((id) => {
+    return { date, productId: id, sellerId: 1 }
+  })
 
-  // const allProducts = await db.sale.create({
-  //   data: {},
+  const createdSales = await db.sale.createMany({
+    data: finalObject,
+  })
+
+  console.log('created', createdSales.count, 'sales on DB')
+
+  return createdSales
 }

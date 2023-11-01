@@ -46,8 +46,8 @@ model Sale {
   updatedAt DateTime @updatedAt
   date      DateTime @db.Date
 
-  productId   Int
   productSold Product @relation(fields: [productId], references: [id]) // connecting each sale to a product 
+  productId   Int     @unique
 
   sellerId Int
   seller   User @relation(fields: [sellerId], references: [id]) // connecting each sale to a seller '(user) 

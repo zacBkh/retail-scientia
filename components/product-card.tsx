@@ -40,7 +40,7 @@ const ProductCard: FC<Product> = ({
           </p>
         </div>
       </div>
-      <AlterCartBtn reference={reference} />
+      <AlterCartBtn id={id} />
     </div>
   )
 }
