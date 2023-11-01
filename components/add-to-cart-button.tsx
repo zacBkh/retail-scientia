@@ -3,7 +3,7 @@
 import { FC, useState } from 'react'
 
 import {
-  getLocalStorageJSONObj,
+  getSalesLocalStorage,
   addProductLocalStorage,
   checkIfRefIsInLS,
 } from '@/utils/local-storage'

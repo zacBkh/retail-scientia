@@ -2,6 +2,7 @@ import { getAllProducts } from '@/services/prisma-queries'
 
 import ProductCard from '@components/product-card'
 import DateSelector from '@components/date-selector/date-selector'
+import Button from '@/components/ui/button'
 
 const HomePage = async () => {
   const allProducts = await getAllProducts()
@@ -29,6 +30,7 @@ const HomePage = async () => {
           />
         ))}
       </div>
+      <Button style={''} txt="Validate your cart" />
     </main>
   )
 }

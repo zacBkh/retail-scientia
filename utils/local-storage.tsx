@@ -1,10 +1,10 @@
-type SalesInLocalStorage = {
+export type SalesInLocalStorage = {
   ref: string
   qty: number
 }[]
 
-export const getLocalStorageJSONObj = (key: 'date' | 'sales') => {
-  const storedDataJSON = localStorage.getItem(key)
+export const getSalesLocalStorage = () => {
+  const storedDataJSON = localStorage.getItem('sales')
   const storedDataObj: SalesInLocalStorage = storedDataJSON
     ? JSON.parse(storedDataJSON)
     : []
@@ -13,6 +13,10 @@ export const getLocalStorageJSONObj = (key: 'date' | 'sales') => {
 }
 
 export const checkIfRefIsInLS = (reference: string) => {
+  if (typeof window === 'undefined' || !window.localStorage) {
+    return
+  }
+
   const storedDataJSON = localStorage.getItem('sales')
   const storedDataObj: SalesInLocalStorage = storedDataJSON
     ? JSON.parse(storedDataJSON)
@@ -63,7 +67,7 @@ export const addProductLocalStorage = (
 
 // Remove from LS via Index
 export const removeFromLocalStorageWithIndex = (indexToRemove: number) => {
-  const allSales = getLocalStorageJSONObj('sales')
+  const allSales = getSalesLocalStorage()
   allSales.splice(indexToRemove, 1) // removing the object
   console.log('has been deleted via index -->', indexToRemove)
 
@@ -73,7 +77,7 @@ export const removeFromLocalStorageWithIndex = (indexToRemove: number) => {
 
 // Remove from LS via ref
 export const removeFromLocalStorageWithRef = (reference: string) => {
-  const allSales = getLocalStorageJSONObj('sales')
+  const allSales = getSalesLocalStorage()
 
   const newSales = allSales.filter((sale) => sale.ref !== reference)
   const updatedSalesJSON = JSON.stringify(newSales)
