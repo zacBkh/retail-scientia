@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { PrismaClient, Sale } from '@prisma/client'
 
+// Hack so new prisma client is not created at every hot reload
 let db: PrismaClient
 if (process.env.NODE_ENV === 'production') {
   db = new PrismaClient()
