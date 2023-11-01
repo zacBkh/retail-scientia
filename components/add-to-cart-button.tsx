@@ -2,26 +2,20 @@
 
 import { FC, useState } from 'react'
 
-import {
-  getSalesLocalStorage,
-  addProductLocalStorage,
-  checkIfRefIsInLS,
-} from '@/utils/local-storage'
+import { checkIfRefIsInLS, addProductLocalStorage } from '@/utils/local-storage'
 
 interface AlterCartBtn {
-  reference: string
+  id: number
 }
 
-const AlterCartBtn: FC<AlterCartBtn> = ({ reference }) => {
+const AlterCartBtn: FC<AlterCartBtn> = ({ id }) => {
   // Checking if item is in LS and define default state
-  const [isAlreadyInCart, setIsAlreadyInCart] = useState(
-    checkIfRefIsInLS(reference)
-  )
+  const [isAlreadyInCart, setIsAlreadyInCart] = useState(checkIfRefIsInLS(id))
 
   const handlerAlterQty = (operator: '+' | '-') => {
-    addProductLocalStorage(reference, operator) // alter LS
+    addProductLocalStorage(id, operator) // alter LS
 
-    setIsAlreadyInCart(checkIfRefIsInLS(reference)) // update is in LS
+    setIsAlreadyInCart(checkIfRefIsInLS(id)) // update is in LS
   }
 
   return (

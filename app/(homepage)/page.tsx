@@ -2,7 +2,7 @@ import { getAllProducts } from '@/services/prisma-queries'
 
 import ProductCard from '@components/product-card'
 import DateSelector from '@components/date-selector/date-selector'
-import Button from '@/components/ui/button'
+import Button from '@/components/ui/button-validate-cart'
 
 const HomePage = async () => {
   const allProducts = await getAllProducts()
