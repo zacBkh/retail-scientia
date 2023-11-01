@@ -46,4 +46,6 @@ const DateSelector = ({}) => {
   )
 }
 
+DateSelector.displayName = 'DateSelector'
+
 export default DateSelector
