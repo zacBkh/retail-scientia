@@ -51,9 +51,6 @@ model Sale {
 
   sellerId Int
   seller   User @relation(fields: [sellerId], references: [id]) // connecting each sale to a seller '(user) 
-
-  quantity  Int
-  priceSold Float
 }
 
 model User {

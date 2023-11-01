@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Sale } from '@prisma/client'
 
 let db: PrismaClient
 if (process.env.NODE_ENV === 'production') {
@@ -19,8 +19,16 @@ if (process.env.NODE_ENV === 'production') {
 
 // const PrismaConnector = new PrismaClient()
 
-// Fetch all
+// Fetch all products
 export const getAllProducts = async () => {
   const allProducts = await db.product.findMany()
   return allProducts
+}
+
+// Fetch all
+export const addSale = async (details: Sale) => {
+  console.log('details from api', details)
+
+  // const allProducts = await db.sale.create({
+  //   data: {},
 }
