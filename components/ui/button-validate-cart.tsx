@@ -2,7 +2,7 @@
 
 import { FC, useState } from 'react'
 
-import { getSalesLSInJSObj } from '@/utils/local-storage'
+import { getSalesLSInJSObj, clearLocalStorage } from '@/utils/local-storage'
 
 import { registerSale } from '@/services/fetchers-api'
 
@@ -22,7 +22,7 @@ const Button: FC<ButtonProps> = ({ txt, style }) => {
 
   const handleValidateCart = async () => {
     const finalSales = getSalesLSInJSObj()
-    const finalDate = localStorage.getItem('date') as string
+    const finalDate = localStorage.getItem('date')
 
     if (!finalDate || !finalSales?.length) {
       console.log('Date or at least a sale is missing')
@@ -32,14 +32,19 @@ const Button: FC<ButtonProps> = ({ txt, style }) => {
       return
     }
 
-    console.log('finalSales', finalSales)
-    console.log('finalDate', finalDate)
-
+    console.log('89')
     const registrationSale: APIAnswer = await registerSale(
       finalDate,
       finalSales
     )
+
+    console.log('66666')
     setFeedbackUser(registrationSale.result)
+    console.log('registrationSale')
+
+    if (registrationSale.success) {
+      clearLocalStorage()
+    }
   }
 
   return (

@@ -20,6 +20,21 @@ export const checkIfRefIsInLS = (reference: number) => {
   return checkIfInCart
 }
 
+export const countOccurenceOfRefInLS = (reference: number) => {
+  const allSales = getSalesLSInJSObj()
+  if (!allSales?.length) {
+    console.log('Sales in LS is empty')
+    return
+  }
+
+  const countOccurrence = allSales?.reduce(
+    (acc, currValue) => (currValue === reference ? (acc += 1) : acc),
+    0
+  )
+
+  return countOccurrence
+}
+
 export const addProductLocalStorage = (
   refToAlter: number,
   operator: '+' | '-'
@@ -31,11 +46,9 @@ export const addProductLocalStorage = (
     storedSalesObj?.push(refToAlter)
     const updatedSalesJSON = JSON.stringify(storedSalesObj)
     localStorage.setItem('sales', updatedSalesJSON)
-    console.log('added')
   } else {
     // If asked to remove
     const isRefAlreadyInLS = storedSalesObj?.includes(refToAlter)
-    console.log('isRefAlreadyInLS', isRefAlreadyInLS)
     // If "-" && ref is not in array
     if (!isRefAlreadyInLS) {
       console.log('error not in LS and want to remove')
@@ -66,4 +79,9 @@ export const removeFromLocalStorageWithRef = (refToRemove: number) => {
 
   const updatedSalesJSON = JSON.stringify(allSales)
   localStorage.setItem('sales', updatedSalesJSON)
+}
+
+// Remove from LS via ref
+export const clearLocalStorage = () => {
+  localStorage.clear()
 }

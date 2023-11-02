@@ -6,13 +6,10 @@
 //     ALL_CAPITAL = 'https://restcountries.com/v3.1/all?fields=cca3,name,capital',
 // }
 
-// export enum APP_LINKS {
-//     HOME = '/',
-//     ABOUT = '/about',
-//     PLAY = '/play',
-//     COUNTRY_LOCATOR = '/country-locator',
-//     CAPITAL_GUESSER = '/capital-guesser',
-// }
+export enum APP_LINKS {
+  HOME = '/',
+  CART = '/cart',
+}
 
 export enum REST_API_LINKS {
   HOME = '/',

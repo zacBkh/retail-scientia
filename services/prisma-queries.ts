@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { PrismaClient, Sale } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 
 // Hack so new prisma client is not created at every hot reload
 let db: PrismaClient

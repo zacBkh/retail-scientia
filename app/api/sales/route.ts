@@ -10,7 +10,6 @@ export async function POST(request: Request) {
 
   const saleRegistration = await addSales(new Date(date), productIDs)
 
-  console.log('created record of sale', saleRegistration)
   return NextResponse.json(
     {
       success: true,

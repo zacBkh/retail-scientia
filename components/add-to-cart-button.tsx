@@ -1,33 +1,40 @@
 'use client'
 
-import { FC, useState } from 'react'
+import { FC, useState, useEffect } from 'react'
 
-import { checkIfRefIsInLS, addProductLocalStorage } from '@/utils/local-storage'
+import {
+  checkIfRefIsInLS,
+  addProductLocalStorage,
+  countOccurenceOfRefInLS,
+} from '@/utils/local-storage'
 
 interface AlterCartBtn {
   id: number
 }
 
 const AlterCartBtn: FC<AlterCartBtn> = ({ id }) => {
-  // Checking if item is in LS and define default state
-  const [isAlreadyInCart, setIsAlreadyInCart] = useState(checkIfRefIsInLS(id))
+  const [currentCartQty, setCurrentCartQty] = useState(0)
 
   const handlerAlterQty = (operator: '+' | '-') => {
     addProductLocalStorage(id, operator) // alter LS
-
-    setIsAlreadyInCart(checkIfRefIsInLS(id)) // update is in LS
+    setCurrentCartQty(countOccurenceOfRefInLS(id) ?? 0) // update qty
   }
+
+  // set current cart qty onLoad
+  useEffect(() => {
+    setCurrentCartQty(countOccurenceOfRefInLS(id) ?? 0)
+  }, [])
 
   return (
     <div className="flex items-center gap-x-3">
       <button
-        disabled={!isAlreadyInCart}
-        className={!isAlreadyInCart ? 'invisible' : ''}
+        disabled={currentCartQty ? false : true}
+        className={!currentCartQty ? 'invisible' : ''}
         onClick={() => handlerAlterQty('-')}
       >
         -
       </button>
-      <p className="text-sm">5</p>
+      <p className="text-sm">{currentCartQty}</p>
       <button onClick={() => handlerAlterQty('+')}>+</button>
     </div>
   )
