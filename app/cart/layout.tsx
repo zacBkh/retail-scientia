@@ -15,7 +15,7 @@ interface LayoutProps {
 }
 
 const CartLayout: FC<LayoutProps> = ({ children }) => {
-  return <section>{children}</section>
+  return <section className="p-3">{children}</section>
 }
 
 export default CartLayout

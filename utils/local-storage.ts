@@ -1,6 +1,6 @@
 export const getSalesLSInJSObj = () => {
   if (typeof window === 'undefined' || !window.localStorage) {
-    console.log('LS not available!!!!')
+    console.log('Server envt, Local Storage not available.')
     return null
   }
 
@@ -13,8 +13,6 @@ export const getSalesLSInJSObj = () => {
   return storedSalesObj
 }
 
-export type SalesInLocalStorage = number[]
-
 export const checkIfRefIsInLS = (reference: number) => {
   const checkIfInCart = getSalesLSInJSObj()?.includes(reference)
   return checkIfInCart
@@ -24,7 +22,7 @@ export const countOccurenceOfRefInLS = (reference: number) => {
   const allSales = getSalesLSInJSObj()
   if (!allSales?.length) {
     console.log('Sales in LS is empty')
-    return
+    return 0
   }
 
   const countOccurrence = allSales?.reduce(

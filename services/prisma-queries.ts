@@ -40,3 +40,14 @@ export const addSales = async (date: Date, productIDs: number[]) => {
 
   return createdSales
 }
+
+export const findSpecificProducts = async (arrayOfIDs: number[]) => {
+  const products = await db.product.findMany({
+    where: {
+      id: {
+        in: arrayOfIDs,
+      },
+    },
+  })
+  return products
+}

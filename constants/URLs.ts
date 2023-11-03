@@ -12,8 +12,8 @@ export enum APP_LINKS {
 }
 
 export enum REST_API_LINKS {
-  HOME = '/',
-  SALE = '/sales',
+  SALE = 'api/sales',
+  SPECIFIC_PRODUCTS = 'api/products',
 }
 
 // export const NAV_LINKS = [

@@ -12,7 +12,7 @@ interface ButtonProps {
   handler?: () => void
 }
 
-import { APIAnswer } from '@/types'
+import type { APIAnswerBasic } from '@/types'
 
 const Button: FC<ButtonProps> = ({ txt, style }) => {
   const css = `flex justify-between gap-x-3 items-center px-4 py-[5px] md:py-[10px] $text-center rounded-full font-bold
@@ -32,13 +32,8 @@ const Button: FC<ButtonProps> = ({ txt, style }) => {
       return
     }
 
-    console.log('89')
-    const registrationSale: APIAnswer = await registerSale(
-      finalDate,
-      finalSales
-    )
+    const registrationSale = await registerSale(finalDate, finalSales)
 
-    console.log('66666')
     setFeedbackUser(registrationSale.result)
     console.log('registrationSale')
 

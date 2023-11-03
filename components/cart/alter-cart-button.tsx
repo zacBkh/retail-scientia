@@ -3,16 +3,17 @@
 import { FC, useState, useEffect } from 'react'
 
 import {
-  checkIfRefIsInLS,
   addProductLocalStorage,
   countOccurenceOfRefInLS,
 } from '@/utils/local-storage'
 
 interface AlterCartBtn {
   id: number
+  style?: string
+  liftQtyUp?: (newCartQty: number) => void
 }
 
-const AlterCartBtn: FC<AlterCartBtn> = ({ id }) => {
+const AlterCartBtn: FC<AlterCartBtn> = ({ id, style, liftQtyUp }) => {
   const [currentCartQty, setCurrentCartQty] = useState(0)
 
   const handlerAlterQty = (operator: '+' | '-') => {
@@ -25,8 +26,15 @@ const AlterCartBtn: FC<AlterCartBtn> = ({ id }) => {
     setCurrentCartQty(countOccurenceOfRefInLS(id) ?? 0)
   }, [])
 
+  // on load and at any cart qty change, lift the info up for cart component if props passed
+  useEffect(() => {
+    if (liftQtyUp) {
+      liftQtyUp(currentCartQty)
+    }
+  }, [currentCartQty])
+
   return (
-    <div className="flex items-center gap-x-3">
+    <div className={`flex items-center gap-x-3 text-sm ${style}`}>
       <button
         disabled={currentCartQty ? false : true}
         className={!currentCartQty ? 'invisible' : ''}
@@ -34,7 +42,7 @@ const AlterCartBtn: FC<AlterCartBtn> = ({ id }) => {
       >
         -
       </button>
-      <p className="text-sm">{currentCartQty}</p>
+      <p>{currentCartQty}</p>
       <button onClick={() => handlerAlterQty('+')}>+</button>
     </div>
   )
