@@ -11,6 +11,11 @@ const config: Config = {
   ],
 
   theme: {
+    extend: {
+      fontSize: {
+        xxs: '0.625rem', // You can adjust the value as needed
+      },
+    },
     fontFamily: {
       sans: ['var(--font-sans)', ...fontFamily.sans],
     },

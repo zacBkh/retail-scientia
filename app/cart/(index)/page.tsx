@@ -34,9 +34,11 @@ const Cart = ({}) => {
     }
   )
 
+  console.log('isLoading', isLoading)
+  console.log('isValidating', isValidating)
   return (
     <>
-      {isLoading || isValidating ? <Loading /> : ''}
+      {isLoading ? <Loading /> : ''}
 
       <div className="flex flex-col gap-y-4">
         {productDetails?.result.map((item) => (

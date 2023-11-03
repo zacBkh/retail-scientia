@@ -11,6 +11,8 @@ import HamburgerMenu from './hamburger-menu'
 
 import { APP_LINKS } from '@/constants/URLs'
 
+import CartNavbarIcon from '../cart/cart-navbar-icon'
+
 // import Logo from '@images/countrypedia-logo.png'
 // import { APP_LINKS } from '@/constants/urls'
 
@@ -56,7 +58,7 @@ const Navbar = () => {
 
           <div className="flex justify-between items-center gap-x-4">
             <Link href={APP_LINKS.CART}>
-              <BsCart2 className={'text-xl'} />
+              <CartNavbarIcon />
             </Link>
             <HamburgerIcon
               onToggleMenu={handleToggleHamburgerMenu}
