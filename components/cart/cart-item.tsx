@@ -14,12 +14,14 @@ const CartItem: FC<CartItemType> = ({
   img,
   regularPrice,
   size,
+  onQtyAlteration,
 }) => {
   const [currentQtyInCart, seturrentQtyInCart] = useState(0)
 
   const handleAlterCartQty = (newCartQty: number) => {
     console.log('newCartQty', newCartQty)
     seturrentQtyInCart(newCartQty)
+    onQtyAlteration() // to check if an item has to be removed
   }
 
   return (

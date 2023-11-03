@@ -2,10 +2,14 @@
 
 import { FC, useState, useEffect } from 'react'
 
+import { mutate } from 'swr'
+
 import {
   addProductLocalStorage,
   countOccurenceOfRefInLS,
 } from '@/utils/local-storage'
+
+import SWR_KEYS from '@/constants/SWR-keys'
 
 interface AlterCartBtn {
   id: number
@@ -26,10 +30,12 @@ const AlterCartBtn: FC<AlterCartBtn> = ({ id, style, liftQtyUp }) => {
     setCurrentCartQty(countOccurenceOfRefInLS(id) ?? 0)
   }, [])
 
-  // on load and at any cart qty change, lift the info up for cart component if props passed
+  // On load & at any cart qty change
   useEffect(() => {
     if (liftQtyUp) {
-      liftQtyUp(currentCartQty)
+      liftQtyUp(currentCartQty) // lift to cart
+      mutate(SWR_KEYS.GET_SOME_PRODUCTS) // mutate cart data
+      console.log('6')
     }
   }, [currentCartQty])
 
