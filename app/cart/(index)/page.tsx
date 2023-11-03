@@ -10,6 +10,7 @@ import { getProductDetails } from '@/services/fetchers-api'
 
 import CartItem from '@/components/cart/cart-item'
 import Loading from '../loading'
+import Spinner from '@/components/ui/spinner'
 
 const Cart = ({}) => {
   let allSalesInLS = getSalesLSInJSObj() ?? []
@@ -36,7 +37,7 @@ const Cart = ({}) => {
 
   return (
     <>
-      {isLoading || isValidating ? <Loading /> : ''}
+      {isLoading ? <Loading /> : ''}
 
       <div className="flex flex-col gap-y-4">
         {productDetails?.result.map((item) => (
@@ -51,6 +52,11 @@ const Cart = ({}) => {
             onQtyAlteration={handleQtyCartChange}
           />
         ))}
+        {isValidating ? (
+          <Spinner style="border-t-black !w-5 !h-5 mx-auto" />
+        ) : (
+          ''
+        )}
       </div>
     </>
   )
