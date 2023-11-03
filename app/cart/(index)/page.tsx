@@ -35,6 +35,8 @@ const Cart = ({}) => {
     }
   )
 
+  console.log('isLoading', isLoading)
+  console.log('isValidating', isValidating)
   return (
     <>
       {isLoading ? <Loading /> : ''}

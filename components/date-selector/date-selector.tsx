@@ -16,7 +16,7 @@ const DateSelector = ({}) => {
   const CustomInput = forwardRef(
     ({ value, onClick }: CustomInputProps, ref: Ref<HTMLButtonElement>) => (
       <button
-        className="w-32 p-1 border border-sky-500 flex  items-center"
+        className="w-32 p-1 border border-sky-500 flex justify-center items-center"
         onClick={onClick}
         ref={ref}
       >
