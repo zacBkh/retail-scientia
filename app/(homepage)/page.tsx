@@ -30,7 +30,6 @@ const HomePage = async () => {
           />
         ))}
       </div>
-      <Button style={''} txt="Validate your cart" />
     </main>
   )
 }

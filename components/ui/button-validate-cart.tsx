@@ -6,13 +6,14 @@ import { getSalesLSInJSObj, clearLocalStorage } from '@/utils/local-storage'
 
 import { registerSale } from '@/services/fetchers-api'
 
+import { mutate } from 'swr'
+import SWR_KEYS from '@/constants/SWR-keys'
+
 interface ButtonProps {
   txt: string
   style: string
   handler?: () => void
 }
-
-import type { APIAnswerBasic } from '@/types'
 
 const Button: FC<ButtonProps> = ({ txt, style }) => {
   const css = `flex justify-between gap-x-3 items-center px-4 py-[5px] md:py-[10px] $text-center rounded-full font-bold
@@ -35,10 +36,11 @@ const Button: FC<ButtonProps> = ({ txt, style }) => {
     const registrationSale = await registerSale(finalDate, finalSales)
 
     setFeedbackUser(registrationSale.result)
-    console.log('registrationSale')
+    console.log('registrationSale done -->', registerSale)
 
     if (registrationSale.success) {
       clearLocalStorage()
+      mutate(SWR_KEYS.GET_CART_QTY) // for navbar cart icon
     }
   }
 

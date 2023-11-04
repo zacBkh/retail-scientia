@@ -9,8 +9,9 @@ import { getSalesLSInJSObj } from '@/utils/local-storage'
 import { getProductDetails } from '@/services/fetchers-api'
 
 import CartItem from '@/components/cart/cart-item'
-import Loading from '../loading'
+import Button from '@/components/ui/button-validate-cart'
 import Spinner from '@/components/ui/spinner'
+import Loading from '../loading'
 
 const Cart = ({}) => {
   let allSalesInLS = getSalesLSInJSObj() ?? []
@@ -35,6 +36,8 @@ const Cart = ({}) => {
     }
   )
 
+  console.log('productDetails', productDetails)
+
   console.log('isLoading', isLoading)
   console.log('isValidating', isValidating)
   return (
@@ -51,7 +54,7 @@ const Cart = ({}) => {
             img={item.img}
             regularPrice={item.regularPrice}
             size={item.size}
-            onQtyAlteration={handleQtyCartChange}
+            onLoadQty={handleQtyCartChange}
           />
         ))}
         {isValidating ? (
@@ -60,6 +63,8 @@ const Cart = ({}) => {
           ''
         )}
       </div>
+
+      <Button style={''} txt="Validate your cart" />
     </>
   )
 }
