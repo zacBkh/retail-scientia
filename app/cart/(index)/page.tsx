@@ -16,13 +16,6 @@ import Loading from '../loading'
 const Cart = ({}) => {
   let allSalesInLS = getSalesLSInJSObj() ?? []
 
-  // IS THIS USEFUL ???Update variable that holds the current LS to remove the line in the cart if needed
-  const handleQtyCartChange = () => {
-    allSalesInLS = getSalesLSInJSObj() ?? []
-  }
-
-  console.log('allSalesInLS', allSalesInLS)
-
   const {
     data: productDetails,
     error,
@@ -36,10 +29,6 @@ const Cart = ({}) => {
     }
   )
 
-  console.log('productDetails', productDetails)
-
-  console.log('isLoading', isLoading)
-  console.log('isValidating', isValidating)
   return (
     <>
       {isLoading ? <Loading /> : ''}
@@ -54,7 +43,6 @@ const Cart = ({}) => {
             img={item.img}
             regularPrice={item.regularPrice}
             size={item.size}
-            onUpdateQty={handleQtyCartChange}
           />
         ))}
         {isValidating ? (
@@ -64,11 +52,7 @@ const Cart = ({}) => {
         )}
       </div>
 
-      <Button
-        style={''}
-        txt="Validate your cart"
-        onValidateCart={handleQtyCartChange}
-      />
+      <Button style={''} txt="Validate your cart" />
     </>
   )
 }
