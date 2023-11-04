@@ -14,14 +14,14 @@ const CartItem: FC<CartItemType> = ({
   img,
   regularPrice,
   size,
-  onLoadQty,
+  onUpdateQty,
 }) => {
   const [currentQtyInCart, seturrentQtyInCart] = useState(0)
 
-  const handlePassQtyInfoOnLoad = (newCartQty: number) => {
+  const handlePassQtyInfoOnAlter = (newCartQty: number) => {
     console.log('newCartQty', newCartQty)
     seturrentQtyInCart(newCartQty)
-    onLoadQty() // to check if an item has to be removed
+    onUpdateQty() // to check if an item has to be removed
   }
 
   return (
@@ -47,7 +47,7 @@ const CartItem: FC<CartItemType> = ({
 
         <div className="border-b border-[#bbb] text-xs w-[13%]">
           <AlterCartBtn
-            liftQtyUp={handlePassQtyInfoOnLoad}
+            liftQtyUp={handlePassQtyInfoOnAlter}
             style="!text-xs"
             id={id}
           />

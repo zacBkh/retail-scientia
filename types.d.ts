@@ -16,4 +16,4 @@ export type SalesInLocalStorage = number[]
 export type CartItemType = Pick<
   Product,
   'id' | 'description' | 'img' | 'regularPrice' | 'size' | 'category1'
-> & { onLoadQty: () => void }
+> & { onUpdateQty: () => void }

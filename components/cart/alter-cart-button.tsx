@@ -22,9 +22,9 @@ const AlterCartBtn: FC<AlterCartBtn> = ({ id, style, liftQtyUp }) => {
 
   const handlerAlterQty = (operator: '+' | '-') => {
     addProductLocalStorage(id, operator) // alter LS
-    setCurrentCartQty(countOccurenceOfRefInLS(id) ?? 0) // update qty
+    setCurrentCartQty(countOccurenceOfRefInLS(id) ?? 0) // update qty based on lS
 
-    mutate(SWR_KEYS.GET_CART_QTY) // for navbar cart icon
+    mutate(SWR_KEYS.GET_TOTAL_CART_QTY) // for navbar cart icon
   }
 
   // set current cart qty onLoad
@@ -36,7 +36,7 @@ const AlterCartBtn: FC<AlterCartBtn> = ({ id, style, liftQtyUp }) => {
   useEffect(() => {
     if (liftQtyUp) {
       liftQtyUp(currentCartQty) // lift to cart
-      mutate(SWR_KEYS.GET_SOME_PRODUCTS) // mutate cart data
+      mutate(SWR_KEYS.GET_CART_PRODUCT_DETAILS) // mutate cart data
       console.log('6')
     }
   }, [currentCartQty])

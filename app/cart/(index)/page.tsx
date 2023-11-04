@@ -1,7 +1,7 @@
 'use client'
 
 import useSwr from 'swr/immutable'
-
+import { mutate } from 'swr'
 import SWR_KEYS from '@/constants/SWR-keys'
 
 import { getSalesLSInJSObj } from '@/utils/local-storage'
@@ -16,7 +16,7 @@ import Loading from '../loading'
 const Cart = ({}) => {
   let allSalesInLS = getSalesLSInJSObj() ?? []
 
-  // Update variable that holds the current LS to remove the line in the cart if needed
+  // IS THIS USEFUL ???Update variable that holds the current LS to remove the line in the cart if needed
   const handleQtyCartChange = () => {
     allSalesInLS = getSalesLSInJSObj() ?? []
   }
@@ -29,7 +29,7 @@ const Cart = ({}) => {
     isLoading,
     isValidating,
   } = useSwr(
-    SWR_KEYS.GET_SOME_PRODUCTS,
+    SWR_KEYS.GET_CART_PRODUCT_DETAILS,
     () => getProductDetails(allSalesInLS),
     {
       revalidateOnMount: true,
@@ -54,7 +54,7 @@ const Cart = ({}) => {
             img={item.img}
             regularPrice={item.regularPrice}
             size={item.size}
-            onLoadQty={handleQtyCartChange}
+            onUpdateQty={handleQtyCartChange}
           />
         ))}
         {isValidating ? (
@@ -64,7 +64,11 @@ const Cart = ({}) => {
         )}
       </div>
 
-      <Button style={''} txt="Validate your cart" />
+      <Button
+        style={''}
+        txt="Validate your cart"
+        onValidateCart={handleQtyCartChange}
+      />
     </>
   )
 }

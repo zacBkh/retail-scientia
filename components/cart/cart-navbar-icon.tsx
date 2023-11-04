@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { BsCart2 } from 'react-icons/bs'
 
-import useSwr from 'swr/immutable'
+import useSWR from 'swr'
 import SWR_KEYS from '@/constants/SWR-keys'
 
 import { getSalesLSInJSObj } from '@/utils/local-storage'
@@ -17,7 +17,7 @@ const CartNavbarIcon = ({}) => {
     error,
     isLoading,
     isValidating,
-  } = useSwr(SWR_KEYS.GET_CART_QTY, () => getSalesLSInJSObj()?.length, {
+  } = useSWR(SWR_KEYS.GET_TOTAL_CART_QTY, () => getSalesLSInJSObj()?.length, {
     revalidateOnMount: true,
   })
 

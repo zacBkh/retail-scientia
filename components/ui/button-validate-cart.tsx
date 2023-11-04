@@ -13,9 +13,10 @@ interface ButtonProps {
   txt: string
   style: string
   handler?: () => void
+  onValidateCart?: () => void
 }
 
-const Button: FC<ButtonProps> = ({ txt, style }) => {
+const Button: FC<ButtonProps> = ({ txt, style, onValidateCart }) => {
   const css = `flex justify-between gap-x-3 items-center px-4 py-[5px] md:py-[10px] $text-center rounded-full font-bold
     ${style}`
 
@@ -40,7 +41,8 @@ const Button: FC<ButtonProps> = ({ txt, style }) => {
 
     if (registrationSale.success) {
       clearLocalStorage()
-      mutate(SWR_KEYS.GET_CART_QTY) // for navbar cart icon
+      mutate(SWR_KEYS.GET_TOTAL_CART_QTY) // for navbar cart icon
+      mutate(SWR_KEYS.GET_CART_PRODUCT_DETAILS)
     }
   }
 

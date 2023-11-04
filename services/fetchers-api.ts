@@ -23,13 +23,20 @@ interface GetProductDetailsArgs {
   (productsIDs: number[]): Promise<APIAnswerFindProducts>
 }
 
+import useSWR from 'swr'
+import SWR_KEYS from '@/constants/SWR-keys'
+
+import { getSalesLSInJSObj } from '@/utils/local-storage'
+
 // Get specific products details from DB, based on array of IDs
 // Used a POST request to pass body
 export const getProductDetails: GetProductDetailsArgs = async (productIDs) => {
+  let productIDsInLS = getSalesLSInJSObj() ?? []
+
   const response = await fetch(`${SPECIFIC_PRODUCTS}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ productIDs }),
+    body: JSON.stringify({ productIDsInLS }),
   })
   const data = await response.json()
   console.log('data--->', data)
