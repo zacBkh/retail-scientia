@@ -23,9 +23,6 @@ interface GetProductDetailsArgs {
   (productsIDs: number[]): Promise<APIAnswerFindProducts>
 }
 
-import useSWR from 'swr'
-import SWR_KEYS from '@/constants/SWR-keys'
-
 import { getSalesLSInJSObj } from '@/utils/local-storage'
 
 // Get specific products details from DB, based on array of IDs
