@@ -28,6 +28,7 @@ const Cart = ({}) => {
     }
   )
 
+  const isCartEmpty = !productDetails?.result?.length
   return (
     <>
       {isLoading ? <Loading /> : ''}
@@ -51,7 +52,11 @@ const Cart = ({}) => {
         )}
       </div>
 
-      <Button style={''} txt="Validate your cart" />
+      {isCartEmpty ? (
+        <div className="text-center">Your cart is empty</div>
+      ) : (
+        <Button style={''} txt="Validate your cart" />
+      )}
     </>
   )
 }
