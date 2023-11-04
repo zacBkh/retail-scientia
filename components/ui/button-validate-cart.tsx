@@ -40,7 +40,6 @@ const Button: FC<ButtonProps> = ({ txt, style }) => {
 
     if (registrationSale.success) {
       clearLocalStorage()
-      mutate(SWR_KEYS.GET_TOTAL_CART_QTY) // for navbar cart icon
       mutate(SWR_KEYS.GET_CART_PRODUCT_DETAILS)
     }
   }

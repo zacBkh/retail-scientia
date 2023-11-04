@@ -1,56 +1,53 @@
 'use client'
 
-import { FC, useState, useEffect } from 'react'
+import { FC, useEffect } from 'react'
 
 import { mutate } from 'swr'
 
 import {
+  getSalesLSInJSObj,
   addProductLocalStorage,
-  countOccurenceOfRefInLS,
+  specificItemQty,
 } from '@/utils/local-storage'
 
 import SWR_KEYS from '@/constants/SWR-keys'
+import useSWR from 'swr'
 
 interface AlterCartBtn {
   id: number
   style?: string
-  liftQtyUp?: (newCartQty: number) => void
 }
 
-const AlterCartBtn: FC<AlterCartBtn> = ({ id, style, liftQtyUp }) => {
-  const [currentCartQty, setCurrentCartQty] = useState(0)
+const AlterCartBtn: FC<AlterCartBtn> = ({ id, style }) => {
+  console.log('id66', id)
+  const {
+    data: allSalesInLS,
+    error,
+    isLoading,
+    isValidating,
+  } = useSWR(SWR_KEYS.GET_CART_LS, () => getSalesLSInJSObj() ?? [], {
+    revalidateOnMount: true,
+  })
+
+  const specificItemCount = specificItemQty(allSalesInLS ?? [], id)
 
   const handlerAlterQty = (operator: '+' | '-') => {
     addProductLocalStorage(id, operator) // alter LS
-    setCurrentCartQty(countOccurenceOfRefInLS(id) ?? 0) // update qty based on lS
 
-    mutate(SWR_KEYS.GET_TOTAL_CART_QTY) // for navbar cart icon
+    mutate(SWR_KEYS.GET_CART_LS) // for btn alter qty & price calculation in cart
+    mutate(SWR_KEYS.GET_CART_PRODUCT_DETAILS) // fetch product details with current cart
   }
-
-  // set current cart qty onLoad
-  useEffect(() => {
-    setCurrentCartQty(countOccurenceOfRefInLS(id) ?? 0)
-  }, [])
-
-  // On load & at any cart qty change
-  useEffect(() => {
-    if (liftQtyUp) {
-      liftQtyUp(currentCartQty) // lift to cart
-      mutate(SWR_KEYS.GET_CART_PRODUCT_DETAILS) // mutate cart data
-      console.log('6')
-    }
-  }, [currentCartQty])
 
   return (
     <div className={`flex items-center gap-x-3 text-sm ${style}`}>
       <button
-        disabled={currentCartQty ? false : true}
-        className={!currentCartQty ? 'invisible' : ''}
+        disabled={specificItemCount ? false : true}
+        className={!specificItemCount ? 'invisible' : ''}
         onClick={() => handlerAlterQty('-')}
       >
         -
       </button>
-      <p>{currentCartQty}</p>
+      <p>{specificItemCount}</p>
       <button onClick={() => handlerAlterQty('+')}>+</button>
     </div>
   )

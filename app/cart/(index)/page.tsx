@@ -1,7 +1,6 @@
 'use client'
 
 import useSwr from 'swr/immutable'
-import { mutate } from 'swr'
 import SWR_KEYS from '@/constants/SWR-keys'
 
 import { getSalesLSInJSObj } from '@/utils/local-storage'

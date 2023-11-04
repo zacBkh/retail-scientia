@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 
 import type { CartItemType } from '@/types'
 
@@ -6,6 +6,11 @@ import Image from 'next/image'
 
 import getCloudiImg from '@/utils/transform-cloudi-img'
 import AlterCartBtn from './alter-cart-button'
+
+import SWR_KEYS from '@/constants/SWR-keys'
+import useSWR from 'swr'
+
+import { getSalesLSInJSObj, specificItemQty } from '@/utils/local-storage'
 
 const CartItem: FC<CartItemType> = ({
   id,
@@ -15,13 +20,16 @@ const CartItem: FC<CartItemType> = ({
   regularPrice,
   size,
 }) => {
-  const [currentQtyInCart, seturrentQtyInCart] = useState(0)
+  const {
+    data: allSalesInLS,
+    error,
+    isLoading,
+    isValidating,
+  } = useSWR(SWR_KEYS.GET_CART_LS, () => getSalesLSInJSObj() ?? [], {
+    revalidateOnMount: true,
+  })
 
-  const handlePassQtyInfoOnAlter = (newCartQty: number) => {
-    console.log('newCartQty', newCartQty)
-    seturrentQtyInCart(newCartQty)
-  }
-
+  const specificItemCount = specificItemQty(allSalesInLS ?? [], id)
   return (
     <>
       <div className="flex justify-between items-center gap-x-6">
@@ -44,15 +52,11 @@ const CartItem: FC<CartItemType> = ({
         </div>
 
         <div className="border-b border-[#bbb] text-xs w-[13%]">
-          <AlterCartBtn
-            liftQtyUp={handlePassQtyInfoOnAlter}
-            style="!text-xs"
-            id={id}
-          />
+          <AlterCartBtn style="!text-xs" id={id} />
         </div>
 
         <div className="text-red-600 text-xs w-[10%]">
-          <span>{Math.trunc(currentQtyInCart * regularPrice)}</span>
+          <span>{Math.trunc(specificItemCount * regularPrice)}</span>
         </div>
       </div>
     </>

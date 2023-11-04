@@ -18,21 +18,6 @@ export const checkIfRefIsInLS = (reference: number) => {
   return checkIfInCart
 }
 
-export const countOccurenceOfRefInLS = (reference: number) => {
-  const allSales = getSalesLSInJSObj()
-  if (!allSales?.length) {
-    console.log('Sales in LS is empty')
-    return 0
-  }
-
-  const countOccurrence = allSales?.reduce(
-    (acc, currValue) => (currValue === reference ? (acc += 1) : acc),
-    0
-  )
-
-  return countOccurrence
-}
-
 export const addProductLocalStorage = (
   refToAlter: number,
   operator: '+' | '-'
@@ -82,4 +67,18 @@ export const removeFromLocalStorageWithRef = (refToRemove: number) => {
 // Remove from LS via ref
 export const clearLocalStorage = () => {
   localStorage.clear()
+}
+
+// Take local storage and ID and count occurence
+export const specificItemQty = (allSalesInLS: number[], id: number) => {
+  if (!allSalesInLS.length || !id) {
+    console.log('allSalesInLS', allSalesInLS)
+    console.log('id', id)
+    console.log('No Sales array or id provided')
+    return 0
+  }
+  return allSalesInLS?.reduce(
+    (acc, currValue) => (currValue === id ? (acc += 1) : acc),
+    0
+  )
 }
