@@ -19,7 +19,6 @@ interface AlterCartBtn {
 }
 
 const AlterCartBtn: FC<AlterCartBtn> = ({ id, style }) => {
-  console.log('id66', id)
   const {
     data: allSalesInLS,
     error,
