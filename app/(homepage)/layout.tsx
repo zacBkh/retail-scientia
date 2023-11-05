@@ -1,8 +1,8 @@
 // import SEO_KEYWORDS from '@/constants/seo-keywords'
 
 export const metadata = {
-  title: 'Welcome',
-  description: 'Bla bla',
+  title: 'Welcome to Retail Scientia! 👋🏼',
+  description: 'Login and start filling your cart to register your Sales! ',
   // keywords: SEO_KEYWORDS,
 }
 
