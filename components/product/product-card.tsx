@@ -23,7 +23,7 @@ const ProductCard: FC<Product> = ({
   timePeriod,
 }) => {
   return (
-    <div className="flex flex-col items-center border-gray-200 rounded-lg shadow max-w-[45vw] bg-white border hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+    <div className="flex flex-col items-center border-gray-200 rounded-lg shadow max-w-[45vw] bg-white border">
       <div className="flex justify-between items-center">
         <div className="w-1/3 h-20 relative">
           <Image
