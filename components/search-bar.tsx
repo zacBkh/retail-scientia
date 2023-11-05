@@ -28,7 +28,7 @@ const SearchBarMain: FC<SearchBarMainProps> = ({ onSearch, searchQuery }) => {
         onChange={(evt) => onSearch(evt.target.value)}
         value={searchQuery}
         placeholder={'Start typing a product name'}
-        className="p-2 pl-9 flex text-sm w-[100%] relative pr-1 py-1 h-10 outline-none focus:outline-orange-500 items-center text-left bg-gray-100"
+        className="p-2 pl-9 flex w-[100%] relative pr-1 py-1 h-10 outline-none focus:outline-orange-500 items-center text-left bg-gray-100"
       />
     </div>
   )

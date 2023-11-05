@@ -39,7 +39,7 @@ const AlterCartBtn: FC<AlterCartBtn> = ({ id, style }) => {
   }
 
   return (
-    <div className={`flex items-center gap-x-3 text-sm ${style}`}>
+    <div className={`flex items-center gap-x-3 text-base ${style}`}>
       <button
         disabled={specificItemCount ? false : true}
         className={!specificItemCount ? 'invisible' : ''}
