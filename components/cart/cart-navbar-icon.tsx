@@ -21,6 +21,7 @@ const CartNavbarIcon = ({}) => {
     revalidateOnMount: true,
   })
 
+  console.log('isValidating -----', isValidating)
   useEffect(() => {
     setIsCartBtnAnimated(true)
 
