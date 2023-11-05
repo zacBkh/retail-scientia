@@ -35,7 +35,7 @@ const CartItem: FC<CartItemType> = ({
       <div className="flex justify-between items-center gap-x-6">
         <div>
           <Image
-            src={getCloudiImg(undefined, img)}
+            src={getCloudiImg(undefined, img as string)}
             alt="Product picture"
             width={50}
             height={75}
