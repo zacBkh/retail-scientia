@@ -19,7 +19,7 @@ interface AlterCartBtn {
 }
 
 const AlterCartBtn: FC<AlterCartBtn> = ({ id, style }) => {
-  console.log('id66', id)
+  // This fetcher cause cart button to bump on search query deletion
   const {
     data: allSalesInLS,
     error,

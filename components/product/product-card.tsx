@@ -6,7 +6,7 @@ import type { Product } from '@prisma/client'
 
 import getCloudiImg from '@/utils/transform-cloudi-img'
 
-import AlterCartBtn from './cart/alter-cart-button'
+import AlterCartBtn from '../cart/alter-cart-button'
 
 const ProductCard: FC<Product> = ({
   category1,
