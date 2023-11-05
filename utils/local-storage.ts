@@ -72,9 +72,6 @@ export const clearLocalStorage = () => {
 // Take local storage and ID and count occurence
 export const specificItemQty = (allSalesInLS: number[], id: number) => {
   if (!allSalesInLS.length || !id) {
-    console.log('allSalesInLS', allSalesInLS)
-    console.log('id', id)
-    console.log('No Sales array or id provided')
     return 0
   }
   return allSalesInLS?.reduce(

@@ -16,11 +16,11 @@ model Product {
   reference   String @unique
   ean         String @unique
   description String @unique
-  size        Int
+  size        String
 
-  img String @default("https://res.cloudinary.com/dnrknpiiz/image/upload/v1697691367/products_pictures/hermes/terre/jewsxivfldl21j7mz7w3.webp")
+  img String?
 
-  isSet     Boolean @default(false)
+  axis      Axis
   category1 String
   category2 String
 
@@ -37,6 +37,12 @@ enum Gender {
   UNISEX
   MEN
   WOMEN
+}
+
+enum Axis {
+  Perfume
+  Beauty
+  Skincare
 }
 
 model Sale {

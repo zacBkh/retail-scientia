@@ -15,8 +15,8 @@ const ProductCard: FC<Product> = ({
   ean,
   gender,
   id,
+  axis,
   img,
-  isSet,
   reference,
   regularPrice,
   size,
@@ -29,7 +29,7 @@ const ProductCard: FC<Product> = ({
           <Image
             fill
             className="object-contain rounded-t-lg"
-            src={getCloudiImg(undefined, img)}
+            src={getCloudiImg(undefined, img as string)}
             alt=""
           />
         </div>

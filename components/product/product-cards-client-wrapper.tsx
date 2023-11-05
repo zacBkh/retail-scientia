@@ -23,6 +23,8 @@ const ClientWrapper: FC<ClientWrapperProps> = ({ allProducts }) => {
     ? filteredProducts
     : allProducts
 
+  console.log('productsToDisplay[0]', productsToDisplay[0])
+  console.log('productsToDisplay[1]', productsToDisplay[1])
   return (
     <>
       <SearchBarMain
@@ -41,12 +43,16 @@ const ClientWrapper: FC<ClientWrapperProps> = ({ allProducts }) => {
               key={product.id}
               ean={product.ean}
               reference={product.reference}
+              axis={product.axis}
               description={product.description}
               category1={product.category1}
               category2={product.category2}
               gender={product.gender}
-              img={product.img}
-              isSet={product.isSet}
+              img={
+                product.img !== ''
+                  ? product.img
+                  : 'fallback_picture/hermes/hermes-logo'
+              }
               regularPrice={product.regularPrice}
               size={product.size}
               timePeriod={product.timePeriod}

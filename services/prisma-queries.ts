@@ -22,7 +22,10 @@ if (process.env.NODE_ENV === 'production') {
 
 // Fetch all products
 export const getAllProducts = async () => {
-  const allProducts = await db.product.findMany()
+  // const allProducts = await db.product.findMany({ take: 50 })
+  const allProducts = await db.product.findMany({
+    where: { img: { not: '' } },
+  })
   return allProducts
 }
 

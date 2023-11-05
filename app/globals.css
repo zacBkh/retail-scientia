@@ -97,8 +97,8 @@
 }
 
 /* Remove cross on input type search */
-/* #mySearchInput::-webkit-search-cancel-button {
+#mySearchInput::-webkit-search-cancel-button {
   -webkit-appearance: none;
   appearance: none;
   display: none;
-} */
+}

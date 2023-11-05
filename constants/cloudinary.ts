@@ -1,2 +1,2 @@
 export const CLOUDINARY_BASE_URL =
-  'https://res.cloudinary.com/dnrknpiiz/image/upload'
+  'https://res.cloudinary.com/dnrknpiiz/image/upload/'
