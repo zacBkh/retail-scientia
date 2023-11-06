@@ -1,11 +1,11 @@
 'use client'
+
 import { FC, useState } from 'react'
 
 import Link from 'next/link'
 import Image from 'next/image'
 
 import { BsCart2 } from 'react-icons/bs'
-
 import HamburgerIcon from './hamburger-icon'
 import HamburgerMenu from './hamburger-menu'
 
@@ -13,21 +13,20 @@ import { APP_LINKS } from '@/constants/URLs'
 
 import CartNavbarIcon from '../cart/cart-navbar-icon'
 
-// import Logo from '@images/countrypedia-logo.png'
-// import { APP_LINKS } from '@/constants/urls'
+import type { Session } from 'next-auth'
 
-// import NavLinks from './nav-links'
-// import HamburgerIcon from './hamburger-icon'
-// import HamburgerMenu from './hamburger-menu'
+interface NavbarProps {
+  session: Session | null
+}
 
-//
-
-const Navbar = () => {
+const Navbar: FC<NavbarProps> = ({ session }) => {
   const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false)
 
   const handleToggleHamburgerMenu = () => {
     setIsHamburgerMenuOpen((prev) => !prev)
   }
+
+  const name = session?.user?.name
 
   return (
     <div
@@ -57,6 +56,8 @@ const Navbar = () => {
           </div> */}
 
           <div className="flex justify-between items-center gap-x-4">
+            {session ? <div className="text-xs">{`Hi, ${name}`}</div> : ''}
+
             <Link href={APP_LINKS.CART}>
               <CartNavbarIcon />
             </Link>

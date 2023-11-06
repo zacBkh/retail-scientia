@@ -3,6 +3,12 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
 import './globals.css'
+import Navbar from '@/components/navigation/navbar'
+
+import { Providers } from '@/components/auth/providers'
+
+import { getServerSession } from 'next-auth'
+import { authOptions } from './api/auth/[...nextauth]/route'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -14,19 +20,22 @@ const inter = Inter({
   display: 'swap',
 })
 
-import Navbar from '@/components/navigation/navbar'
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const currentSession = await getServerSession(authOptions)
+  console.log('currentSession from layout', currentSession)
+
   return (
     <html lang="en" className={inter.className}>
-      <body>
-        <Navbar />
-        <main>{children}</main>
-      </body>
+      <Providers>
+        <body>
+          <Navbar session={currentSession} />
+          <main>{children}</main>
+        </body>
+      </Providers>
     </html>
   )
 }

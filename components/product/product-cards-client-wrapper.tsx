@@ -23,8 +23,6 @@ const ClientWrapper: FC<ClientWrapperProps> = ({ allProducts }) => {
     ? filteredProducts
     : allProducts
 
-  console.log('productsToDisplay[0]', productsToDisplay[0])
-  console.log('productsToDisplay[1]', productsToDisplay[1])
   return (
     <>
       <SearchBarMain
