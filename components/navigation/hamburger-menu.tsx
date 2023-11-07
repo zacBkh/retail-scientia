@@ -2,6 +2,8 @@ import { FC } from 'react'
 
 // import NavLinks from './nav-links'
 
+import { signOut } from 'next-auth/react'
+
 interface HamburgerMenuProps {
   isOpen: boolean
 }
@@ -17,6 +19,7 @@ const HamburgerMenu: FC<HamburgerMenuProps> = ({ isOpen }) => {
       <nav
         className={`z-[99999] py-8 md:hidden bg-white dark:bg-[#232730] w-screen absolute drop-shadow-2xl border-t-[#EBECF0] dark:border-t-[#232324] border-t-[2px]}`}
       >
+        <button onClick={() => signOut()}>Sign Out</button>
         {/* <NavLinks
                     navItemsTrad={navItemsTrad}
                     isHamburgerMenu
