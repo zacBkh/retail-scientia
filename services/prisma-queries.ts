@@ -5,7 +5,7 @@ import { PrismaClient } from '@prisma/client'
 let db: PrismaClient
 if (process.env.NODE_ENV === 'production') {
   db = new PrismaClient()
-  console.log('Production: Created DB connection.')
+  console.log('Production: Created a new DB connection.')
 } else {
   // @ts-ignore
   if (!global.db) {
@@ -27,17 +27,19 @@ export const getAllProducts = async () => {
   return allProducts
 }
 
-export const addSales = async (date: Date, productIDs: number[]) => {
+export const addSales = async (
+  date: Date,
+  sellerId: number,
+  productIDs: number[]
+) => {
   // Changing the shape
-  const finalObject = productIDs.map((id) => {
-    return { date, productId: id, sellerId: 1 }
+  const finalObject = productIDs.map((skuID) => {
+    return { date, productId: skuID, sellerId }
   })
 
   const createdSales = await db.sale.createMany({
     data: finalObject,
   })
-
-  console.log('created', createdSales.count, 'sales on DB')
 
   return createdSales
 }

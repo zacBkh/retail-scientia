@@ -21,22 +21,18 @@ export const authOptions: AuthOptions = {
         user: {
           ...session.user,
           id: token.id,
-          randomKey: token.randomKey,
         },
       }
-      console.log('enrichedSession', enrichedSession)
       return enrichedSession
     },
 
     jwt: ({ token, user }) => {
-      console.log('token,user from api auth', token, user)
       if (user) {
         // if user JUST logged in, this will be available in jwt in session since we put the info below in the jwt
         const u = user as unknown as any
         return {
           ...token,
           id: u.id,
-          randomKey: u.randomKey,
         }
       }
       return token
@@ -57,23 +53,24 @@ export const authOptions: AuthOptions = {
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
 
+        // If email or pwd not supplied
         if (!credentials?.email || !credentials.password) {
           return null
         }
 
+        // If user does not exist
         const user = await findAUser(credentials.email)
         if (!user) {
-          console.log('2')
           return null
         }
 
+        // If user exist but pwd does not match
         const isPwdValid = await compare(credentials.password, user.password)
         if (!isPwdValid) {
-          console.log('3')
           return null
         }
 
-        console.log('user from API good auth !', user)
+        console.log('User authenticated ✅', user)
         // Any object returned will be saved in `user` property of the JWT
         // return user
 
