@@ -10,6 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Gender {
+  UNISEX
+  MEN
+  WOMEN
+}
+
+enum Axis {
+  Perfume
+  Beauty
+  Skincare
+}
+
 model Product {
   id Int @id @default(autoincrement())
 
@@ -31,18 +43,6 @@ model Product {
   timePeriod String
 
   sales Sale[] // product has many sales (disambiguating relations)
-}
-
-enum Gender {
-  UNISEX
-  MEN
-  WOMEN
-}
-
-enum Axis {
-  Perfume
-  Beauty
-  Skincare
 }
 
 model Sale {
