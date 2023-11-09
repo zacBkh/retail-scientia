@@ -1,5 +1,3 @@
-import { APP_LINKS } from './constants/URLs'
-
 export { default } from 'next-auth/middleware'
 
 // export const config = {
