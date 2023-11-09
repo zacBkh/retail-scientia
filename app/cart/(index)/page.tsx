@@ -4,7 +4,6 @@ import useSwr from 'swr/immutable'
 import SWR_KEYS from '@/constants/SWR-keys'
 
 import { getSalesLSInJSObj } from '@/utils/local-storage'
-
 import { getProductDetails } from '@/services/fetchers-api'
 
 import CartItem from '@/components/cart/cart-item'
@@ -12,7 +11,13 @@ import Button from '@/components/ui/button-validate-cart'
 import Spinner from '@/components/ui/spinner'
 import Loading from '../loading'
 
+import { useSession } from 'next-auth/react'
+
 const Cart = ({}) => {
+  const { data: currentSession, status } = useSession()
+  console.log('currentSession', currentSession)
+  console.log('status', status)
+
   let allSalesInLS = getSalesLSInJSObj() ?? []
 
   const {

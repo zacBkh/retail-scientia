@@ -18,8 +18,6 @@ if (process.env.NODE_ENV === 'production') {
   db = global.db
 }
 
-// const PrismaConnector = new PrismaClient()
-
 // Fetch all products
 export const getAllProducts = async () => {
   // const allProducts = await db.product.findMany({ take: 50 })
@@ -53,4 +51,13 @@ export const findSpecificProducts = async (arrayOfIDs: number[]) => {
     },
   })
   return products
+}
+
+export const findAUser = async (email: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      email: email,
+    },
+  })
+  return user
 }
