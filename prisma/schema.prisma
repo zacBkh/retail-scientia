@@ -60,6 +60,9 @@ model Sale {
 
   sellerId Int
   seller   User @relation(fields: [sellerId], references: [id]) // connecting each sale to a seller '(user) 
+
+  brandId Int?
+  brand   Brand? @relation(fields: [brandId], references: [id])
 }
 
 model User {
@@ -76,6 +79,8 @@ model User {
   sales Sale[] // a user has many sales (disambiguating relations)
 
   isAdmin Boolean @default(false)
+
+  brand Brand[]
 }
 
 model Brand {
@@ -85,4 +90,7 @@ model Brand {
   logo String
 
   products Product[]
+  Sale     Sale[]
+  User     User?     @relation(fields: [userId], references: [id])
+  userId   Int?
 }
