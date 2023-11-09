@@ -38,6 +38,7 @@ const ClientWrapper: FC<ClientWrapperProps> = ({ allProducts }) => {
         ) : (
           productsToDisplay.map((product) => (
             <ProductCard
+              brandId={product.brandId}
               key={product.id}
               ean={product.ean}
               reference={product.reference}

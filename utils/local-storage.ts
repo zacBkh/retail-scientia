@@ -34,12 +34,11 @@ export const addProductLocalStorage = (
     const isRefAlreadyInLS = storedSalesObj?.includes(refToAlter)
     // If "-" && ref is not in array
     if (!isRefAlreadyInLS) {
-      console.log('error not in LS and want to remove')
+      console.log('Error: not in LS and want to remove ❌')
       return
     }
 
     // If in array, remove
-    console.log('removed')
     return removeFromLocalStorageWithRef(refToAlter)
   }
 }
@@ -53,8 +52,9 @@ export const removeFromLocalStorageWithRef = (refToRemove: number) => {
     (sale: number) => sale === refToRemove
   )
 
+  // If cannot find the product or index is not supplied
   if (indexToRemove === -1 || indexToRemove === undefined) {
-    console.log('error 88')
+    console.log('Error: product to removed cannot be found ❌')
     return
   }
 

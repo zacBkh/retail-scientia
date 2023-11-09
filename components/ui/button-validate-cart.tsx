@@ -26,7 +26,6 @@ const Button: FC<ButtonProps> = ({ txt, style }) => {
     const finalDate = localStorage.getItem('date')
 
     if (!finalDate || !finalSales?.length) {
-      console.log('Date or at least a sale is missing')
       setFeedbackUser(
         'You either do not have sales registered or a specific date'
       )
@@ -35,12 +34,13 @@ const Button: FC<ButtonProps> = ({ txt, style }) => {
 
     const registrationSale = await registerSale(finalDate, finalSales)
 
-    setFeedbackUser(registrationSale.result)
-    console.log('registrationSale done -->', registerSale)
-
     if (registrationSale.success) {
+      setFeedbackUser(registrationSale.result)
+      console.log('Sale registered ✅', registrationSale)
       clearLocalStorage()
       mutate(SWR_KEYS.GET_CART_PRODUCT_DETAILS)
+    } else {
+      console.log('Error in registering the sale ❌', registrationSale)
     }
   }
 

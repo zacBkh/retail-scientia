@@ -43,6 +43,9 @@ model Product {
   timePeriod String
 
   sales Sale[] // product has many sales (disambiguating relations)
+
+  brandId Int?
+  brand   Brand? @relation(fields: [brandId], references: [id])
 }
 
 model Sale {
@@ -53,7 +56,7 @@ model Sale {
   date      DateTime @db.Date
 
   productSold Product @relation(fields: [productId], references: [id]) // connecting each sale to a product 
-  productId   Int     @unique
+  productId   Int
 
   sellerId Int
   seller   User @relation(fields: [sellerId], references: [id]) // connecting each sale to a seller '(user) 
@@ -73,4 +76,17 @@ model User {
   sales Sale[] // a user has many sales (disambiguating relations)
 
   isAdmin Boolean @default(false)
+
+  brands Brand[]
+}
+
+model Brand {
+  id Int @id @default(autoincrement())
+
+  name String
+  logo String
+
+  // A brand has many product, users
+  products Product[]
+  users    User[]
 }

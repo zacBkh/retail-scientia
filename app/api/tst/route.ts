@@ -5,7 +5,6 @@ import { authOptions } from '../auth/[...nextauth]/route'
 
 export async function GET(request: Request) {
   const currentSession = await getServerSession(authOptions)
-  console.log('currentSession from API', currentSession)
 
   return NextResponse.json(
     {

@@ -15,8 +15,6 @@ import { useSession } from 'next-auth/react'
 
 const Cart = ({}) => {
   const { data: currentSession, status } = useSession()
-  console.log('currentSession', currentSession)
-  console.log('status', status)
 
   let allSalesInLS = getSalesLSInJSObj() ?? []
 

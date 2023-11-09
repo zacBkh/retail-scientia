@@ -9,6 +9,7 @@ import getCloudiImg from '@/utils/transform-cloudi-img'
 import AlterCartBtn from '../cart/alter-cart-button'
 
 const ProductCard: FC<Product> = ({
+  brandId,
   category1,
   category2,
   description,

@@ -36,6 +36,5 @@ export const getProductDetails: GetProductDetailsArgs = async (productIDs) => {
     body: JSON.stringify({ productIDsInLS }),
   })
   const data = await response.json()
-  console.log('data--->', data)
   return data
 }

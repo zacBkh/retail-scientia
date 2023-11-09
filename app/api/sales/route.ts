@@ -2,13 +2,20 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { addSales } from '@/services/prisma-queries'
 
-export async function POST(request: Request) {
-  const req = await request.json()
-  console.log('req from API route', req)
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../auth/[...nextauth]/route'
 
+export async function POST(request: Request) {
+  const currentSession = await getServerSession(authOptions)
+
+  const req = await request.json()
   const { date, productIDs } = req
 
-  const saleRegistration = await addSales(new Date(date), productIDs)
+  const saleRegistration = await addSales(
+    new Date(date),
+    Number(currentSession?.user?.id),
+    productIDs
+  )
 
   return NextResponse.json(
     {
