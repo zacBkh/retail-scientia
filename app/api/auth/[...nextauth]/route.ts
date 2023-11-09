@@ -21,6 +21,7 @@ export const authOptions: AuthOptions = {
         user: {
           ...session.user,
           id: token.id,
+          brands: token.brands,
         },
       }
       return enrichedSession
@@ -33,6 +34,7 @@ export const authOptions: AuthOptions = {
         return {
           ...token,
           id: u.id,
+          brands: u.brands,
         }
       }
       return token
@@ -48,7 +50,11 @@ export const authOptions: AuthOptions = {
           type: 'text',
           placeholder: 'mohamad@gmail.fr',
         },
-        password: { label: 'Password', type: 'password' },
+        password: {
+          label: 'Password',
+          type: 'password',
+          placeholder: '******',
+        },
       },
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
@@ -78,7 +84,7 @@ export const authOptions: AuthOptions = {
           id: user.id + '',
           email: user.email,
           name: user.name,
-          randomKey: 'kergjer',
+          brands: user.brands,
         }
       },
     }),

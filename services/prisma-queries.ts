@@ -57,9 +57,11 @@ export const findSpecificProducts = async (arrayOfIDs: number[]) => {
 
 export const findAUser = async (email: string) => {
   const user = await db.user.findUnique({
+    include: { brands: true },
     where: {
       email: email,
     },
   })
+
   return user
 }

@@ -21,9 +21,9 @@ const HamburgerIcon: FC<HamburgerIconProps> = ({
         isHamburgerMenuOpen ? 'open' : ''
       } hamburger block md:hidden focus:outline-none h-fit hover:!bg-transparent `}
     >
-      <span className="hamburger-top"></span>
-      <span className="hamburger-middle"></span>
-      <span className="hamburger-bottom"></span>
+      <div className="hamburger-top"></div>
+      <div className="hamburger-middle"></div>
+      <div className="hamburger-bottom"></div>
     </button>
   )
 }

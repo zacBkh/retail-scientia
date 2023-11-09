@@ -27,11 +27,11 @@
 }
 
 .hamburger-middle {
-  transform: translateY(7px);
+  transform: translateY(6px);
 }
 
 .hamburger-bottom {
-  transform: translateY(14px);
+  transform: translateY(12px);
 }
 
 /* This class will be added through JS */
