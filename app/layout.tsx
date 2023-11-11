@@ -40,7 +40,7 @@ export default async function RootLayout({
             {/* <Navbar session={currentSession} /> */}
             <NavbarRx session={currentSession} />
             <main>{children}</main>
-            {/* <ThemePanel className="!" /> */}
+            {/* <ThemePanel /> */}
           </Theme>
         </body>
       </Providers>

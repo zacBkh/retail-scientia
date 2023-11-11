@@ -8,7 +8,7 @@ import getCloudiImg from '@/utils/transform-cloudi-img'
 
 import AlterCartBtn from '../cart/alter-cart-button'
 
-import { Card, Flex, Avatar, Text, Box, Inset } from '@radix-ui/themes'
+import { Card, Flex, Text, Box, Inset, Separator } from '@radix-ui/themes'
 
 const ProductCard: FC<Product> = ({
   brandId,
@@ -47,6 +47,7 @@ const ProductCard: FC<Product> = ({
           </Text> */}
           </Box>
         </Flex>
+        <Separator my={'1'} size="4" />
         <AlterCartBtn id={id} />
       </Inset>
     </Card>
