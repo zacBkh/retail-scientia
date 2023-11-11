@@ -7,8 +7,6 @@ import * as NavigationMenu from '@radix-ui/react-navigation-menu'
 import classNames from 'classnames'
 import './styles.css'
 
-import { Text } from '@radix-ui/themes'
-
 import Link from 'next/link'
 
 import CartNavbarIcon from '@/components/cart/cart-navbar-icon'
@@ -69,7 +67,7 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
                   <div>
                     <li style={{ gridRow: 'span 3' }}>
                       <NavigationMenu.Link asChild>
-                        <a className="Callout" href="/">
+                        <Link className="Callout" href={'/'}>
                           {brandLogo ? (
                             <Image
                               className="mx-auto"
@@ -84,7 +82,7 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
 
                           <div className="CalloutHeading">{brandName}</div>
                           <p className="CalloutText">Welcome, {userName}</p>
-                        </a>
+                        </Link>
                       </NavigationMenu.Link>
                     </li>
                   </div>

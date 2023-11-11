@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, useEffect } from 'react'
+import { FC } from 'react'
 
 import { mutate } from 'swr'
 
@@ -12,6 +12,8 @@ import {
 
 import SWR_KEYS from '@/constants/SWR-keys'
 import useSWR from 'swr'
+
+import { Text, Button } from '@radix-ui/themes'
 
 interface AlterCartBtn {
   id: number
@@ -39,7 +41,29 @@ const AlterCartBtn: FC<AlterCartBtn> = ({ id, style }) => {
   }
 
   return (
-    <div className={`flex items-center gap-x-3 text-base ${style}`}>
+    <div className={`flex justify-center items-center gap-x-3 my-1 ${style}`}>
+      <Button
+        variant="soft"
+        size={'1'}
+        disabled={specificItemCount ? false : true}
+        className={`${!specificItemCount ? 'invisible' : ''} !h-5`}
+        onClick={() => handlerAlterQty('-')}
+      >
+        -
+      </Button>
+      <Text weight={'bold'} size={'1'}>
+        {specificItemCount ? specificItemCount : ''}
+      </Text>
+
+      <Button
+        className={`!h-5`}
+        variant="soft"
+        size={'1'}
+        onClick={() => handlerAlterQty('+')}
+      >
+        +
+      </Button>
+      {/* 
       <button
         disabled={specificItemCount ? false : true}
         className={!specificItemCount ? 'invisible' : ''}
@@ -47,8 +71,7 @@ const AlterCartBtn: FC<AlterCartBtn> = ({ id, style }) => {
       >
         -
       </button>
-      <p>{specificItemCount}</p>
-      <button onClick={() => handlerAlterQty('+')}>+</button>
+      <button onClick={() => handlerAlterQty('+')}>+</button> */}
     </div>
   )
 }
