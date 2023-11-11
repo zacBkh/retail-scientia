@@ -74,7 +74,7 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
                             alt="Brand Logo"
                           />
                         ) : (
-                          ''
+                          <div className="h-14"></div>
                         )}
 
                         <div className="CalloutHeading">{brandName}</div>
