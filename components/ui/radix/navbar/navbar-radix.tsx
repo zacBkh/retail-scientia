@@ -50,7 +50,9 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
         onValueChange={(open) => {
           setIsMenuOpen(open.length ? true : false)
         }}
-        className="NavigationMenuRoot shadow-md"
+        className={`NavigationMenuRoot shadow-md ${
+          isMenuOpen ? '!bg-white' : ''
+        }`}
       >
         <NavigationMenu.List className="NavigationMenuList !items-center">
           {/* Profile dropdown */}
@@ -89,7 +91,7 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
 
                   <div>
                     <ListItem
-                      link="/"
+                      link={APP_LINKS.DASHBOARD}
                       title="Dashboard"
                       icon={<RiDashboard3Line />}
                     >
