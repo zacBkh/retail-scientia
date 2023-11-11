@@ -7,6 +7,8 @@ import * as NavigationMenu from '@radix-ui/react-navigation-menu'
 import classNames from 'classnames'
 import './styles.css'
 
+import { Text } from '@radix-ui/themes'
+
 import Link from 'next/link'
 
 import CartNavbarIcon from '@/components/cart/cart-navbar-icon'
@@ -40,7 +42,6 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
 
   const userName = session?.user?.name
 
-  console.log('isMenuOpen', isMenuOpen)
   return (
     <>
       {isMenuOpen ? <OverlayDarkener isActive={true} /> : ''}
@@ -110,8 +111,17 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
             </NavigationMenu.Item>
           </div>
 
-          {/* Cart */}
-          <div>
+          <div className="flex items-center">
+            {/* Greet */}
+            {/* <NavigationMenu.Item> */}
+            {/* <NavigationMenu.Trigger className="NavigationMenuTrigger"> */}
+            <p className="whitespace-nowrap NavigationMenuTrigger hover:!bg-transparent hover:!shadow-none !text-xs">
+              Hi, {userName}
+            </p>
+            {/* </NavigationMenu.Trigger> */}
+            {/* </NavigationMenu.Item> */}
+
+            {/* Cart */}
             <Link href={APP_LINKS.CART}>
               <NavigationMenu.Item className="NavigationMenuLink">
                 <CartNavbarIcon />

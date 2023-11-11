@@ -36,11 +36,11 @@ export default async function RootLayout({
     <html lang="en" className={inter.className}>
       <Providers>
         <body>
-          <Theme accentColor="gray" panelBackground="translucent">
+          <Theme accentColor="mint" panelBackground="translucent">
             {/* <Navbar session={currentSession} /> */}
             <NavbarRx session={currentSession} />
             <main>{children}</main>
-            {/* <ThemePanel /> */}
+            <ThemePanel className="!hidden" />
           </Theme>
         </body>
       </Providers>
