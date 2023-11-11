@@ -47,7 +47,7 @@ const CartItem: FC<CartItemType> = ({
           <p className="font-semibold">{category1}</p>
           <div>
             <p>{description}</p>
-            <p className="text-[#7a7a7a]">{`Size: ${size}ml`}</p>
+            <p className="text-[#7a7a7a]">{`Size: ${size}`}</p>
           </div>
         </div>
 

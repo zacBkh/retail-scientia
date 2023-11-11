@@ -3,14 +3,17 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
 import './globals.css'
+
 import Navbar from '@/components/navigation/navbar'
+import NavbarRx from '@/components/ui/radix/navbar/navbar-radix'
+
+import '@radix-ui/themes/styles.css'
+import { Theme, ThemePanel } from '@radix-ui/themes'
 
 import { Providers } from '@/components/auth/providers'
 
 import { getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]/route'
-
-import OverlayDarkener from '@/components/ui/overlay-darkener'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -33,8 +36,12 @@ export default async function RootLayout({
     <html lang="en" className={inter.className}>
       <Providers>
         <body>
-          <Navbar session={currentSession} />
-          <main>{children}</main>
+          <Theme accentColor="gray" panelBackground="translucent">
+            {/* <Navbar session={currentSession} /> */}
+            <NavbarRx session={currentSession} />
+            <main>{children}</main>
+            {/* <ThemePanel /> */}
+          </Theme>
         </body>
       </Providers>
     </html>

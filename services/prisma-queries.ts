@@ -65,3 +65,24 @@ export const findAUser = async (email: string) => {
 
   return user
 }
+
+export const findSalesOfUser = async (userID: number) => {
+  const userSales = await db.sale.findMany({
+    // include: {
+    //   productSold: {
+    //     select: {
+    //       id: true,
+    //       description: true,
+    //       size: true,
+    //     },
+    //   },
+    // },
+    include: { productSold: true },
+
+    where: {
+      sellerId: userID,
+    },
+  })
+
+  return userSales
+}

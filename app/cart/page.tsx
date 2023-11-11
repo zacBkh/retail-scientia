@@ -6,10 +6,12 @@ import SWR_KEYS from '@/constants/SWR-keys'
 import { getSalesLSInJSObj } from '@/utils/local-storage'
 import { getProductDetails } from '@/services/fetchers-api'
 
+import AlertDialogRx from '@/components/ui/radix/alert-dialog'
+
 import CartItem from '@/components/cart/cart-item'
 import Button from '@/components/ui/button-validate-cart'
 import Spinner from '@/components/ui/spinner'
-import Loading from '../loading'
+import Loading from './loading'
 
 import { useSession } from 'next-auth/react'
 
@@ -58,7 +60,13 @@ const Cart = ({}) => {
       {isCartEmpty ? (
         <div className="text-center">Your cart is empty</div>
       ) : (
-        <Button style={''} txt="Validate your cart" />
+        // <Button style={''} txt="Validate your cart" />
+        <AlertDialogRx
+          buttonTriggerTxt="Validate Cart"
+          headerTxt="Are you sure?"
+          bodyTxt="You are about to validate your cart. No further change can be made to your sales once you validated your cart. Please check carefully."
+          btnConfirmTxt="Validate Cart"
+        />
       )}
     </>
   )

@@ -111,5 +111,5 @@
   height: 100vh;
   backdrop-filter: blur(2px);
   background-color: rgba(0, 0, 0, 0.4);
-  z-index: 998; /* Ensure the overlay is on top */
+  z-index: 50; /* Ensure the overlay is on top */
 }

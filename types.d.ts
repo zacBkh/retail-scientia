@@ -1,4 +1,4 @@
-import type { Product } from '@prisma/client'
+import type { Prisma, Product, Sales } from '@prisma/client'
 
 // Using generics (make this type flexible)
 export type APIAnswerBasic<T> = {
@@ -17,3 +17,7 @@ export type CartItemType = Pick<
   Product,
   'id' | 'description' | 'img' | 'regularPrice' | 'size' | 'category1'
 > /* & { onUpdateQty: () => void } */
+
+type SalesWithProducts = Prisma.SaleGetPayload<{
+  include: { productSold: true }
+}>[]
