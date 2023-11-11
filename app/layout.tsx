@@ -4,7 +4,6 @@ import { Inter } from 'next/font/google'
 
 import './globals.css'
 
-import Navbar from '@/components/navigation/navbar'
 import NavbarRx from '@/components/ui/radix/navbar/navbar-radix'
 
 import '@radix-ui/themes/styles.css'
@@ -14,6 +13,9 @@ import { Providers } from '@/components/auth/providers'
 
 import { getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]/route'
+
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -37,11 +39,11 @@ export default async function RootLayout({
       <Providers>
         <body>
           <Theme accentColor="cyan">
-            {/* <Navbar session={currentSession} /> */}
             <NavbarRx session={currentSession} />
             <main>{children}</main>
             {/* <ThemePanel /> */}
           </Theme>
+          <ToastContainer position="bottom-right" pauseOnHover />
         </body>
       </Providers>
     </html>

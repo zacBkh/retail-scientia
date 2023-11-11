@@ -2,12 +2,17 @@ import { FC } from 'react'
 
 import { Button, Flex, AlertDialog } from '@radix-ui/themes'
 
+import Baaaaa from '../button-validate-cart'
+
 interface AlertDialogRxProps {
   buttonTriggerTxt: string
   headerTxt: string
   bodyTxt: string
+  bodyTxt2?: string
   btnConfirmTxt: string
   btnCancelTxt?: string
+
+  onValidateAction: () => void
 }
 
 const AlertDialogRx: FC<AlertDialogRxProps> = ({
@@ -16,6 +21,9 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
   bodyTxt,
   btnConfirmTxt,
   btnCancelTxt,
+  bodyTxt2,
+
+  onValidateAction,
 }) => {
   return (
     <>
@@ -25,8 +33,18 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
         </AlertDialog.Trigger>
         <AlertDialog.Content style={{ maxWidth: 450 }}>
           <AlertDialog.Title>{headerTxt}</AlertDialog.Title>
-          <AlertDialog.Description size="2">{bodyTxt}</AlertDialog.Description>
-
+          <div className="flex flex-col gap-y-2">
+            <AlertDialog.Description size="2">
+              {bodyTxt}
+            </AlertDialog.Description>
+            {bodyTxt2 ? (
+              <AlertDialog.Description size="2">
+                {bodyTxt2}
+              </AlertDialog.Description>
+            ) : (
+              ''
+            )}
+          </div>
           <Flex gap="3" mt="4" justify="end">
             <AlertDialog.Cancel>
               <Button variant="soft" color="gray">
@@ -34,7 +52,7 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
               </Button>
             </AlertDialog.Cancel>
             <AlertDialog.Action>
-              <Button variant="solid" color="red">
+              <Button onClick={onValidateAction} variant="solid" color="red">
                 {btnConfirmTxt ?? 'Continue'}
               </Button>
             </AlertDialog.Action>

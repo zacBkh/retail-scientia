@@ -1,5 +1,6 @@
 import { FC } from 'react'
 
+import { Text } from '@radix-ui/themes'
 // import SEO_KEYWORDS from '@/constants/seo-keywords'
 
 export const metadata = {
@@ -16,14 +17,13 @@ interface LayoutProps {
 
 const CartLayout: FC<LayoutProps> = ({ children }) => {
   return (
-    <section className="TAMER p-3 flex flex-col gap-y-4">
-      <div className="flex justify-center flex-wrap gap-y-6">Your Cart</div>
-
-      <div className="flex justify-between text-xs border-b border-black pb-2 mt-2">
+    <section className="p-2 flex flex-col gap-y-6">
+      <Text align={'center'}>Your Cart</Text>
+      {/* <div className="flex justify-between text-xs border-b border-black pb-2 mt-2">
         <span className="w-[65%]">Products</span>
         <span className="w-[15%]">Quantity</span>
         <span className="w-[10%]">Price</span>
-      </div>
+      </div> */}
       {children}
     </section>
   )
