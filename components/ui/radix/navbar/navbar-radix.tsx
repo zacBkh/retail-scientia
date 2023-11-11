@@ -49,70 +49,75 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
         onValueChange={(open) => {
           setIsMenuOpen(open.length ? true : false)
         }}
-        className="NavigationMenuRoot"
+        className="NavigationMenuRoot shadow-md"
       >
         <NavigationMenu.List className="NavigationMenuList !items-center">
-          <NavigationMenu.Item>
-            <NavigationMenu.Trigger className="NavigationMenuTrigger">
-              Profile <PiCaretDownLight className="CaretDown" aria-hidden />
-            </NavigationMenu.Trigger>
-            <NavigationMenu.Content
-              onInteractOutside={() => setIsMenuOpen(false)}
-              className="NavigationMenuContent"
-            >
-              <ul className="List one">
-                <div>
-                  <li style={{ gridRow: 'span 3' }}>
-                    <NavigationMenu.Link asChild>
-                      <a className="Callout" href="/">
-                        {brandLogo ? (
-                          <Image
-                            className="mx-auto"
-                            width={100}
-                            height={100}
-                            src={getCloudiImg(undefined, brandLogo)}
-                            alt="Brand Logo"
-                          />
-                        ) : (
-                          <div className="h-14"></div>
-                        )}
+          {/* Profile dropdown */}
+          <div className="w-full flex justify-center">
+            <NavigationMenu.Item>
+              <NavigationMenu.Trigger className="NavigationMenuTrigger">
+                Profile <PiCaretDownLight className="CaretDown" aria-hidden />
+              </NavigationMenu.Trigger>
+              <NavigationMenu.Content
+                onInteractOutside={() => setIsMenuOpen(false)}
+                className="NavigationMenuContent"
+              >
+                <ul className="List one">
+                  <div>
+                    <li style={{ gridRow: 'span 3' }}>
+                      <NavigationMenu.Link asChild>
+                        <a className="Callout" href="/">
+                          {brandLogo ? (
+                            <Image
+                              className="mx-auto"
+                              width={100}
+                              height={100}
+                              src={getCloudiImg(undefined, brandLogo)}
+                              alt="Brand Logo"
+                            />
+                          ) : (
+                            <div className="h-14"></div>
+                          )}
 
-                        <div className="CalloutHeading">{brandName}</div>
-                        <p className="CalloutText">Welcome, {userName}</p>
-                      </a>
-                    </NavigationMenu.Link>
-                  </li>
-                </div>
+                          <div className="CalloutHeading">{brandName}</div>
+                          <p className="CalloutText">Welcome, {userName}</p>
+                        </a>
+                      </NavigationMenu.Link>
+                    </li>
+                  </div>
 
-                <div>
-                  <ListItem
-                    link="/"
-                    title="Dashboard"
-                    icon={<RiDashboard3Line />}
-                  >
-                    See your performance.
-                  </ListItem>
+                  <div>
+                    <ListItem
+                      link="/"
+                      title="Dashboard"
+                      icon={<RiDashboard3Line />}
+                    >
+                      See your performance.
+                    </ListItem>
 
-                  <ListItem link="/" title="Profile" icon={<AiOutlineUser />}>
-                    Check your profile.
-                  </ListItem>
+                    <ListItem link="/" title="Profile" icon={<AiOutlineUser />}>
+                      Check your profile.
+                    </ListItem>
 
-                  <ListItem
-                    isBtnSignOut
-                    title="Sign Out"
-                    icon={<GoSignOut />}
-                  />
-                </div>
-              </ul>
-            </NavigationMenu.Content>
-          </NavigationMenu.Item>
+                    <ListItem
+                      isBtnSignOut
+                      title="Sign Out"
+                      icon={<GoSignOut />}
+                    />
+                  </div>
+                </ul>
+              </NavigationMenu.Content>
+            </NavigationMenu.Item>
+          </div>
 
           {/* Cart */}
-          <Link href={APP_LINKS.CART}>
-            <NavigationMenu.Item className="NavigationMenuLink">
-              <CartNavbarIcon />
-            </NavigationMenu.Item>
-          </Link>
+          <div>
+            <Link href={APP_LINKS.CART}>
+              <NavigationMenu.Item className="NavigationMenuLink">
+                <CartNavbarIcon />
+              </NavigationMenu.Item>
+            </Link>
+          </div>
         </NavigationMenu.List>
 
         <div className="ViewportPosition">
