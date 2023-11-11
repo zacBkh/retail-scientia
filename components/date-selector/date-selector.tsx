@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, forwardRef, Ref } from 'react'
-import DatePicker, { ReactDatePickerProps } from 'react-datepicker'
+import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
 interface CustomInputProps {
@@ -30,7 +30,6 @@ const DateSelector = ({}) => {
     if (!(startDate instanceof Date)) {
       return
     }
-    // localStorage.setItem('date', format(startDate, 'dd/MM/yyyy'))
     localStorage.setItem('date', startDate.toISOString())
   }, [startDate])
 

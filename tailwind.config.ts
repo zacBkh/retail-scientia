@@ -8,6 +8,7 @@ const config: Config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './constants/**/*.{ts,tsx}', // Fixed the path here
+    './node_modules/react-tailwindcss-datepicker/dist/index.esm.js',
   ],
 
   theme: {

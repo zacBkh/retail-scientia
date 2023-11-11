@@ -45,13 +45,13 @@ const CartItem: FC<CartItemType> = ({
 
         <div className="flex flex-col gap-y-2 text-xs w-1/2">
           <p className="font-semibold">{category1}</p>
-          <div>
+          <div className="flex flex-col">
             <p>{description}</p>
             <p className="text-[#7a7a7a]">{`Size: ${size}`}</p>
           </div>
         </div>
 
-        <div className="border-b border-[#bbb] text-xs w-[13%]">
+        <div className="border-b border-[#bbb] text-xs w-[15%]">
           <AlterCartBtn style="!text-xs" id={id} />
         </div>
 

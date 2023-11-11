@@ -6,7 +6,7 @@ import { mutate } from 'swr'
 
 import {
   getSalesLSInJSObj,
-  addProductLocalStorage,
+  alterProductLocalStorage,
   specificItemQty,
 } from '@/utils/local-storage'
 
@@ -34,19 +34,21 @@ const AlterCartBtn: FC<AlterCartBtn> = ({ id, style }) => {
   const specificItemCount = specificItemQty(allSalesInLS ?? [], id)
 
   const handlerAlterQty = (operator: '+' | '-') => {
-    addProductLocalStorage(id, operator) // alter LS
+    alterProductLocalStorage(id, operator) // alter LS
 
     mutate(SWR_KEYS.GET_CART_LS) // for btn alter qty & price calculation in cart
     mutate(SWR_KEYS.GET_CART_PRODUCT_DETAILS) // fetch product details with current cart
   }
 
   return (
-    <div className={`flex justify-center items-center gap-x-3 my-1 ${style}`}>
+    <div
+      className={`flex justify-center items-center gap-x-3 my-1 ${style ?? ''}`}
+    >
       <Button
         variant="soft"
         size={'1'}
         disabled={specificItemCount ? false : true}
-        className={`${!specificItemCount ? 'invisible' : ''} !h-5`}
+        className={`${!specificItemCount ? 'invisible' : ''} !h-4`}
         onClick={() => handlerAlterQty('-')}
       >
         -
@@ -56,7 +58,7 @@ const AlterCartBtn: FC<AlterCartBtn> = ({ id, style }) => {
       </Text>
 
       <Button
-        className={`!h-5`}
+        className={`!h-4`}
         variant="soft"
         size={'1'}
         onClick={() => handlerAlterQty('+')}
