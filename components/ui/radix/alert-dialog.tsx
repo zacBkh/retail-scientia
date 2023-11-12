@@ -2,8 +2,6 @@ import { FC } from 'react'
 
 import { Button, Flex, AlertDialog } from '@radix-ui/themes'
 
-import Baaaaa from '../button-validate-cart'
-
 interface AlertDialogRxProps {
   buttonTriggerTxt: string
   headerTxt: string

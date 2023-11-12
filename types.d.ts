@@ -6,8 +6,8 @@ export type APIAnswerBasic<T> = {
   result: T
 }
 
-export type APIRegisterSales = APIAnswerBasic<string>
-export type APIAnswerFindProducts = APIAnswerBasic<Product[]>
+export type APIResponseRegisterSales = APIAnswerBasic<string>
+export type APIResponseFindProducts = APIAnswerBasic<Product[]>
 
 // LS
 export type SalesInLocalStorage = number[]
@@ -19,6 +19,13 @@ export type CartItemType = Pick<
 > /* & { onUpdateQty: () => void } */
 
 // Sales of a user with the product populated
-type SalesWithProducts = Prisma.SaleGetPayload<{
+export type SalesWithProducts = Prisma.SaleGetPayload<{
   include: { productSold: true }
 }>[]
+
+export type APIResponseFindUserSales = APIAnswerBasic<SalesWithProducts>
+
+export type DateRangeTypeExt = {
+  startDate: string
+  endDate: string
+}

@@ -69,7 +69,7 @@ export const findAUser = async (email: string) => {
 import type { SalesWithProducts } from '@/types'
 
 interface FindSalesOfUserArgs {
-  (userID: number, dateQuery?: string[]): Promise<SalesWithProducts>
+  (userID: number, dateQuery?: string[] | null): Promise<SalesWithProducts>
 }
 
 // If no dateQuery supplied, it will get everything
@@ -77,8 +77,7 @@ export const findSalesOfUser: FindSalesOfUserArgs = async (
   userID,
   dateQuery
 ) => {
-  const isSingleDate = dateQuery?.length === 1
-
+  const isSingleDate = dateQuery && dateQuery[0] === dateQuery[1]
   const userSales = await db.sale.findMany({
     // include: {
     //   productSold: {
