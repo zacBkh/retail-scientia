@@ -64,6 +64,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
   }, [datesObject?.startDate, datesObject?.endDate])
 
   const ttlSalesValue = sumSalesValue(filteredSalesUser?.result ?? [])
+  console.log('ttlSalesValue', ttlSalesValue)
 
   return (
     <>

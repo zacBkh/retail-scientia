@@ -1,7 +1,8 @@
 // Sum sales value
 import type { SalesWithProducts } from '@/types'
 export const sumSalesValue = (salesOfUser: SalesWithProducts) => {
-  if (salesOfUser.length !== 2 || salesOfUser === undefined) {
+  console.log('salesOfUser', salesOfUser)
+  if (salesOfUser.length <= 0 || salesOfUser === undefined) {
     return
   }
 

@@ -113,13 +113,10 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
 
           <div className="flex items-center">
             {/* Greet */}
-            {/* <NavigationMenu.Item> */}
-            {/* <NavigationMenu.Trigger className="NavigationMenuTrigger"> */}
+
             <p className="whitespace-nowrap NavigationMenuTrigger hover:!bg-transparent hover:!shadow-none !text-xs">
               Hi, {userName}
             </p>
-            {/* </NavigationMenu.Trigger> */}
-            {/* </NavigationMenu.Item> */}
 
             {/* Cart */}
             <Link href={APP_LINKS.CART}>
