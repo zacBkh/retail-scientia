@@ -67,18 +67,20 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
                   <div>
                     <li style={{ gridRow: 'span 3' }}>
                       <NavigationMenu.Link asChild>
-                        <Link className="Callout" href={'/'}>
-                          {brandLogo ? (
-                            <Image
-                              className="mx-auto"
-                              width={100}
-                              height={100}
-                              src={getCloudiImg(undefined, brandLogo)}
-                              alt="Brand Logo"
-                            />
-                          ) : (
-                            <div className="h-14"></div>
-                          )}
+                        <Link className="Callout" href={APP_LINKS.HOME}>
+                          <div className="h-[57px]">
+                            {brandLogo ? (
+                              <Image
+                                className="mx-auto"
+                                width={100}
+                                height={100}
+                                src={getCloudiImg(undefined, brandLogo)}
+                                alt="Brand Logo"
+                              />
+                            ) : (
+                              <div className="h-[57px]"></div>
+                            )}
+                          </div>
 
                           <div className="CalloutHeading">{brandName}</div>
                           <p className="CalloutText">Welcome, {userName}</p>
