@@ -31,8 +31,6 @@ const Navbar: FC<NavbarProps> = ({ session }) => {
   const name = session?.user?.name
   const brandLogo = session?.user.brands[0].logo
 
-  // console.log('session', session)
-
   return (
     <>
       <OverlayDarkener isActive={isHamburgerMenuOpen} />
@@ -57,7 +55,7 @@ const Navbar: FC<NavbarProps> = ({ session }) => {
                     width={40}
                     height={40}
                     src={getCloudiImg(undefined, brandLogo)}
-                    alt="CountryPedia logo"
+                    alt="Brand Logo"
                   />
                 ) : (
                   ''
@@ -68,6 +66,7 @@ const Navbar: FC<NavbarProps> = ({ session }) => {
             <div className="flex justify-between items-center gap-x-4">
               {session ? <div className="text-xs">{`Hi, ${name}`}</div> : ''}
 
+              <Link href={APP_LINKS.DASHBOARD}>Dash</Link>
               <Link href={APP_LINKS.CART}>
                 <CartNavbarIcon />
               </Link>

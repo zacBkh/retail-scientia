@@ -97,7 +97,7 @@
 }
 
 /* Remove cross on input type search */
-#mySearchInput::-webkit-search-cancel-button {
+#searchBar::-webkit-search-cancel-button {
   -webkit-appearance: none;
   appearance: none;
   display: none;
@@ -111,5 +111,14 @@
   height: 100vh;
   backdrop-filter: blur(2px);
   background-color: rgba(0, 0, 0, 0.4);
-  z-index: 998; /* Ensure the overlay is on top */
+  z-index: 50; /* Ensure the overlay is on top */
+}
+
+/* Toasters */
+.Toastify__toast-theme--light {
+  background-color: #00c2d121 !important;
+}
+
+.Toastify__progress-bar--success {
+  background-color: #75fa7a !important;
 }

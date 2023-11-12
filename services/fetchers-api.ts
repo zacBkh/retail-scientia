@@ -1,5 +1,5 @@
 import { REST_API_LINKS } from '@/constants/URLs'
-const { SPECIFIC_PRODUCTS, SALE } = REST_API_LINKS
+const { PRODUCTS, SALE } = REST_API_LINKS
 
 import type { APIAnswerFindProducts, APIRegisterSales } from '@/types'
 import type { SalesInLocalStorage } from '@/types'
@@ -30,7 +30,7 @@ import { getSalesLSInJSObj } from '@/utils/local-storage'
 export const getProductDetails: GetProductDetailsArgs = async (productIDs) => {
   let productIDsInLS = getSalesLSInJSObj() ?? []
 
-  const response = await fetch(`${SPECIFIC_PRODUCTS}`, {
+  const response = await fetch(`${PRODUCTS}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ productIDsInLS }),
@@ -38,3 +38,18 @@ export const getProductDetails: GetProductDetailsArgs = async (productIDs) => {
   const data = await response.json()
   return data
 }
+
+interface GetUserSalesInDB {
+  // (userID: number): Promise<APIAnswerFindProducts>
+  (userID: string): any
+}
+
+// Dashboard - get user sales
+// export const getUserSalesInDB: GetUserSalesInDB = async (userID) => {
+//   console.log('userID', userID)
+//   const response = await fetch(`/${SALE}?user=${userID}`, {
+//     method: 'GET',
+//   })
+//   const data = await response.json()
+//   return data
+// }

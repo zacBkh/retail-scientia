@@ -9,11 +9,12 @@
 export enum APP_LINKS {
   HOME = '/',
   CART = '/cart',
+  DASHBOARD = '/dashboard',
 }
 
 export enum REST_API_LINKS {
   SALE = 'api/sales',
-  SPECIFIC_PRODUCTS = 'api/products',
+  PRODUCTS = 'api/products',
 }
 
 // export const NAV_LINKS = [

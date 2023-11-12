@@ -3,14 +3,19 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
 import './globals.css'
-import Navbar from '@/components/navigation/navbar'
+
+import NavbarRx from '@/components/ui/radix/navbar/navbar-radix'
+
+import '@radix-ui/themes/styles.css'
+import { Theme, ThemePanel } from '@radix-ui/themes'
 
 import { Providers } from '@/components/auth/providers'
 
 import { getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]/route'
 
-import OverlayDarkener from '@/components/ui/overlay-darkener'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -33,8 +38,12 @@ export default async function RootLayout({
     <html lang="en" className={inter.className}>
       <Providers>
         <body>
-          <Navbar session={currentSession} />
-          <main>{children}</main>
+          <Theme accentColor="cyan">
+            <NavbarRx session={currentSession} />
+            <main>{children}</main>
+            {/* <ThemePanel /> */}
+          </Theme>
+          <ToastContainer position="bottom-right" pauseOnHover />
         </body>
       </Providers>
     </html>

@@ -13,12 +13,24 @@ export const getSalesLSInJSObj = () => {
   return storedSalesObj
 }
 
+export const getDateLS = () => {
+  if (typeof window === 'undefined' || !window.localStorage) {
+    console.log('Server envt, Local Storage not available.')
+    return null
+  }
+
+  const storedDate = localStorage.getItem('date')
+  const date = storedDate?.length ? storedDate : null
+
+  return date
+}
+
 export const checkIfRefIsInLS = (reference: number) => {
   const checkIfInCart = getSalesLSInJSObj()?.includes(reference)
   return checkIfInCart
 }
 
-export const addProductLocalStorage = (
+export const alterProductLocalStorage = (
   refToAlter: number,
   operator: '+' | '-'
 ) => {
