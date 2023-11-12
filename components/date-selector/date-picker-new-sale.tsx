@@ -12,7 +12,7 @@ import { getDateLS } from '@/utils/local-storage'
 import SWR_KEYS from '@/constants/SWR-keys'
 import { ListFormat } from 'typescript'
 
-const DatePicker = () => {
+const DatePickerNewSale = () => {
   const {
     data: dateInLS,
     error,
@@ -56,6 +56,7 @@ const DatePicker = () => {
   return (
     <div>
       <Datepicker
+        startWeekOn="mon"
         readOnly={true}
         inputClassName={`${
           isDatePickerBumping ? 'bump' : ''
@@ -72,6 +73,6 @@ const DatePicker = () => {
   )
 }
 
-DatePicker.displayName = 'DateSelector'
+DatePickerNewSale.displayName = 'DatePickerNewSale'
 
-export default DatePicker
+export default DatePickerNewSale

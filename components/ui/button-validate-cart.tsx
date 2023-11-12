@@ -38,7 +38,7 @@ const Button: FC<ButtonProps> = ({ txt, style }) => {
       setFeedbackUser(registrationSale.result)
       console.log('Sale registered ✅', registrationSale)
       clearLocalStorage()
-      mutate(SWR_KEYS.GET_CART_PRODUCT_DETAILS)
+      mutate(SWR_KEYS.GET_CART_PRODUCT_DETAILS_DB)
     } else {
       console.log('Error in registering the sale ❌', registrationSale)
     }

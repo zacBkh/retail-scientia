@@ -10,8 +10,6 @@ import AlertDialogRx from '@/components/ui/radix/alert-dialog'
 
 import Spinner from '@/components/ui/spinner'
 
-import { useSession } from 'next-auth/react'
-
 import { toast } from 'react-toastify'
 
 import CartTable from '@/components/cart/cart-table'
@@ -28,7 +26,7 @@ const Cart = ({}) => {
     isLoading,
     isValidating,
   } = useSWR(
-    SWR_KEYS.GET_CART_PRODUCT_DETAILS,
+    SWR_KEYS.GET_CART_PRODUCT_DETAILS_DB,
     () => getProductDetails(allSalesInLS),
     {
       revalidateOnMount: true,
@@ -58,7 +56,7 @@ const Cart = ({}) => {
       // toast.success('Wow so easy !')
       console.log('Sale registered ✅', registrationSale)
       clearLocalStorage()
-      mutate(SWR_KEYS.GET_CART_PRODUCT_DETAILS)
+      mutate(SWR_KEYS.GET_CART_PRODUCT_DETAILS_DB)
     } else {
       console.log('Error in registering the sale ❌', registrationSale)
     }

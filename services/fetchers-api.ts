@@ -1,11 +1,15 @@
 import { REST_API_LINKS } from '@/constants/URLs'
 const { PRODUCTS, SALE } = REST_API_LINKS
 
-import type { APIAnswerFindProducts, APIRegisterSales } from '@/types'
-import type { SalesInLocalStorage } from '@/types'
+import type {
+  APIResponseFindProducts,
+  APIResponseRegisterSales,
+  SalesInLocalStorage,
+  APIResponseFindUserSales,
+} from '@/types'
 
 interface RegisterSalesTypes {
-  (date: string, sales: SalesInLocalStorage): Promise<APIRegisterSales>
+  (date: string, sales: SalesInLocalStorage): Promise<APIResponseRegisterSales>
 }
 
 // Add a sale in DB
@@ -20,7 +24,7 @@ export const registerSale: RegisterSalesTypes = async (date, productIDs) => {
 }
 
 interface GetProductDetailsArgs {
-  (productsIDs: number[]): Promise<APIAnswerFindProducts>
+  (productsIDs: number[]): Promise<APIResponseFindProducts>
 }
 
 import { getSalesLSInJSObj } from '@/utils/local-storage'
@@ -39,17 +43,25 @@ export const getProductDetails: GetProductDetailsArgs = async (productIDs) => {
   return data
 }
 
-interface GetUserSalesInDB {
-  // (userID: number): Promise<APIAnswerFindProducts>
-  (userID: string): any
+interface GetFileredUserSalesInDB {
+  (dateQuery?: string[]): Promise<APIResponseFindUserSales>
 }
 
 // Dashboard - get user sales
-// export const getUserSalesInDB: GetUserSalesInDB = async (userID) => {
-//   console.log('userID', userID)
-//   const response = await fetch(`/${SALE}?user=${userID}`, {
-//     method: 'GET',
-//   })
-//   const data = await response.json()
-//   return data
-// }
+export const filterUserSalesInDB: GetFileredUserSalesInDB = async (
+  datesQuery
+) => {
+  console.log('dateQuery89_856', datesQuery)
+
+  const response = await fetch(`/${SALE}/?dates=${datesQuery}`, {
+    method: 'GET',
+  })
+  const data: APIResponseFindUserSales = await response.json()
+  if (!data.success) {
+    // @ts-ignore
+    const error = new Error(data.result)
+    throw error
+  }
+
+  return data
+}

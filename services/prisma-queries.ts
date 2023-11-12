@@ -66,7 +66,18 @@ export const findAUser = async (email: string) => {
   return user
 }
 
-export const findSalesOfUser = async (userID: number) => {
+import type { SalesWithProducts } from '@/types'
+
+interface FindSalesOfUserArgs {
+  (userID: number, dateQuery?: string[] | null): Promise<SalesWithProducts>
+}
+
+// If no dateQuery supplied, it will get everything
+export const findSalesOfUser: FindSalesOfUserArgs = async (
+  userID,
+  dateQuery
+) => {
+  const isSingleDate = dateQuery && dateQuery[0] === dateQuery[1]
   const userSales = await db.sale.findMany({
     // include: {
     //   productSold: {
@@ -81,6 +92,12 @@ export const findSalesOfUser = async (userID: number) => {
 
     where: {
       sellerId: userID,
+      ...(dateQuery && {
+        date: {
+          gte: new Date(dateQuery[0]),
+          lte: new Date(isSingleDate ? dateQuery[0] : dateQuery[1]),
+        },
+      }),
     },
   })
 

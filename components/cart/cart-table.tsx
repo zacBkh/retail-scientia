@@ -2,14 +2,14 @@ import { FC } from 'react'
 
 import Image from 'next/image'
 
-import { APIAnswerFindProducts } from '@/types'
+import { APIResponseFindProducts } from '@/types'
 import getCloudiImg from '@/utils/transform-cloudi-img'
 import { specificItemQty } from '@/utils/local-storage'
 
 import AlterCartBtn from './alter-cart-button'
 
 interface CartTableProps {
-  productDetails: APIAnswerFindProducts | undefined
+  productDetails: APIResponseFindProducts | undefined
   allSalesInLS: number[]
 }
 

@@ -37,7 +37,7 @@ const AlterCartBtn: FC<AlterCartBtn> = ({ id, style }) => {
     alterProductLocalStorage(id, operator) // alter LS
 
     mutate(SWR_KEYS.GET_CART_LS) // for btn alter qty & price calculation in cart
-    mutate(SWR_KEYS.GET_CART_PRODUCT_DETAILS) // fetch product details with current cart
+    mutate(SWR_KEYS.GET_CART_PRODUCT_DETAILS_DB) // fetch product details with current cart
   }
 
   return (
