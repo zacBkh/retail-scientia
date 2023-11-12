@@ -1,3 +1,5 @@
+// TODO TO DELETE
+
 import { FC } from 'react'
 
 import type { CartItemType } from '@/types'
@@ -43,7 +45,7 @@ const CartItem: FC<CartItemType> = ({
           />
         </div>
 
-        <div className="flex flex-col gap-y-2 text-xs w-1/2">
+        <div className="flex flex-col gap-y-2 text-xs lg:text-base w-1/2">
           <p className="font-semibold">{category1}</p>
           <div className="flex flex-col">
             <p>{description}</p>
