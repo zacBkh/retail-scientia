@@ -9,7 +9,7 @@
 export enum APP_LINKS {
   HOME = '/',
   CART = '/cart',
-  DASHBOARD = '/radix',
+  DASHBOARD = '/dashboard',
 }
 
 export enum REST_API_LINKS {

@@ -26,7 +26,7 @@ const ProductCard: FC<Product> = ({
   timePeriod,
 }) => {
   return (
-    <Card className="!max-w-[45vw] !shadow">
+    <Card variant="classic" className="!max-w-[45vw] !shadow">
       <Inset side={'y'}>
         <Flex align="center" className="!h-[80px]">
           <div className="w-[50%] h-16 relative">
