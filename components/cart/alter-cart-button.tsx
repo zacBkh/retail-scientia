@@ -48,7 +48,9 @@ const AlterCartBtn: FC<AlterCartBtn> = ({ id, style }) => {
         variant="soft"
         size={'1'}
         disabled={specificItemCount ? false : true}
-        className={`${!specificItemCount ? 'invisible' : ''} !h-4`}
+        className={`${
+          !specificItemCount ? 'invisible' : ''
+        } !h-4 !cursor-pointer`}
         onClick={() => handlerAlterQty('-')}
       >
         -
@@ -58,7 +60,7 @@ const AlterCartBtn: FC<AlterCartBtn> = ({ id, style }) => {
       </Text>
 
       <Button
-        className={`!h-4`}
+        className={`!h-4 !cursor-pointer`}
         variant="soft"
         size={'1'}
         onClick={() => handlerAlterQty('+')}

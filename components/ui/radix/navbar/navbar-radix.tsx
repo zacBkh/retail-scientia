@@ -4,6 +4,7 @@ import { FC, useState } from 'react'
 
 import React from 'react'
 import * as NavigationMenu from '@radix-ui/react-navigation-menu'
+import { Separator, Text } from '@radix-ui/themes'
 import classNames from 'classnames'
 import './styles.css'
 
@@ -53,18 +54,25 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
         }`}
       >
         <NavigationMenu.List className="NavigationMenuList !items-center">
-          {/* Profile dropdown */}
-          <div className="w-full flex justify-center">
-            <NavigationMenu.Item>
-              <NavigationMenu.Trigger className="NavigationMenuTrigger">
-                Profile <PiCaretDownLight className="CaretDown" aria-hidden />
-              </NavigationMenu.Trigger>
-              <NavigationMenu.Content
-                onInteractOutside={() => setIsMenuOpen(false)}
-                className="NavigationMenuContent"
-              >
-                <ul className="List one">
-                  <div>
+          <Link
+            className="NavigationMenuTrigger hover:!bg-transparent hover:!shadow-none"
+            href={APP_LINKS.HOME}
+          >
+            RetailScientia
+          </Link>
+
+          <div className="flex items-center" id="rest">
+            {/* More dropdown */}
+            <div className="w-full flex justify-end items-center">
+              <NavigationMenu.Item>
+                <NavigationMenu.Trigger className="NavigationMenuTrigger">
+                  More <PiCaretDownLight className="CaretDown" aria-hidden />
+                </NavigationMenu.Trigger>
+                <NavigationMenu.Content
+                  onInteractOutside={() => setIsMenuOpen(false)}
+                  className="NavigationMenuContent"
+                >
+                  <ul className="List one">
                     <li style={{ gridRow: 'span 3' }}>
                       <NavigationMenu.Link asChild>
                         <Link className="Callout" href={APP_LINKS.HOME}>
@@ -87,9 +95,7 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
                         </Link>
                       </NavigationMenu.Link>
                     </li>
-                  </div>
 
-                  <div>
                     <ListItem
                       link={APP_LINKS.DASHBOARD}
                       title="Dashboard"
@@ -102,34 +108,37 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
                       Check your profile.
                     </ListItem>
 
-                    <ListItem
-                      isBtnSignOut
-                      title="Sign Out"
-                      icon={<GoSignOut />}
-                    />
-                  </div>
-                </ul>
-              </NavigationMenu.Content>
-            </NavigationMenu.Item>
-          </div>
+                    <div>
+                      <Separator mb={'3'} size="4" />
 
-          <div className="flex items-center">
-            {/* Greet */}
-
-            <p className="whitespace-nowrap NavigationMenuTrigger hover:!bg-transparent hover:!shadow-none !text-xs">
-              Hi, {userName}
-            </p>
-
-            {/* Cart */}
-            <Link href={APP_LINKS.CART}>
-              <NavigationMenu.Item className="NavigationMenuLink">
-                <CartNavbarIcon />
+                      <ListItem
+                        isBtnSignOut
+                        title="Sign Out"
+                        icon={<GoSignOut />}
+                      />
+                    </div>
+                  </ul>
+                </NavigationMenu.Content>
               </NavigationMenu.Item>
-            </Link>
+            </div>
+
+            <div className="flex items-center">
+              {/* Greet */}
+              <p className="whitespace-nowrap NavigationMenuTrigger hover:!bg-transparent hover:!shadow-none !text-xs">
+                Hi, {userName}
+              </p>
+
+              {/* Cart */}
+              <Link href={APP_LINKS.CART}>
+                <NavigationMenu.Item className="NavigationMenuLink">
+                  <CartNavbarIcon />
+                </NavigationMenu.Item>
+              </Link>
+            </div>
           </div>
         </NavigationMenu.List>
 
-        <div className="ViewportPosition">
+        <div className="ViewportPosition !left-0 lg:!left-[55px]">
           <NavigationMenu.Viewport className="NavigationMenuViewport" />
         </div>
       </NavigationMenu.Root>

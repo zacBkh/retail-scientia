@@ -26,7 +26,10 @@ const ProductCard: FC<Product> = ({
   timePeriod,
 }) => {
   return (
-    <Card variant="classic" className="!max-w-[45vw] !shadow">
+    <Card
+      variant="classic"
+      className="w-[45vw] sm:w-1/4 lg:w-[17%] 2xl:w-[13%] !shadow"
+    >
       <Inset side={'y'}>
         <Flex align="center" className="!h-[80px]">
           <div className="w-[50%] h-16 relative">
@@ -38,13 +41,9 @@ const ProductCard: FC<Product> = ({
             />
           </div>
           <Box className="!w-2/3">
-            {/* <Text as="div" size="2" weight="bold"></Text> */}
             <Text className="!text-xxs" align={'center'} as="div" color="gray">
               {description}
             </Text>
-            {/* <Text as="div" size="1" color="gray">
-            {size}
-          </Text> */}
           </Box>
         </Flex>
         <Separator my={'1'} size="4" />

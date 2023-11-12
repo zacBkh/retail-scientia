@@ -59,7 +59,7 @@ const ClientWrapper: FC<ClientWrapperProps> = ({ allProducts }) => {
       <div
         className={`${
           !isDateSet ? 'pointer-events-none' : ''
-        } flex flex-wrap gap-x-1 gap-y-2 justify-between items-center`}
+        } flex flex-wrap gap-x-2 gap-y-2 justify-between items-center`}
       >
         {!productsToDisplay.length ? (
           <span className="px-5 mx-auto text-center">
