@@ -18,6 +18,7 @@ export type CartItemType = Pick<
   'id' | 'description' | 'img' | 'regularPrice' | 'size' | 'category1'
 > /* & { onUpdateQty: () => void } */
 
+// Sales of a user with the product populated
 type SalesWithProducts = Prisma.SaleGetPayload<{
   include: { productSold: true }
 }>[]
