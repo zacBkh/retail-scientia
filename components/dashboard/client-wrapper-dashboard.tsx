@@ -2,7 +2,7 @@
 
 import { FC, useState, useEffect } from 'react'
 
-import { Flex, Text, Box } from '@radix-ui/themes'
+import { Flex, Text, Box, Card } from '@radix-ui/themes'
 
 import type { Session } from 'next-auth'
 import { SalesWithProducts } from '@/types'
@@ -20,6 +20,13 @@ import { dateToStringForQuery, dateStringForQueryToDate } from '@/utils/dates'
 
 import type { DateValueType } from 'react-tailwindcss-datepicker'
 import { DateRangeTypeExt } from '@/types'
+import PieChart from '../charts/pie-chart'
+import { HERMES_LINE_NAME } from '@/constants/business'
+
+import {
+  extractUniqueCategoryFromSales,
+  combineCategoriesAndSales,
+} from '@/utils/business'
 
 /* CAN BE OPTIMIZED BY PRESERVING NEW DATE AS STATE AND PASS TO filterUserSalesInDB the  new Date in dateToStringForQuery
 like this, the display does not have to use dateStringForQueryToDate
@@ -64,36 +71,115 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
   }, [datesObject?.startDate, datesObject?.endDate])
 
   const ttlSalesValue = sumSalesValue(filteredSalesUser?.result ?? [])
+
+  console.log('filteredSalesUser', filteredSalesUser)
+
+  // CAN SIMPLIFY BELOW BY HAVING ONLY ONE FX
+
+  const uniqueCategories = extractUniqueCategoryFromSales(
+    filteredSalesUser?.result ?? []
+  )
+
+  const salesByLine = combineCategoriesAndSales(
+    uniqueCategories,
+    filteredSalesUser?.result ?? []
+  )
+
   console.log('ttlSalesValue', ttlSalesValue)
 
   return (
     <>
       <Box p={'3'}>
-        <Flex direction={'column'} gap="3">
-          <Text>Value: {ttlSalesValue}</Text>
-          <Text>Qty: {filteredSalesUser?.result.length}</Text>
-        </Flex>
-      </Box>
-      --------------------
-      <Box p={'3'}>
         <DatePickerDashboard
           datesObject={datesObject}
           onNewDateObject={handleNewDateObject}
         />
-        {isLoading || isValidating ? (
-          <>
-            <p>Loading...</p>
-          </>
-        ) : (
-          <Flex direction={'column'}>
-            <Text as="p" suppressHydrationWarning>
-              Start date: {dateStringForQueryToDate(datesObject?.startDate)}
-            </Text>
-            <Text as="p" suppressHydrationWarning>
-              End date: {dateStringForQueryToDate(datesObject?.endDate)}
-            </Text>
-          </Flex>
-        )}
+        {
+          isLoading || isValidating ? (
+            <>
+              <p>Loading...</p>
+            </>
+          ) : (
+            ''
+          )
+          //  (
+          //   <Flex direction={'column'}>
+          //     <Text as="p" suppressHydrationWarning>
+          //       Start date: {dateStringForQueryToDate(datesObject?.startDate)}
+          //     </Text>
+          //     <Text as="p" suppressHydrationWarning>
+          //       End date: {dateStringForQueryToDate(datesObject?.endDate)}
+          //     </Text>
+          //   </Flex>
+          // )
+        }
+        <Flex justify={'between'} gap={'2'}>
+          <Box>
+            <Card className="mt-4" variant="classic">
+              <Text as="div" size="2" weight="bold">
+                Value
+              </Text>
+              <Text
+                className="mx-auto block"
+                weight={'bold'}
+                align={'center'}
+                color="gray"
+                size="7"
+              >
+                {(ttlSalesValue ?? 0) + '$'}
+              </Text>
+            </Card>
+          </Box>
+          <Box>
+            <Card className="mt-4" variant="classic">
+              <Text as="div" size="2" weight="bold">
+                Quantity
+              </Text>
+              <Text
+                className="mx-auto block"
+                weight={'bold'}
+                align={'center'}
+                color="gray"
+                size="7"
+              >
+                {(filteredSalesUser?.result.length ?? 0) + 'pcs'}
+              </Text>
+            </Card>
+          </Box>
+
+          <Box>
+            <Card className="mt-4" variant="classic">
+              <Text as="div" size="2" weight="bold">
+                Ranking
+              </Text>
+              <Text
+                className="mx-auto block"
+                weight={'bold'}
+                align={'center'}
+                color="gray"
+                size="7"
+              >
+                #4
+              </Text>
+            </Card>
+          </Box>
+        </Flex>
+      </Box>
+
+      <PieChart
+        salesByLine={salesByLine}
+        // salesByLine={[
+        //   { category1: HERMES_LINE_NAME.BATH, sales: 13 },
+        //   { category1: HERMES_LINE_NAME.TERRE_DHERMES, sales: 410 },
+        //   { category1: HERMES_LINE_NAME.TWILLY_DHERMES, sales: 269 },
+        //   { category1: HERMES_LINE_NAME.H24, sales: 189 },
+        // ]}
+      />
+      <Box p={'3'}>
+        <Flex direction={'column'} gap="3">
+          <Text>Value: {ttlSalesValue}</Text>
+          <Text>Qty: {filteredSalesUser?.result.length}</Text>
+        </Flex>
       </Box>
       {error ? <p>{error.message || 'An error occured'}</p> : ''}
     </>
