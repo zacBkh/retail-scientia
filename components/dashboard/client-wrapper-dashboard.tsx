@@ -21,8 +21,12 @@ import { dateToStringForQuery, dateStringForQueryToDate } from '@/utils/dates'
 import type { DateValueType } from 'react-tailwindcss-datepicker'
 import { DateRangeTypeExt } from '@/types'
 import PieChart from '../charts/pie-chart'
-import { BsFillBriefcaseFill } from 'react-icons/bs'
 import { HERMES_LINE_NAME } from '@/constants/business'
+
+import {
+  extractUniqueCategoryFromSales,
+  combineCategoriesAndSales,
+} from '@/utils/business'
 
 /* CAN BE OPTIMIZED BY PRESERVING NEW DATE AS STATE AND PASS TO filterUserSalesInDB the  new Date in dateToStringForQuery
 like this, the display does not have to use dateStringForQueryToDate
@@ -67,6 +71,20 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
   }, [datesObject?.startDate, datesObject?.endDate])
 
   const ttlSalesValue = sumSalesValue(filteredSalesUser?.result ?? [])
+
+  console.log('filteredSalesUser', filteredSalesUser)
+
+  // CAN SIMPLIFY BELOW BY HAVING ONLY ONE FX
+
+  const uniqueCategories = extractUniqueCategoryFromSales(
+    filteredSalesUser?.result ?? []
+  )
+
+  const salesByLine = combineCategoriesAndSales(
+    uniqueCategories,
+    filteredSalesUser?.result ?? []
+  )
+
   console.log('ttlSalesValue', ttlSalesValue)
 
   return (
@@ -108,7 +126,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
                 color="gray"
                 size="7"
               >
-                3,948$
+                {(ttlSalesValue ?? 0) + '$'}
               </Text>
             </Card>
           </Box>
@@ -124,7 +142,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
                 color="gray"
                 size="7"
               >
-                183 pcs
+                {(filteredSalesUser?.result.length ?? 0) + 'pcs'}
               </Text>
             </Card>
           </Box>
@@ -147,29 +165,22 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
           </Box>
         </Flex>
       </Box>
-      ------------
-      {/* Pass array :
-        - of all line the user sold 
-        - label
-        - sales by line
-        - sorted by value
-        */}
+
       <PieChart
-        salesByLine={[
-          { Line: HERMES_LINE_NAME.BATH, sales: 13 },
-          { Line: HERMES_LINE_NAME.TERRE_DHERMES, sales: 410 },
-          { Line: HERMES_LINE_NAME.TWILLY_DHERMES, sales: 269 },
-          { Line: HERMES_LINE_NAME.H24, sales: 189 },
-        ]}
+        salesByLine={salesByLine}
+        // salesByLine={[
+        //   { category1: HERMES_LINE_NAME.BATH, sales: 13 },
+        //   { category1: HERMES_LINE_NAME.TERRE_DHERMES, sales: 410 },
+        //   { category1: HERMES_LINE_NAME.TWILLY_DHERMES, sales: 269 },
+        //   { category1: HERMES_LINE_NAME.H24, sales: 189 },
+        // ]}
       />
-      ------------
       <Box p={'3'}>
         <Flex direction={'column'} gap="3">
           <Text>Value: {ttlSalesValue}</Text>
           <Text>Qty: {filteredSalesUser?.result.length}</Text>
         </Flex>
       </Box>
-      --------------------
       {error ? <p>{error.message || 'An error occured'}</p> : ''}
     </>
   )

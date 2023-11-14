@@ -15,11 +15,11 @@ import { HERMES_LINE_NAME } from '@/constants/business'
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 interface PieChartProps {
-  salesByLine: { Line: HERMES_LINE_NAME; sales: number }[]
+  salesByLine: { category1: string; sales: number }[]
 }
 
 const PieChart: FC<PieChartProps> = ({ salesByLine }) => {
-  const allLines = salesByLine.map((line) => line.Line)
+  const allLines = salesByLine.map((line) => line.category1)
   const allSales = salesByLine.map((line) => line.sales)
 
   const data: ChartData<'pie'> = {
@@ -93,7 +93,7 @@ const PieChart: FC<PieChartProps> = ({ salesByLine }) => {
   }
 
   return (
-    <div className="w-[300px] mx-auto">
+    <div className="flex justify-center">
       <Pie options={options} data={data} />
     </div>
   )
