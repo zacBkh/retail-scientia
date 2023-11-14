@@ -36,11 +36,12 @@ const DatePickerDashboard: FC<DatePickerDashboardProps> = ({
       <Datepicker
         configs={SHORTCUT_LABELS}
         startWeekOn="mon"
+        separator={'to'}
         useRange={false}
         readOnly={true}
         value={datesObject}
         inputClassName={
-          'w-[87vw] h-[40px] !bg-purple-100 !rounded-lg  relative transition-all duration-300 py-2.5 pl-4 pr-14 w-full border-gray-300 dark:bg-slate-800 dark:text-white/80 dark:border-slate-600  tracking-wide font-light  placeholder-gray-400 focus:ring disabled:opacity-40 disabled:cursor-not-allowed focus:border-purple-500 focus:ring-purple-500/20'
+          'w-[87vw] h-[40px] !bg-purple-100 !rounded-lg  relative transition-all duration-300 py-2.5 pl-4 pr-14 w-full border-gray-300 dark:bg-slate-800 dark:text-white/80 dark:border-slate-600  tracking-wide font-light placeholder-gray-400 focus:ring disabled:opacity-40 disabled:cursor-not-allowed focus:border-purple-500 focus:ring-purple-500/20'
         }
         onChange={handleValueChange}
         placeholder="Choose a date range"
