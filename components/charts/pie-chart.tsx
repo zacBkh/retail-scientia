@@ -93,7 +93,7 @@ const PieChart: FC<PieChartProps> = ({ salesByLine }) => {
   }
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center max-w-[350px] mx-auto p-1">
       <Pie options={options} data={data} />
     </div>
   )

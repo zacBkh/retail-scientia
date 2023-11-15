@@ -6,7 +6,6 @@ import Datepicker from 'react-tailwindcss-datepicker'
 import type { DateValueType } from 'react-tailwindcss-datepicker'
 
 import { SHORTCUT_LABELS } from '@/constants/date-picker'
-import { dateToStringForQuery } from '@/utils/dates'
 
 interface DatePickerDashboardProps {
   datesObject: DateValueType
@@ -18,12 +17,9 @@ const DatePickerDashboard: FC<DatePickerDashboardProps> = ({
   onNewDateObject,
 }) => {
   const handleValueChange = (newValue: DateValueType) => {
-    console.log('newValue', newValue)
-
-    // if (!newValue?.startDate || !newValue?.endDate === null) {
-    //   console.error('Put a date')
-    //   return
-    // }
+    if (newValue?.endDate === '3000-01-01') {
+      return onNewDateObject({ startDate: null, endDate: null })
+    }
     onNewDateObject(newValue)
   }
 

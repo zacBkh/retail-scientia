@@ -165,22 +165,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
           </Box>
         </Flex>
       </Box>
-
-      <PieChart
-        salesByLine={salesByLine}
-        // salesByLine={[
-        //   { category1: HERMES_LINE_NAME.BATH, sales: 13 },
-        //   { category1: HERMES_LINE_NAME.TERRE_DHERMES, sales: 410 },
-        //   { category1: HERMES_LINE_NAME.TWILLY_DHERMES, sales: 269 },
-        //   { category1: HERMES_LINE_NAME.H24, sales: 189 },
-        // ]}
-      />
-      <Box p={'3'}>
-        <Flex direction={'column'} gap="3">
-          <Text>Value: {ttlSalesValue}</Text>
-          <Text>Qty: {filteredSalesUser?.result.length}</Text>
-        </Flex>
-      </Box>
+      <PieChart salesByLine={salesByLine} />
       {error ? <p>{error.message || 'An error occured'}</p> : ''}
     </>
   )
