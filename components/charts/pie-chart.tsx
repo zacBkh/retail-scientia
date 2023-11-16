@@ -4,15 +4,22 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Pie } from 'react-chartjs-2'
 import type { ChartData, ChartOptions } from 'chart.js'
 
-import { HERMES_LINE_NAME } from '@/constants/business'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 interface PieChartProps {
   salesByLine: { category1: string; sales: number }[]
+  isLoading: boolean
+  isSalesEmpty: boolean
 }
 
-const PieChart: FC<PieChartProps> = ({ salesByLine }) => {
+const PieChart: FC<PieChartProps> = ({
+  salesByLine,
+  isLoading,
+  isSalesEmpty,
+}) => {
   const allLines = salesByLine.map((line) => line.category1)
   const allSales = salesByLine.map((line) => line.sales)
 
@@ -45,36 +52,7 @@ const PieChart: FC<PieChartProps> = ({ salesByLine }) => {
     ],
   }
 
-  // const options: ChartOptions<'pie'> = {
-  //   font: {
-  //     family: 'Arial, sans-serif',
-  //     size: 10,
-  //     style: 'normal',
-  //     weight: 'normal',
-  //     lineHeight: 1.2,
-  //   },
-  //   legend: {
-
-  //   display: true,
-  //   labels: {
-  //     padding: 20, // Adjust the padding to add space between legend and chart
-  //     font: {
-  //       size: 16, // Adjust the font size as needed
-  //       family: 'Arial, sans-serif', // Specify the font family
-  //       weight: 'bold', // Specify the font weight
-  //     },
-  //   },
-  //   },
-  //   layout: {
-  //     padding: {
-  //       left: 20,
-  //       right: 20,
-  //       top: 20,
-  //       bottom: 20,
-  //     },
-  //   },
-  // }
-  const options: ChartOptions = {
+  const options: ChartOptions<'pie'> = {
     plugins: {
       legend: {
         position: 'bottom',
@@ -89,8 +67,25 @@ const PieChart: FC<PieChartProps> = ({ salesByLine }) => {
 
   return (
     <div className="card-dashboard w-full md:w-1/2 flex justify-center items-center">
-      <div className=" md:w-full py-4">
-        <Pie options={options} data={data} />
+      <div className=" md:w-full p-3 flex-1">
+        {isLoading ? (
+          <>
+            <Skeleton
+              circle
+              containerClassName="flex"
+              className="h-[280px] !w-[280px] mx-auto  mb-2"
+            />
+            <Skeleton
+              count={2}
+              className=""
+              containerClassName="w-1/2 block mx-auto "
+            />
+          </>
+        ) : isSalesEmpty ? (
+          <p className="block text-center">Not much to show here! 😭</p>
+        ) : (
+          <Pie options={options} data={data} />
+        )}
       </div>
     </div>
   )
