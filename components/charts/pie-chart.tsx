@@ -1,14 +1,8 @@
 import { FC } from 'react'
 
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  ChartOptions,
-  ChartData,
-} from 'chart.js'
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Pie } from 'react-chartjs-2'
+import type { ChartData, ChartOptions } from 'chart.js'
 
 import { HERMES_LINE_NAME } from '@/constants/business'
 
@@ -80,9 +74,10 @@ const PieChart: FC<PieChartProps> = ({ salesByLine }) => {
   //     },
   //   },
   // }
-  const options = {
+  const options: ChartOptions = {
     plugins: {
       legend: {
+        position: 'bottom',
         labels: {
           font: {
             family: 'Arial, sans-serif', // Set the font family here
@@ -93,8 +88,10 @@ const PieChart: FC<PieChartProps> = ({ salesByLine }) => {
   }
 
   return (
-    <div className="flex justify-center">
-      <Pie options={options} data={data} />
+    <div className="card-dashboard w-full md:w-1/2 flex justify-center items-center">
+      <div className=" md:w-full py-4">
+        <Pie options={options} data={data} />
+      </div>
     </div>
   )
 }

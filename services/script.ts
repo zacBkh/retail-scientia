@@ -11,7 +11,6 @@
 //       email: 'zachariedupain@hotmail.fr',
 //       country: 'UAE',
 //       pointOfSale: 'Dubai Duty Free',
-//       password: 'foueted93',
 //       isAdmin: true,
 //     },
 //   })

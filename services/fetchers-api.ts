@@ -51,8 +51,6 @@ interface GetFileredUserSalesInDB {
 export const filterUserSalesInDB: GetFileredUserSalesInDB = async (
   datesQuery
 ) => {
-  console.log('dateQuery89_856', datesQuery)
-
   const response = await fetch(`/${SALE}/?dates=${datesQuery}`, {
     method: 'GET',
   })

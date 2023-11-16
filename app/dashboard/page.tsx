@@ -16,10 +16,12 @@ const Dashboard = async () => {
   )
 
   return (
-    <DashboardClientWrapper
-      currentSession={currentSession}
-      totalSalesOfUser={totalSalesOfUser}
-    />
+    <>
+      <DashboardClientWrapper
+        currentSession={currentSession}
+        totalSalesOfUser={totalSalesOfUser}
+      />
+    </>
   )
 }
 

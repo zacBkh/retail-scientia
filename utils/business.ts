@@ -44,15 +44,25 @@ export const combineCategoriesAndSales: CombineCategoriesAndSalesArgs = (
   categories,
   sales
 ) => {
-  return categories.map((category1) => {
-    // Summing the sale
-    const matchingSale = sales.find(
-      (sale) => sale.productSold.category1 === category1
+  const nonSortedSales = categories.map((category1) => {
+    // iterating through each category
+
+    //
+    const onlySalesOfCurrentCat = sales
+      .filter((sale) => sale.productSold.category1 === category1) // grab the sales from this cat
+      .map((sale) => sale.productSold.regularPrice) // keep only their price
+
+    // Sum their value
+    const matchingTtlSale = onlySalesOfCurrentCat.reduce(
+      (accumulator, currentValue) => accumulator + currentValue
     )
 
     return {
       category1,
-      sales: matchingSale ? matchingSale.productSold.regularPrice : 0,
+      sales: matchingTtlSale ? matchingTtlSale : 0,
     }
   })
+
+  console.log('nonSortedSales', nonSortedSales)
+  return nonSortedSales.sort((a, b) => b.sales - a.sales)
 }

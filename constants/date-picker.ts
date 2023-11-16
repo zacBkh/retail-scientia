@@ -1,6 +1,10 @@
 const today = new Date()
+
+// Three month ago
 let threeMonthsAgo = new Date(today)
 threeMonthsAgo.setMonth(today.getMonth() - 3)
+
+// Forever
 
 export const SHORTCUT_LABELS = {
   shortcuts: {
@@ -16,6 +20,13 @@ export const SHORTCUT_LABELS = {
         // end: '2023-11-20',
         start: threeMonthsAgo,
         end: today,
+      },
+    },
+    forever: {
+      text: 'Forever',
+      period: {
+        start: today,
+        end: '3000-01-01',
       },
     },
   },

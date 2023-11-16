@@ -21,7 +21,10 @@ import { dateToStringForQuery, dateStringForQueryToDate } from '@/utils/dates'
 import type { DateValueType } from 'react-tailwindcss-datepicker'
 import { DateRangeTypeExt } from '@/types'
 import PieChart from '../charts/pie-chart'
-import { HERMES_LINE_NAME } from '@/constants/business'
+
+import COLORS from '@/constants/colors-temp'
+
+import LatestProductSoldItem from './latest-product-sold'
 
 import {
   extractUniqueCategoryFromSales,
@@ -59,7 +62,6 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
     }
   )
   const handleNewDateObject = (newDateObject: DateValueType) => {
-    console.log('newDateObject', newDateObject)
     if (newDateObject) {
       setDatesObject(newDateObject as DateRangeTypeExt)
     }
@@ -88,31 +90,19 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
   console.log('ttlSalesValue', ttlSalesValue)
 
   return (
-    <>
+    <div className={`${COLORS.grey_bg} px-2`}>
       <Box p={'3'}>
         <DatePickerDashboard
           datesObject={datesObject}
           onNewDateObject={handleNewDateObject}
         />
-        {
-          isLoading || isValidating ? (
-            <>
-              <p>Loading...</p>
-            </>
-          ) : (
-            ''
-          )
-          //  (
-          //   <Flex direction={'column'}>
-          //     <Text as="p" suppressHydrationWarning>
-          //       Start date: {dateStringForQueryToDate(datesObject?.startDate)}
-          //     </Text>
-          //     <Text as="p" suppressHydrationWarning>
-          //       End date: {dateStringForQueryToDate(datesObject?.endDate)}
-          //     </Text>
-          //   </Flex>
-          // )
-        }
+        {isLoading || isValidating ? (
+          <>
+            <p>Loading...</p>
+          </>
+        ) : (
+          ''
+        )}
         <Flex justify={'between'} gap={'2'}>
           <Box>
             <Card className="mt-4" variant="classic">
@@ -166,23 +156,24 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
         </Flex>
       </Box>
 
-      <PieChart
-        salesByLine={salesByLine}
-        // salesByLine={[
-        //   { category1: HERMES_LINE_NAME.BATH, sales: 13 },
-        //   { category1: HERMES_LINE_NAME.TERRE_DHERMES, sales: 410 },
-        //   { category1: HERMES_LINE_NAME.TWILLY_DHERMES, sales: 269 },
-        //   { category1: HERMES_LINE_NAME.H24, sales: 189 },
-        // ]}
-      />
-      <Box p={'3'}>
-        <Flex direction={'column'} gap="3">
-          <Text>Value: {ttlSalesValue}</Text>
-          <Text>Qty: {filteredSalesUser?.result.length}</Text>
-        </Flex>
-      </Box>
+      <div className="flex flex-col md:flex-row justify-center items-center md:items-stretch gap-x-4 gap-y-4 px-2">
+        <PieChart salesByLine={salesByLine} />
+
+        <div
+          className={`flex flex-col gap-y-3 py-2 px-4 card-dashboard w-full md:w-1/2`}
+        >
+          <span className="text-lg font-bold my-4">Latest Sales</span>
+          {filteredSalesUser?.result?.map((item) => (
+            <LatestProductSoldItem
+              key={item.id}
+              img={item.productSold.img}
+              desc={item.productSold.description}
+            />
+          ))}
+        </div>
+      </div>
       {error ? <p>{error.message || 'An error occured'}</p> : ''}
-    </>
+    </div>
   )
 }
 

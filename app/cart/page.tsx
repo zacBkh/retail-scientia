@@ -56,6 +56,7 @@ const Cart = ({}) => {
       // toast.success('Wow so easy !')
       console.log('Sale registered ✅', registrationSale)
       clearLocalStorage()
+      mutate(SWR_KEYS.GET_CART_LS)
       mutate(SWR_KEYS.GET_CART_PRODUCT_DETAILS_DB)
     } else {
       console.log('Error in registering the sale ❌', registrationSale)
