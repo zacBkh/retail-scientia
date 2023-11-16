@@ -99,6 +99,9 @@ export const findSalesOfUser: FindSalesOfUserArgs = async (
         },
       }),
     },
+    orderBy: {
+      createdAt: 'desc',
+    },
   })
 
   return userSales

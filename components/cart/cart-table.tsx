@@ -29,7 +29,7 @@ const CartTable: FC<CartTableProps> = ({ productDetails, allSalesInLS }) => {
         <tbody>
           {productDetails?.result.map((item) => (
             <tr key={item.id}>
-              <td className="pr-3 py-2 flex items-center text-xs md:text-base">
+              <td className="pr-2 py-2 flex items-center text-xs md:text-base gap-x-2">
                 <Image
                   src={getCloudiImg(undefined, item.img as string)}
                   alt="Product picture"
