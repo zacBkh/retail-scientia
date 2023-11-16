@@ -9,7 +9,7 @@ import getCloudiImg from '@/utils/transform-cloudi-img'
 import { Separator } from '@radix-ui/themes'
 
 interface LatestProductSoldItemProps {
-  img: string
+  img: string | null
   desc: string
 }
 
@@ -25,7 +25,7 @@ const LatestProductSoldItem: FC<LatestProductSoldItemProps> = ({
             <Image
               width={48}
               height={48}
-              src={getCloudiImg(undefined, img)}
+              src={getCloudiImg(undefined, img ?? '')}
               alt="Image of a product"
             />
           </div>
