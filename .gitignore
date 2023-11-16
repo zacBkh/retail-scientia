@@ -36,3 +36,6 @@ next-env.d.ts
 
 # Ignore the prisma/seed.ts file
 prisma/seed.ts
+
+# Ignore the prisma/seed.ts file
+script.ts
