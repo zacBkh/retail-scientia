@@ -24,14 +24,14 @@ export const registerSale: RegisterSalesTypes = async (date, productIDs) => {
 }
 
 interface GetProductDetailsArgs {
-  (productsIDs: number[]): Promise<APIResponseFindProducts>
+  (): Promise<APIResponseFindProducts>
 }
 
 import { getSalesLSInJSObj } from '@/utils/local-storage'
 
 // Get specific products details from DB, based on array of IDs
 // Used a POST request to pass body
-export const getProductDetails: GetProductDetailsArgs = async (productIDs) => {
+export const getProductDetails: GetProductDetailsArgs = async () => {
   let productIDsInLS = getSalesLSInJSObj() ?? []
 
   const response = await fetch(`${PRODUCTS}`, {

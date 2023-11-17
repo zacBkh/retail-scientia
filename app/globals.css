@@ -126,12 +126,28 @@
 .card-dashboard {
   box-shadow: rgba(0, 0, 0, 0.04) 0px 5px 22px,
     rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px;
-
   background-color: white;
-
   border-radius: 0.75rem;
 }
 
 .suspensionPoints {
   @apply text-ellipsis whitespace-nowrap overflow-hidden;
+}
+
+.addBorderTableAfter:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.addBorderTableBefore:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }

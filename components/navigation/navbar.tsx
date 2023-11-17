@@ -52,6 +52,7 @@ const Navbar: FC<NavbarProps> = ({ session }) => {
               <div>
                 {brandLogo ? (
                   <Image
+                    priority
                     width={40}
                     height={40}
                     src={getCloudiImg(undefined, brandLogo)}
