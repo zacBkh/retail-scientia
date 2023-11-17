@@ -14,6 +14,8 @@ import { toast } from 'react-toastify'
 
 import CartTable from '@/components/cart/cart-table'
 
+import { dateStringForQueryToDate } from '@/utils/dates'
+
 const Cart = ({}) => {
   // const { data: currentSession, status } = useSession()
 
@@ -65,8 +67,6 @@ const Cart = ({}) => {
 
   return (
     <>
-      {/* {isLoading ? <Loading /> : ''} */}
-
       <CartTable allSalesInLS={allSalesInLS} productDetails={productDetails} />
 
       {isValidating ? <Spinner style="border-t-black !w-5 !h-5 mx-auto" /> : ''}
@@ -77,8 +77,12 @@ const Cart = ({}) => {
         <AlertDialogRx
           buttonTriggerTxt="Validate Cart"
           headerTxt="Are you sure?"
-          bodyTxt="You are about to validate your cart. No further change can be made to your sales once you validated your cart."
+          bodyTxt="You are about to validate your cart. No further change can be made to your sales once you validated it."
           bodyTxt2="Please check carefully."
+          salesDetails={{
+            date: dateStringForQueryToDate('2022-11-12T09:53:35.960+00:00'),
+            totalValue: 1259,
+          }}
           btnConfirmTxt="Validate Cart"
           onValidateAction={hanldeConfirmCart}
         />
