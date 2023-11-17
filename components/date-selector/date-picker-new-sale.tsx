@@ -10,7 +10,6 @@ import useSWR, { mutate } from 'swr'
 import { getDateLS } from '@/utils/local-storage'
 
 import SWR_KEYS from '@/constants/SWR-keys'
-import { ListFormat } from 'typescript'
 
 const DatePickerNewSale = () => {
   const {

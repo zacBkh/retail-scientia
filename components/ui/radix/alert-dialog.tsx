@@ -9,7 +9,9 @@ interface AlertDialogRxProps {
   bodyTxt2?: string
   btnConfirmTxt: string
   btnCancelTxt?: string
-  salesDetails?: { date: string; totalValue: number }
+  salesDetails?: { date: string; ttlCartValue: number; ttlQty: number }
+
+  isDisabled?: boolean
 
   onValidateAction: () => void
 }
@@ -24,6 +26,8 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
 
   salesDetails,
 
+  isDisabled,
+
   onValidateAction,
 }) => {
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false)
@@ -32,10 +36,15 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
     setIsCheckboxChecked(evt)
   }
 
+  const handleToggleDialog = (isDialogOpen: boolean) => {
+    console.log('isDialogOpen', isDialogOpen)
+  }
+
+  const { date, ttlCartValue, ttlQty } = salesDetails ?? {}
   return (
     <>
-      <AlertDialog.Root>
-        <AlertDialog.Trigger>
+      <AlertDialog.Root onOpenChange={handleToggleDialog}>
+        <AlertDialog.Trigger disabled={isDisabled}>
           <Button>{buttonTriggerTxt}</Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content style={{ maxWidth: 450 }}>
@@ -59,13 +68,12 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
               <div className="flex flex-col text-sm">
                 <p>
                   You are registering your sales for the{' '}
-                  <span className="font-semibold">{salesDetails?.date}.</span>
+                  <span className="font-semibold">{date}.</span>
                 </p>
                 <p>
                   The value for this day is{' '}
-                  <span className="font-semibold">
-                    {salesDetails?.totalValue}
-                  </span>
+                  <span className="font-semibold">{ttlCartValue} </span>, for
+                  <span className="font-semibold"> {ttlQty} products.</span>
                 </p>
               </div>
             ) : (

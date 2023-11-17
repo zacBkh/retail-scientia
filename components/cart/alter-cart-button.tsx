@@ -4,6 +4,8 @@ import { FC } from 'react'
 
 import { mutate } from 'swr'
 
+import { FaPlus, FaMinus } from 'react-icons/fa6'
+
 import {
   getSalesLSInJSObj,
   alterProductLocalStorage,
@@ -53,7 +55,7 @@ const AlterCartBtn: FC<AlterCartBtn> = ({ id, style }) => {
         } !h-4 !cursor-pointer`}
         onClick={() => handlerAlterQty('-')}
       >
-        -
+        <FaMinus className="text-xxs" />
       </Button>
       <Text weight={'bold'} size={'1'}>
         {specificItemCount ? specificItemCount : ''}
@@ -65,17 +67,8 @@ const AlterCartBtn: FC<AlterCartBtn> = ({ id, style }) => {
         size={'1'}
         onClick={() => handlerAlterQty('+')}
       >
-        +
+        <FaPlus className="text-xxs" />
       </Button>
-      {/* 
-      <button
-        disabled={specificItemCount ? false : true}
-        className={!specificItemCount ? 'invisible' : ''}
-        onClick={() => handlerAlterQty('-')}
-      >
-        -
-      </button>
-      <button onClick={() => handlerAlterQty('+')}>+</button> */}
     </div>
   )
 }

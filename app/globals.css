@@ -133,3 +133,21 @@
 .suspensionPoints {
   @apply text-ellipsis whitespace-nowrap overflow-hidden;
 }
+
+.addBorderTableAfter:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.addBorderTableBefore:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}

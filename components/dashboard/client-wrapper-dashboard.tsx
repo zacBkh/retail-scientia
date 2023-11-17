@@ -26,6 +26,8 @@ import LatestProductSoldItem from './latest-product-sold'
 
 import { FaLongArrowAltDown } from 'react-icons/fa'
 
+import Spinner from '../ui/spinner'
+
 import {
   extractUniqueCategoryFromSales,
   combineCategoriesAndSales,
