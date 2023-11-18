@@ -13,25 +13,20 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 
-import { ModeOfProductTable } from '@/constants/db-queries'
-
 interface TableOfSKUsProps {
   img: string | null
   desc: string
   isLoading: boolean
   dateSold: Date
-
-  mode: ModeOfProductTable
 }
 
-const TableOfSKUs: FC<TableOfSKUsProps> = ({
+const TopSellerSKUs: FC<TableOfSKUsProps> = ({
   img,
   desc,
   isLoading,
   dateSold,
-
-  mode,
 }) => {
+  const today = dayjs()
   const saleDate = dayjs(dateSold) // Replace with your actual date
   const timeAgo = saleDate.fromNow()
 
@@ -67,4 +62,4 @@ const TableOfSKUs: FC<TableOfSKUsProps> = ({
   )
 }
 
-export default TableOfSKUs
+export default TopSellerSKUs

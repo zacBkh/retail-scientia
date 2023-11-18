@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 
 // Hack so new prisma client is not created at every hot reload
 let db: PrismaClient
@@ -105,4 +105,60 @@ export const findSalesOfUser: FindSalesOfUserArgs = async (
   })
 
   return userSales
+}
+
+interface GetSalesByTopSoldSKU {
+  (userID: number, dateQuery?: string[] | null): Promise<any>
+}
+
+// Getting the sales by order of SKU occurence for a certain user
+// Had to do 2 queries bcs prisma does not support groupBy & include: https://www.prisma.io/docs/concepts/components/prisma-client/aggregation-grouping-summarizing#groupby-faq:~:text=You%20cannot%20use%20select%20with%20groupBy
+
+export const getSalesByBestSellerSku: GetSalesByTopSoldSKU = async (
+  userID,
+  dateQuery
+) => {
+  const isSingleDate = dateQuery && dateQuery[0] === dateQuery[1]
+
+  const salesByProduct = await db.sale.groupBy({
+    by: ['productId'],
+
+    where: {
+      sellerId: userID,
+
+      ...(dateQuery && {
+        date: {
+          gte: new Date(dateQuery[0]),
+          lte: new Date(isSingleDate ? dateQuery[0] : dateQuery[1]),
+        },
+      }),
+    },
+    _count: {
+      id: true,
+    },
+    orderBy: {
+      _count: {
+        id: 'desc', // Order by the count of sales in descending order
+      },
+    },
+    take: 6,
+  })
+
+  // Get all products details whose id is included in the result of group query
+  const productsFetched = await db.product.findMany({
+    where: {
+      id: { in: salesByProduct.map((sku) => sku.productId) },
+    },
+  })
+
+  // Map together the products and their count
+  const finalSKUOrder = salesByProduct.map((sku) => {
+    const productToAdd = productsFetched.find(
+      (product) => product.id === sku.productId
+    )
+    const count = sku._count.id
+    return { productSold: { ...productToAdd, count } }
+  })
+
+  return finalSKUOrder
 }

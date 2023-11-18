@@ -3,7 +3,6 @@
 import { FC, useState, useEffect } from 'react'
 
 import type { Session } from 'next-auth'
-import { SalesWithProducts } from '@/types'
 
 import SWR_KEYS from '@/constants/SWR-keys'
 import useSWR, { mutate } from 'swr'
@@ -12,21 +11,21 @@ import { sumSalesValue } from '@/utils/db-data'
 
 import DatePickerDashboard from './date-picker-dashboard'
 
-import { filterUserSalesInDB } from '@/services/fetchers-api'
+import { getUserSalesInDB } from '@/services/fetchers-api'
 
 import { dateToStringForQuery } from '@/utils/dates'
 
 import type { DateValueType } from 'react-tailwindcss-datepicker'
-import { DateRangeTypeExt } from '@/types'
+import { DateRangeTypeExt, SalesWithProducts } from '@/types'
+import { ModeOfProductTable } from '@/constants/db-queries'
+
 import PieChart from '../charts/pie-chart'
 
 import COLORS from '@/constants/colors-temp'
 
-import LatestProductSoldItem from './latest-product-sold'
+import TableOfSKUs from './latest-product-sold'
 
 import { FaLongArrowAltDown } from 'react-icons/fa'
-
-import Spinner from '../ui/spinner'
 
 import {
   extractUniqueCategoryFromSales,
@@ -35,7 +34,7 @@ import {
 
 import CardHeaderKPIs from './card-kpis-header'
 
-/* CAN BE OPTIMIZED BY PRESERVING NEW DATE AS STATE AND PASS TO filterUserSalesInDB the  new Date in dateToStringForQuery
+/* CAN BE OPTIMIZED BY PRESERVING NEW DATE AS STATE AND PASS TO getUserSalesInDB the  new Date in dateToStringForQuery
 like this, the display does not have to use dateStringForQueryToDate
 */
 
@@ -60,11 +59,27 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
     isValidating,
   } = useSWR(
     SWR_KEYS.GET_SALES_OF_USER_DB,
-    () => filterUserSalesInDB([datesObject?.startDate, datesObject?.endDate]),
+    () => getUserSalesInDB([datesObject?.startDate, datesObject?.endDate]),
     {
       revalidateOnMount: true,
     }
   )
+  const {
+    data: filteredSalesUserBySKU,
+    error: errorFilteredSalesUserBySKU,
+    isLoading: isLoadingFilteredSalesUserBySKU,
+    isValidating: isValidatingFilteredSalesUserBySKU,
+  } = useSWR(
+    SWR_KEYS.GET_SALES_OF_USER_BY_BEST_SELLER_DB,
+    () =>
+      getUserSalesInDB([datesObject?.startDate, datesObject?.endDate], true),
+    {
+      revalidateOnMount: true,
+    }
+  )
+
+  console.log('filteredSalesUserBySKU', filteredSalesUserBySKU)
+
   const handleNewDateObject = (newDateObject: DateValueType) => {
     if (newDateObject) {
       setDatesObject(newDateObject as DateRangeTypeExt)
@@ -74,9 +89,11 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
   //   If date changed, update the numbers
   useEffect(() => {
     mutate(SWR_KEYS.GET_SALES_OF_USER_DB)
+    mutate(SWR_KEYS.GET_SALES_OF_USER_BY_BEST_SELLER_DB)
   }, [datesObject?.startDate, datesObject?.endDate])
 
-  const ttlSalesValue = sumSalesValue(filteredSalesUser?.result ?? [])
+  const ttlSalesValue =
+    filteredSalesUser && sumSalesValue(filteredSalesUser?.result ?? [])
 
   const uniqueCategories = extractUniqueCategoryFromSales(
     filteredSalesUser?.result ?? []
@@ -87,11 +104,10 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
     filteredSalesUser?.result ?? []
   )
 
-  console.log('filteredSalesUser', filteredSalesUser)
-
   const isSalesEmpty = !filteredSalesUser?.result.length
 
-  const [qtyShowPrevSales, setQtyShowPrevSales] = useState(3)
+  const [qtyShowLastSales, setQtyShowLastSales] = useState(3)
+  const [qtyShowTopSellers, setQtyShowTopSellers] = useState(3)
 
   return (
     <div className={`${COLORS.grey_bg} px-2`}>
@@ -133,9 +149,10 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
         >
           <span className="text-lg font-bold my-2">Latest Sales</span>
           {filteredSalesUser?.result
-            ?.slice(0, qtyShowPrevSales)
+            ?.slice(0, qtyShowLastSales)
             ?.map((item) => (
-              <LatestProductSoldItem
+              <TableOfSKUs
+                mode={ModeOfProductTable.LatestProductsSold}
                 isLoading={isLoading || isValidating}
                 key={item.id}
                 img={item.productSold.img}
@@ -147,14 +164,14 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
           {!isSalesEmpty ? (
             <button
               onClick={() =>
-                setQtyShowPrevSales(qtyShowPrevSales === 3 ? 6 : 3)
+                setQtyShowLastSales(qtyShowLastSales === 3 ? 6 : 3)
               }
               className="text-sm font-semibold inline-flex justify-end items-center gap-x-2"
             >
-              {`View ${qtyShowPrevSales === 3 ? 'more' : 'less'}`}
+              {`View ${qtyShowLastSales === 3 ? 'more' : 'less'}`}
               <FaLongArrowAltDown
                 className={`transition-transform duration-200 ${
-                  qtyShowPrevSales === 3 ? 'rotate-0' : '-rotate-180'
+                  qtyShowLastSales === 3 ? 'rotate-0' : '-rotate-180'
                 }`}
               />
             </button>
@@ -163,6 +180,44 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
           )}
         </div>
       </div>
+
+      {/* TOP SELLERS */}
+      <div
+        className={`flex flex-col gap-y-3 py-4 px-4 mb-4 card-dashboard w-full md:w-1/2`}
+      >
+        <span className="text-lg font-bold my-2">Top Sellers</span>
+        {filteredSalesUserBySKU?.result
+          ?.slice(0, qtyShowTopSellers)
+          ?.map((item) => (
+            <TableOfSKUs
+              mode={ModeOfProductTable.TopSellersProducts}
+              isLoading={isLoading || isValidating}
+              key={item.id}
+              img={item.productSold.img}
+              desc={item.productSold.description}
+              dateSold={item.createdAt}
+            />
+          ))}
+
+        {!isSalesEmpty ? (
+          <button
+            onClick={() =>
+              setQtyShowTopSellers(qtyShowTopSellers === 3 ? 6 : 3)
+            }
+            className="text-sm font-semibold inline-flex justify-end items-center gap-x-2"
+          >
+            {`View ${qtyShowTopSellers === 3 ? 'more' : 'less'}`}
+            <FaLongArrowAltDown
+              className={`transition-transform duration-200 ${
+                qtyShowTopSellers === 3 ? 'rotate-0' : '-rotate-180'
+              }`}
+            />
+          </button>
+        ) : (
+          <p className="block text-center">Not much to show here! 😭</p>
+        )}
+      </div>
+
       {error ? <p>{error.message || 'An error occured'}</p> : ''}
     </div>
   )
