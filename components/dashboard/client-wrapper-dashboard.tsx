@@ -18,14 +18,11 @@ import { dateToStringForQuery } from '@/utils/dates'
 import type { DateValueType } from 'react-tailwindcss-datepicker'
 import { DateRangeTypeExt, SalesWithProducts } from '@/types'
 import { ModeOfProductTable } from '@/constants/db-queries'
+import COLORS from '@/constants/colors-temp'
 
 import PieChart from '../charts/pie-chart'
 
-import COLORS from '@/constants/colors-temp'
-
 import TableOfSKUs from './latest-product-sold'
-
-import { FaLongArrowAltDown } from 'react-icons/fa'
 
 import {
   extractUniqueCategoryFromSales,
@@ -34,9 +31,7 @@ import {
 
 import CardHeaderKPIs from './card-kpis-header'
 
-/* CAN BE OPTIMIZED BY PRESERVING NEW DATE AS STATE AND PASS TO getUserSalesInDB the  new Date in dateToStringForQuery
-like this, the display does not have to use dateStringForQueryToDate
-*/
+import ShowMoreButtonDashboard from '../ui/button-show-more-dashboard'
 
 interface DashboardClientWrapperProps {
   currentSession: Session | null
@@ -78,18 +73,18 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
     }
   )
 
-  console.log('filteredSalesUserBySKU', filteredSalesUserBySKU)
-
   const handleNewDateObject = (newDateObject: DateValueType) => {
     if (newDateObject) {
       setDatesObject(newDateObject as DateRangeTypeExt)
     }
   }
 
-  //   If date changed, update the numbers
+  // If date changed, update the numbers
   useEffect(() => {
-    mutate(SWR_KEYS.GET_SALES_OF_USER_DB)
-    mutate(SWR_KEYS.GET_SALES_OF_USER_BY_BEST_SELLER_DB)
+    mutate([
+      SWR_KEYS.GET_SALES_OF_USER_DB,
+      SWR_KEYS.GET_SALES_OF_USER_BY_BEST_SELLER_DB,
+    ])
   }, [datesObject?.startDate, datesObject?.endDate])
 
   const ttlSalesValue =
@@ -106,8 +101,11 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
 
   const isSalesEmpty = !filteredSalesUser?.result.length
 
-  const [qtyShowLastSales, setQtyShowLastSales] = useState(3)
-  const [qtyShowTopSellers, setQtyShowTopSellers] = useState(3)
+  const [isShowLastSalesExpanded, setIsShowLastSalesExpanded] = useState(false)
+  const [isShowTopSellersExpanded, setIsShowTopSellersExpanded] =
+    useState(false)
+
+  console.log('filteredSalesUserBySKU', filteredSalesUserBySKU)
 
   return (
     <div className={`${COLORS.grey_bg} px-2`}>
@@ -144,12 +142,13 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
           salesByLine={salesByLine}
         />
 
+        {/* LAST SALES */}
         <div
-          className={`flex flex-col gap-y-3 py-4 px-4 mb-4 card-dashboard w-full md:w-1/2`}
+          className={`flex flex-col gap-y-3 py-4 px-4 card-dashboard w-full md:w-1/2`}
         >
           <span className="text-lg font-bold my-2">Latest Sales</span>
           {filteredSalesUser?.result
-            ?.slice(0, qtyShowLastSales)
+            ?.slice(0, isShowLastSalesExpanded ? 6 : 3)
             ?.map((item) => (
               <TableOfSKUs
                 mode={ModeOfProductTable.LatestProductsSold}
@@ -157,65 +156,43 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
                 key={item.id}
                 img={item.productSold.img}
                 desc={item.productSold.description}
-                dateSold={item.createdAt}
+                subInfo={item.createdAt}
               />
             ))}
-
-          {!isSalesEmpty ? (
-            <button
-              onClick={() =>
-                setQtyShowLastSales(qtyShowLastSales === 3 ? 6 : 3)
-              }
-              className="text-sm font-semibold inline-flex justify-end items-center gap-x-2"
-            >
-              {`View ${qtyShowLastSales === 3 ? 'more' : 'less'}`}
-              <FaLongArrowAltDown
-                className={`transition-transform duration-200 ${
-                  qtyShowLastSales === 3 ? 'rotate-0' : '-rotate-180'
-                }`}
-              />
-            </button>
-          ) : (
-            <p className="block text-center">Not much to show here! 😭</p>
-          )}
+          <ShowMoreButtonDashboard
+            isSalesEmpty={isSalesEmpty}
+            onToggleBtn={(newState) => setIsShowLastSalesExpanded(newState)}
+            isExpandedView={isShowLastSalesExpanded}
+          />
         </div>
-      </div>
 
-      {/* TOP SELLERS */}
-      <div
-        className={`flex flex-col gap-y-3 py-4 px-4 mb-4 card-dashboard w-full md:w-1/2`}
-      >
-        <span className="text-lg font-bold my-2">Top Sellers</span>
-        {filteredSalesUserBySKU?.result
-          ?.slice(0, qtyShowTopSellers)
-          ?.map((item) => (
-            <TableOfSKUs
-              mode={ModeOfProductTable.TopSellersProducts}
-              isLoading={isLoading || isValidating}
-              key={item.id}
-              img={item.productSold.img}
-              desc={item.productSold.description}
-              dateSold={item.createdAt}
-            />
-          ))}
-
-        {!isSalesEmpty ? (
-          <button
-            onClick={() =>
-              setQtyShowTopSellers(qtyShowTopSellers === 3 ? 6 : 3)
-            }
-            className="text-sm font-semibold inline-flex justify-end items-center gap-x-2"
-          >
-            {`View ${qtyShowTopSellers === 3 ? 'more' : 'less'}`}
-            <FaLongArrowAltDown
-              className={`transition-transform duration-200 ${
-                qtyShowTopSellers === 3 ? 'rotate-0' : '-rotate-180'
-              }`}
-            />
-          </button>
-        ) : (
-          <p className="block text-center">Not much to show here! 😭</p>
-        )}
+        {/* TOP SELLERS */}
+        <div
+          className={` flex flex-col gap-y-3 py-4 px-4 mb-4 card-dashboard w-full md:w-1/2`}
+        >
+          <span className="text-lg font-bold my-2">Top Sellers</span>
+          {filteredSalesUserBySKU?.result
+            ?.slice(0, isShowTopSellersExpanded ? 6 : 3)
+            ?.map((item) => (
+              <TableOfSKUs
+                mode={ModeOfProductTable.TopSellersProducts}
+                isLoading={
+                  isLoadingFilteredSalesUserBySKU ||
+                  isValidatingFilteredSalesUserBySKU
+                }
+                key={item.id}
+                img={item.productSold.img}
+                desc={item.productSold.description}
+                // @ts-ignore
+                subInfo={item.productSold?.count}
+              />
+            ))}
+          <ShowMoreButtonDashboard
+            isSalesEmpty={isSalesEmpty}
+            onToggleBtn={(newState) => setIsShowTopSellersExpanded(newState)}
+            isExpandedView={isShowTopSellersExpanded}
+          />
+        </div>
       </div>
 
       {error ? <p>{error.message || 'An error occured'}</p> : ''}

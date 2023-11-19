@@ -15,12 +15,14 @@ dayjs.extend(relativeTime)
 
 import { ModeOfProductTable } from '@/constants/db-queries'
 
+type EitherLastDateSoldOrCountSKU = Date | number
+
 interface TableOfSKUsProps {
   img: string | null
   desc: string
   isLoading: boolean
-  dateSold: Date
 
+  subInfo: EitherLastDateSoldOrCountSKU
   mode: ModeOfProductTable
 }
 
@@ -28,12 +30,18 @@ const TableOfSKUs: FC<TableOfSKUsProps> = ({
   img,
   desc,
   isLoading,
-  dateSold,
+  subInfo,
 
   mode,
 }) => {
-  const saleDate = dayjs(dateSold) // Replace with your actual date
-  const timeAgo = saleDate.fromNow()
+  let saleDate
+  let subInfoDsiplay: string | number
+  if (mode === ModeOfProductTable.LatestProductsSold) {
+    saleDate = dayjs(subInfo) // Replace with your actual date
+    subInfoDsiplay = saleDate.fromNow()
+  } else {
+    subInfoDsiplay = `Sold ${subInfo as number} times`
+  }
 
   return (
     <>
@@ -57,7 +65,7 @@ const TableOfSKUs: FC<TableOfSKUsProps> = ({
               {isLoading ? <Skeleton /> : desc}
             </p>
             <p className="text-[#6c737f] text-xs">
-              {isLoading ? <Skeleton className="!w-1/2" /> : timeAgo}{' '}
+              {isLoading ? <Skeleton className="!w-1/2" /> : subInfoDsiplay}{' '}
             </p>
           </div>
         </div>
