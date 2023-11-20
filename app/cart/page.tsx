@@ -81,7 +81,6 @@ const Cart = ({}) => {
     )
 
     if (registrationSale.success) {
-      // toast.success('Wow so easy !')
       console.log('Sale registered ✅', registrationSale)
       clearLocalStorage()
       mutate(SWR_KEYS.GET_CART_LS)

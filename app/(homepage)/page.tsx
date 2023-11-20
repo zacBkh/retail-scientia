@@ -14,7 +14,7 @@ const HomePage = async () => {
 
   return (
     <main className="flex flex-col items-center gap-y-4 text-black p-2">
-      <DatePickerNewSale />
+      <DatePickerNewSale currentSession={currentSession} />
 
       <ClientWrapper allProducts={allProducts} />
     </main>

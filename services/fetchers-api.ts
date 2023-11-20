@@ -55,6 +55,7 @@ export const getUserSalesInDB: GetFileredUserSalesInDB = async (
   datesQuery,
   byTopSeller
 ) => {
+  console.log('new query to fetch user sales', datesQuery)
   const response = await fetch(
     `/${SALE}/?dates=${datesQuery}&byTopSeller=${byTopSeller}`,
     {
@@ -67,6 +68,8 @@ export const getUserSalesInDB: GetFileredUserSalesInDB = async (
     const error = new Error(data.result)
     throw error
   }
+
+  console.log('data from querYY', data)
 
   return data
 }
