@@ -106,7 +106,6 @@ const DatePickerNewSale: FC<DatePickerNewSaleProps> = ({ currentSession }) => {
     }
   }, [isValidating])
 
-  // fegegegege
   const [isDatePickerOpen, setDatePickerOpen] = useState(false)
 
   const handleClickOnPage = () => {
@@ -134,10 +133,7 @@ const DatePickerNewSale: FC<DatePickerNewSaleProps> = ({ currentSession }) => {
     <>
       <OverlayDarkener zIndex="z-[39]" isActive={isDatePickerOpen} />
 
-      <div
-        // onClick={handleClickDatePicker}
-        className="sticky top-[45px] z-[40]"
-      >
+      <div className="sticky top-[45px] z-[40]">
         <Datepicker
           startWeekOn="mon"
           readOnly={true}

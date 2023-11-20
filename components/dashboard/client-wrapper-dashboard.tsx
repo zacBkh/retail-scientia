@@ -33,6 +33,8 @@ import CardHeaderKPIs from './card-kpis-header'
 
 import ShowMoreButtonDashboard from '../ui/button-show-more-dashboard'
 
+import OverlayDarkener from '../ui/overlay-darkener'
+
 interface DashboardClientWrapperProps {
   currentSession: Session | null
   totalSalesOfUser: SalesWithProducts
@@ -107,96 +109,123 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
 
   console.log('filteredSalesUserBySKU', filteredSalesUserBySKU)
 
+  const [isDatePickerOpen, setDatePickerOpen] = useState(false)
+
+  const handleClickOnPage = () => {
+    setTimeout(() => {
+      const datePickerIsOpen = document.querySelector(
+        'div.block.translate-y-0.opacity-1.block'
+      )
+      if (datePickerIsOpen) {
+        setDatePickerOpen(true)
+      } else {
+        setDatePickerOpen(false)
+      }
+    }, 50)
+  }
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOnPage)
+
+    return () => {
+      document.removeEventListener('click', handleClickOnPage)
+    }
+  }, [])
+
   return (
-    <div className={`${COLORS.grey_bg} px-2`}>
-      <div className="p-3">
-        <DatePickerDashboard
-          datesObject={datesObject}
-          onNewDateObject={handleNewDateObject}
-        />
+    <>
+      <OverlayDarkener zIndex="z-[39]" isActive={isDatePickerOpen} />
 
-        <div className="my-3 flex gap-x-3 justify-between">
-          <CardHeaderKPIs
-            isLoading={isLoading || isValidating}
-            text="Value"
-            value={(ttlSalesValue ?? 0) + ' $'}
-          />
-          <CardHeaderKPIs
-            isLoading={isLoading || isValidating}
-            text="Quantity"
-            value={(filteredSalesUser?.result.length ?? 0) + ' pcs'}
+      <div className={`${COLORS.grey_bg} px-2`}>
+        <div className="p-3 ">
+          <DatePickerDashboard
+            datesObject={datesObject}
+            onNewDateObject={handleNewDateObject}
           />
 
-          <CardHeaderKPIs
-            isLoading={isLoading || isValidating}
-            text="Ranking"
-            value="#4"
-          />
+          <div className="my-3 flex gap-x-3 justify-between">
+            <CardHeaderKPIs
+              isLoading={isLoading || isValidating}
+              text="Value"
+              value={(ttlSalesValue ?? 0) + ' $'}
+            />
+            <CardHeaderKPIs
+              isLoading={isLoading || isValidating}
+              text="Quantity"
+              value={(filteredSalesUser?.result.length ?? 0) + ' pcs'}
+            />
+
+            <CardHeaderKPIs
+              isLoading={isLoading || isValidating}
+              text="Ranking"
+              value="#4"
+            />
+          </div>
         </div>
-      </div>
 
-      <div className="flex flex-col md:flex-row justify-center items-center md:items-stretch gap-x-4 gap-y-4 px-2">
-        <PieChart
-          isLoading={isLoading || isValidating}
-          isSalesEmpty={isSalesEmpty}
-          salesByLine={salesByLine}
-        />
-
-        {/* LAST SALES */}
-        <div
-          className={`flex flex-col gap-y-3 py-4 px-4 card-dashboard w-full md:w-1/2`}
-        >
-          <span className="text-lg font-bold my-2">Latest Sales</span>
-          {filteredSalesUser?.result
-            ?.slice(0, isShowLastSalesExpanded ? 6 : 3)
-            ?.map((item) => (
-              <TableOfSKUs
-                mode={ModeOfProductTable.LatestProductsSold}
-                isLoading={isLoading || isValidating}
-                key={item.id}
-                img={item.productSold.img}
-                desc={item.productSold.description}
-                subInfo={item.createdAt}
-              />
-            ))}
-          <ShowMoreButtonDashboard
+        <div className="flex flex-col md:flex-row justify-center items-center md:items-stretch gap-x-4 gap-y-4 px-2">
+          <PieChart
+            isLoading={isLoading || isValidating}
             isSalesEmpty={isSalesEmpty}
-            onToggleBtn={(newState) => setIsShowLastSalesExpanded(newState)}
-            isExpandedView={isShowLastSalesExpanded}
+            salesByLine={salesByLine}
           />
+
+          {/* LAST SALES */}
+          <div
+            className={`flex flex-col gap-y-3 py-4 px-4 card-dashboard w-full md:w-1/2`}
+          >
+            <span className="text-lg font-bold my-2">Latest Sales</span>
+            {filteredSalesUser?.result
+              ?.slice(0, isShowLastSalesExpanded ? 6 : 3)
+              ?.map((item) => (
+                <TableOfSKUs
+                  mode={ModeOfProductTable.LatestProductsSold}
+                  isLoading={isLoading || isValidating}
+                  key={item.id}
+                  img={item.productSold.img}
+                  desc={item.productSold.description}
+                  subInfo={item.createdAt}
+                />
+              ))}
+            <ShowMoreButtonDashboard
+              isSalesEmpty={isSalesEmpty}
+              onToggleBtn={(newState) => setIsShowLastSalesExpanded(newState)}
+              isExpandedView={isShowLastSalesExpanded}
+            />
+          </div>
+
+          {/* TOP SELLERS */}
+          <div
+            className={` flex flex-col gap-y-3 py-4 px-4 mb-4 card-dashboard w-full md:w-1/2`}
+          >
+            <span className="text-lg font-bold my-2">Top Sellers</span>
+            {filteredSalesUserBySKU?.result
+              ?.slice(0, isShowTopSellersExpanded ? 6 : 3)
+              ?.map((item) => (
+                <TableOfSKUs
+                  mode={ModeOfProductTable.TopSellersProducts}
+                  isLoading={
+                    isLoadingFilteredSalesUserBySKU ||
+                    isValidatingFilteredSalesUserBySKU
+                  }
+                  key={item.id}
+                  img={item.productSold.img}
+                  desc={item.productSold.description}
+                  // @ts-ignore
+                  subInfo={item.productSold?.count}
+                />
+              ))}
+            <ShowMoreButtonDashboard
+              isSalesEmpty={isSalesEmpty}
+              onToggleBtn={(newState) => setIsShowTopSellersExpanded(newState)}
+              isExpandedView={isShowTopSellersExpanded}
+            />
+          </div>
         </div>
 
-        {/* TOP SELLERS */}
-        <div
-          className={` flex flex-col gap-y-3 py-4 px-4 mb-4 card-dashboard w-full md:w-1/2`}
-        >
-          <span className="text-lg font-bold my-2">Top Sellers</span>
-          {filteredSalesUserBySKU?.result
-            ?.slice(0, isShowTopSellersExpanded ? 6 : 3)
-            ?.map((item) => (
-              <TableOfSKUs
-                mode={ModeOfProductTable.TopSellersProducts}
-                isLoading={
-                  isLoadingFilteredSalesUserBySKU ||
-                  isValidatingFilteredSalesUserBySKU
-                }
-                key={item.id}
-                img={item.productSold.img}
-                desc={item.productSold.description}
-                // @ts-ignore
-                subInfo={item.productSold?.count}
-              />
-            ))}
-          <ShowMoreButtonDashboard
-            isSalesEmpty={isSalesEmpty}
-            onToggleBtn={(newState) => setIsShowTopSellersExpanded(newState)}
-            isExpandedView={isShowTopSellersExpanded}
-          />
-        </div>
+        {error ? <p>{error.message || 'An error occured'}</p> : ''}
       </div>
-
-      {error ? <p>{error.message || 'An error occured'}</p> : ''}
-    </div>
+    </>
   )
 }
 
