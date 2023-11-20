@@ -28,7 +28,7 @@ const DatePickerDashboard: FC<DatePickerDashboardProps> = ({
   threeMonthsAgo.setMonth(today.getMonth() - 3)
 
   return (
-    <div>
+    <div className="z-[40] relative">
       <Datepicker
         configs={SHORTCUT_LABELS}
         startWeekOn="mon"

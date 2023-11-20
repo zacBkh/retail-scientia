@@ -43,13 +43,13 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
 
   return (
     <>
-      {isMenuOpen ? <OverlayDarkener isActive={true} /> : ''}
+      <OverlayDarkener zIndex="z-[49]" isActive={isMenuOpen} />
 
       <NavigationMenu.Root
         onValueChange={(open) => {
           setIsMenuOpen(open.length ? true : false)
         }}
-        className={`NavigationMenuRoot shadow-md ${
+        className={`NavigationMenuRoot transparent-navbar shadow-md ${
           isMenuOpen ? '!bg-white' : ''
         }`}
       >
@@ -138,7 +138,7 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
           </div>
         </NavigationMenu.List>
 
-        <div className="ViewportPosition !left-0 lg:!left-[55px]">
+        <div className="ViewportPosition !left-0 lg:!left-[55px] z-[150]">
           <NavigationMenu.Viewport className="NavigationMenuViewport" />
         </div>
       </NavigationMenu.Root>

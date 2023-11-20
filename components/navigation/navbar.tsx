@@ -33,7 +33,7 @@ const Navbar: FC<NavbarProps> = ({ session }) => {
 
   return (
     <>
-      <OverlayDarkener isActive={isHamburgerMenuOpen} />
+      <OverlayDarkener zIndex="z-10" isActive={isHamburgerMenuOpen} />
       <div
         id="navbar"
         className="sticky top-0 z-[999999] bg-gray-400 dark:bg-[#232730] sm:transparent-navbar"

@@ -1,11 +1,13 @@
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { addSales } from '@/services/prisma-queries'
-
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../auth/[...nextauth]/route'
 
-import { findSalesOfUser } from '@/services/prisma-queries'
+import {
+  findSalesOfUser,
+  getSalesByBestSellerSku,
+  addSales,
+} from '@/services/prisma-queries'
 
 export async function POST(request: Request) {
   const currentSession = await getServerSession(authOptions)
@@ -28,27 +30,47 @@ export async function POST(request: Request) {
   )
 }
 
+// Send sales either by chroological order (findSalesOfUser) or by top ref sold (getSalesByBestSellerSku)
 export async function GET(request: NextRequest) {
   try {
     const queryDates = request.nextUrl.searchParams.get('dates') ?? null
+    const byTopSeller =
+      request.nextUrl.searchParams.get('byTopSeller') === 'true'
+
+    const currentSession = await getServerSession(authOptions)
 
     // If no date (user clear the calendar), send null to Prisma so no filter on date
     const isNoDate = queryDates && queryDates[0] === ','
     const arrayQueryDates = isNoDate ? null : queryDates?.split(',')
 
-    const currentSession = await getServerSession(authOptions)
-    const filteredSalesUser = await findSalesOfUser(
-      Number(currentSession?.user?.id),
-      arrayQueryDates
-    )
+    // If query param mentionned only top sellers should be sent
+    if (byTopSeller) {
+      const filteredSalesUserByTopSeller = await getSalesByBestSellerSku(
+        Number(currentSession?.user?.id),
+        arrayQueryDates
+      )
 
-    return NextResponse.json(
-      {
-        success: true,
-        result: filteredSalesUser,
-      },
-      { status: 201 }
-    )
+      return NextResponse.json(
+        {
+          success: true,
+          result: filteredSalesUserByTopSeller,
+        },
+        { status: 201 }
+      )
+    } else {
+      const filteredSalesUser = await findSalesOfUser(
+        Number(currentSession?.user?.id),
+        arrayQueryDates
+      )
+
+      return NextResponse.json(
+        {
+          success: true,
+          result: filteredSalesUser,
+        },
+        { status: 201 }
+      )
+    }
   } catch (error) {
     return NextResponse.json(
       {

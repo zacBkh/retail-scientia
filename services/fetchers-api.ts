@@ -44,22 +44,32 @@ export const getProductDetails: GetProductDetailsArgs = async () => {
 }
 
 interface GetFileredUserSalesInDB {
-  (dateQuery?: string[]): Promise<APIResponseFindUserSales>
+  (
+    dateQuery?: string[],
+    byTopSeller?: boolean
+  ): Promise<APIResponseFindUserSales>
 }
 
 // Dashboard - get user sales
-export const filterUserSalesInDB: GetFileredUserSalesInDB = async (
-  datesQuery
+export const getUserSalesInDB: GetFileredUserSalesInDB = async (
+  datesQuery,
+  byTopSeller
 ) => {
-  const response = await fetch(`/${SALE}/?dates=${datesQuery}`, {
-    method: 'GET',
-  })
+  console.log('new query to fetch user sales', datesQuery)
+  const response = await fetch(
+    `/${SALE}/?dates=${datesQuery}&byTopSeller=${byTopSeller}`,
+    {
+      method: 'GET',
+    }
+  )
   const data: APIResponseFindUserSales = await response.json()
   if (!data.success) {
     // @ts-ignore
     const error = new Error(data.result)
     throw error
   }
+
+  console.log('data from querYY', data)
 
   return data
 }
