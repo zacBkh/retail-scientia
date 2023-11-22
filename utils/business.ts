@@ -63,6 +63,5 @@ export const combineCategoriesAndSales: CombineCategoriesAndSalesArgs = (
     }
   })
 
-  console.log('nonSortedSales', nonSortedSales)
   return nonSortedSales.sort((a, b) => b.sales - a.sales)
 }

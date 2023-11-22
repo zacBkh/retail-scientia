@@ -28,6 +28,7 @@ import type { Session } from 'next-auth'
 import getCloudiImg from '@/utils/transform-cloudi-img'
 
 import OverlayDarkener from '../../overlay-darkener'
+import { zIndexes } from '@/constants/z-indexes'
 
 interface NavbarRxProps {
   session: Session | null
@@ -43,15 +44,18 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
 
   return (
     <>
-      <OverlayDarkener zIndex="z-[49]" isActive={isMenuOpen} />
+      <OverlayDarkener
+        zIndex={zIndexes.OVERLAY_DATEPICKER_NAVBAR}
+        isActive={isMenuOpen}
+      />
 
       <NavigationMenu.Root
         onValueChange={(open) => {
           setIsMenuOpen(open.length ? true : false)
         }}
-        className={`NavigationMenuRoot transparent-navbar shadow-md ${
-          isMenuOpen ? '!bg-white' : ''
-        }`}
+        className={`NavigationMenuRoot ${
+          zIndexes.NAVBAR
+        } transparent-navbar shadow-md ${isMenuOpen ? '!bg-white' : ''}`}
       >
         <NavigationMenu.List className="NavigationMenuList !items-center">
           <Link

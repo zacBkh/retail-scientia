@@ -8,8 +8,8 @@ interface OverlayDarkenerProps {
 const OverlayDarkener: FC<OverlayDarkenerProps> = ({ isActive, zIndex }) => {
   return (
     <div
-      className={`transition-all duration-200 ease-in-out ${
-        isActive ? `overlayDarkener ${zIndex}` : 'killOverlayDarkener'
+      className={`${zIndex} overlayDarkenerBase ${
+        isActive ? `overlayDarkenerActive ` : ''
       }`}
     ></div>
   )

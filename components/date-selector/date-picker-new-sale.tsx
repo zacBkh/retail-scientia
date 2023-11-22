@@ -23,6 +23,8 @@ import OverlayDarkener from '../ui/overlay-darkener'
 
 import { dateToStringForQuery } from '@/utils/dates'
 
+import { zIndexes } from '@/constants/z-indexes'
+
 interface DatePickerNewSaleProps {
   currentSession: Session | null
 }
@@ -71,9 +73,9 @@ const DatePickerNewSale: FC<DatePickerNewSaleProps> = ({ currentSession }) => {
     () =>
       getUserSalesInDB([datesObject?.startDate, datesObject?.endDate ?? '']),
     {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
+      // revalidateIfStale: false,
+      // revalidateOnFocus: false,
+      // revalidateOnReconnect: false,
       onSuccess: (data, key, config) => checkIfAlreadySales(data),
     }
   )
@@ -131,9 +133,12 @@ const DatePickerNewSale: FC<DatePickerNewSaleProps> = ({ currentSession }) => {
 
   return (
     <>
-      <OverlayDarkener zIndex="z-[39]" isActive={isDatePickerOpen} />
+      <OverlayDarkener
+        zIndex={zIndexes.OVERLAY_DATEPICKER_NEW_SALE}
+        isActive={isDatePickerOpen}
+      />
 
-      <div className="sticky top-[45px] z-[40]">
+      <div className={`sticky top-[45px] ${zIndexes.DATEPICKER_NEW_SALE}`}>
         <Datepicker
           startWeekOn="mon"
           readOnly={true}
