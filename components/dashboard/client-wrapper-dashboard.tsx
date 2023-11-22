@@ -35,6 +35,10 @@ import ShowMoreButtonDashboard from '../ui/button-show-more-dashboard'
 
 import OverlayDarkener from '../ui/overlay-darkener'
 
+import { zIndexes } from '@/constants/z-indexes'
+
+import useOnDetectDatePickerOpen from '@/hooks/useOnDetectDatePickerOpen'
+
 interface DashboardClientWrapperProps {
   currentSession: Session | null
   totalSalesOfUser: SalesWithProducts
@@ -62,10 +66,10 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
     }
   )
   const {
-    data: filteredSalesUserBySKU,
-    error: errorFilteredSalesUserBySKU,
-    isLoading: isLoadingFilteredSalesUserBySKU,
-    isValidating: isValidatingFilteredSalesUserBySKU,
+    data: sortedSalesBySKU,
+    error: errorsortedSalesBySKU,
+    isLoading: isLoadingsortedSalesBySKU,
+    isValidating: isValidatingsortedSalesBySKU,
   } = useSWR(
     SWR_KEYS.GET_SALES_OF_USER_BY_BEST_SELLER_DB,
     () =>
@@ -83,10 +87,9 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
 
   // If date changed, update the numbers
   useEffect(() => {
-    mutate([
-      SWR_KEYS.GET_SALES_OF_USER_DB,
-      SWR_KEYS.GET_SALES_OF_USER_BY_BEST_SELLER_DB,
-    ])
+    console.log('new dates!!')
+    mutate(SWR_KEYS.GET_SALES_OF_USER_BY_BEST_SELLER_DB)
+    mutate(SWR_KEYS.GET_SALES_OF_USER_DB)
   }, [datesObject?.startDate, datesObject?.endDate])
 
   const ttlSalesValue =
@@ -107,34 +110,17 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
   const [isShowTopSellersExpanded, setIsShowTopSellersExpanded] =
     useState(false)
 
-  console.log('filteredSalesUserBySKU', filteredSalesUserBySKU)
+  const isDatePickerOpen = useOnDetectDatePickerOpen()
 
-  const [isDatePickerOpen, setDatePickerOpen] = useState(false)
-
-  const handleClickOnPage = () => {
-    setTimeout(() => {
-      const datePickerIsOpen = document.querySelector(
-        'div.block.translate-y-0.opacity-1.block'
-      )
-      if (datePickerIsOpen) {
-        setDatePickerOpen(true)
-      } else {
-        setDatePickerOpen(false)
-      }
-    }, 50)
-  }
-
-  useEffect(() => {
-    document.addEventListener('click', handleClickOnPage)
-
-    return () => {
-      document.removeEventListener('click', handleClickOnPage)
-    }
-  }, [])
+  console.log('sortedSalesBySKU', sortedSalesBySKU)
+  console.log('filteredSalesUser', filteredSalesUser)
 
   return (
     <>
-      <OverlayDarkener zIndex="z-[39]" isActive={isDatePickerOpen} />
+      <OverlayDarkener
+        zIndex={zIndexes.OVERLAY_DATEPICKER_DASHBOARD}
+        isActive={isDatePickerOpen}
+      />
 
       <div className={`${COLORS.grey_bg} px-2`}>
         <div className="p-3 ">
@@ -199,16 +185,15 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
             className={` flex flex-col gap-y-3 py-4 px-4 mb-4 card-dashboard w-full md:w-1/2`}
           >
             <span className="text-lg font-bold my-2">Top Sellers</span>
-            {filteredSalesUserBySKU?.result
+            {sortedSalesBySKU?.result
               ?.slice(0, isShowTopSellersExpanded ? 6 : 3)
               ?.map((item) => (
                 <TableOfSKUs
                   mode={ModeOfProductTable.TopSellersProducts}
                   isLoading={
-                    isLoadingFilteredSalesUserBySKU ||
-                    isValidatingFilteredSalesUserBySKU
+                    isLoadingsortedSalesBySKU || isValidatingsortedSalesBySKU
                   }
-                  key={item.id}
+                  key={`${item.productSold.id}-1`}
                   img={item.productSold.img}
                   desc={item.productSold.description}
                   // @ts-ignore

@@ -1,12 +1,7 @@
-import Spinner from '@/components/ui/spinner'
+import LoadingViewServer from '@/components/ui/loading-files'
 
 const Loading = () => {
-  return (
-    <div className="flex flex-wrap justify-center items-center gap-4 h-screen sm:h-[40vw]">
-      <p className="text-xl font-semibold">Loading your Cart...</p>
-      <Spinner style="border-t-black !w-10 !h-10" />
-    </div>
-  )
+  return <LoadingViewServer text="Your Cart is loading... 💪🏼" />
 }
 
 export default Loading

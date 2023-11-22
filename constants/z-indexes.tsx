@@ -1,0 +1,10 @@
+export const zIndexes = {
+  OVERLAY_DATEPICKER_NEW_SALE: 'z-[9]',
+  DATEPICKER_NEW_SALE: 'z-[10]',
+
+  OVERLAY_DATEPICKER_DASHBOARD: 'z-[10]',
+  DATEPICKER_DASHBOARD: 'z-[40]',
+
+  OVERLAY_DATEPICKER_NAVBAR: 'z-[49]',
+  NAVBAR: 'z-[50]',
+}

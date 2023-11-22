@@ -2,7 +2,6 @@
 import type { SalesWithProducts, APIResponseFindProducts } from '@/types'
 
 export const sumSalesValue = (salesOfUser: SalesWithProducts) => {
-  console.log('salesOfUser', salesOfUser)
   if (salesOfUser.length <= 0 || salesOfUser === undefined) {
     return
   }

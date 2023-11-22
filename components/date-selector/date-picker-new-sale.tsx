@@ -23,6 +23,10 @@ import OverlayDarkener from '../ui/overlay-darkener'
 
 import { dateToStringForQuery } from '@/utils/dates'
 
+import { zIndexes } from '@/constants/z-indexes'
+
+import useOnDetectDatePickerOpen from '@/hooks/useOnDetectDatePickerOpen'
+
 interface DatePickerNewSaleProps {
   currentSession: Session | null
 }
@@ -71,9 +75,9 @@ const DatePickerNewSale: FC<DatePickerNewSaleProps> = ({ currentSession }) => {
     () =>
       getUserSalesInDB([datesObject?.startDate, datesObject?.endDate ?? '']),
     {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
+      // revalidateIfStale: false,
+      // revalidateOnFocus: false,
+      // revalidateOnReconnect: false,
       onSuccess: (data, key, config) => checkIfAlreadySales(data),
     }
   )
@@ -106,34 +110,16 @@ const DatePickerNewSale: FC<DatePickerNewSaleProps> = ({ currentSession }) => {
     }
   }, [isValidating])
 
-  const [isDatePickerOpen, setDatePickerOpen] = useState(false)
-
-  const handleClickOnPage = () => {
-    setTimeout(() => {
-      const datePickerIsOpen = document.querySelector(
-        'div.block.translate-y-0.opacity-1.block'
-      )
-      if (datePickerIsOpen) {
-        setDatePickerOpen(true)
-      } else {
-        setDatePickerOpen(false)
-      }
-    }, 50)
-  }
-
-  useEffect(() => {
-    document.addEventListener('click', handleClickOnPage)
-
-    return () => {
-      document.removeEventListener('click', handleClickOnPage)
-    }
-  }, [])
+  const isDatePickerOpen = useOnDetectDatePickerOpen()
 
   return (
     <>
-      <OverlayDarkener zIndex="z-[39]" isActive={isDatePickerOpen} />
+      <OverlayDarkener
+        zIndex={zIndexes.OVERLAY_DATEPICKER_NEW_SALE}
+        isActive={isDatePickerOpen}
+      />
 
-      <div className="sticky top-[45px] z-[40]">
+      <div className={`sticky top-[45px] ${zIndexes.DATEPICKER_NEW_SALE}`}>
         <Datepicker
           startWeekOn="mon"
           readOnly={true}

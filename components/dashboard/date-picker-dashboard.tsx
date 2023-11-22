@@ -7,6 +7,8 @@ import type { DateValueType } from 'react-tailwindcss-datepicker'
 
 import { SHORTCUT_LABELS } from '@/constants/date-picker'
 
+import { zIndexes } from '@/constants/z-indexes'
+
 interface DatePickerDashboardProps {
   datesObject: DateValueType
   onNewDateObject: (newDateObject: DateValueType) => void
@@ -28,7 +30,7 @@ const DatePickerDashboard: FC<DatePickerDashboardProps> = ({
   threeMonthsAgo.setMonth(today.getMonth() - 3)
 
   return (
-    <div className="z-[40] relative">
+    <div className={`${zIndexes.DATEPICKER_DASHBOARD} relative`}>
       <Datepicker
         configs={SHORTCUT_LABELS}
         startWeekOn="mon"
