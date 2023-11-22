@@ -25,6 +25,8 @@ import { dateToStringForQuery } from '@/utils/dates'
 
 import { zIndexes } from '@/constants/z-indexes'
 
+import useOnDetectDatePickerOpen from '@/hooks/useOnDetectDatePickerOpen'
+
 interface DatePickerNewSaleProps {
   currentSession: Session | null
 }
@@ -108,28 +110,7 @@ const DatePickerNewSale: FC<DatePickerNewSaleProps> = ({ currentSession }) => {
     }
   }, [isValidating])
 
-  const [isDatePickerOpen, setDatePickerOpen] = useState(false)
-
-  const handleClickOnPage = () => {
-    setTimeout(() => {
-      const datePickerIsOpen = document.querySelector(
-        'div.block.translate-y-0.opacity-1.block'
-      )
-      if (datePickerIsOpen) {
-        setDatePickerOpen(true)
-      } else {
-        setDatePickerOpen(false)
-      }
-    }, 50)
-  }
-
-  useEffect(() => {
-    document.addEventListener('click', handleClickOnPage)
-
-    return () => {
-      document.removeEventListener('click', handleClickOnPage)
-    }
-  }, [])
+  const isDatePickerOpen = useOnDetectDatePickerOpen()
 
   return (
     <>

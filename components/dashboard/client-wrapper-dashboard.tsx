@@ -37,6 +37,8 @@ import OverlayDarkener from '../ui/overlay-darkener'
 
 import { zIndexes } from '@/constants/z-indexes'
 
+import useOnDetectDatePickerOpen from '@/hooks/useOnDetectDatePickerOpen'
+
 interface DashboardClientWrapperProps {
   currentSession: Session | null
   totalSalesOfUser: SalesWithProducts
@@ -108,28 +110,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
   const [isShowTopSellersExpanded, setIsShowTopSellersExpanded] =
     useState(false)
 
-  const [isDatePickerOpen, setDatePickerOpen] = useState(false)
-
-  const handleClickOnPage = () => {
-    setTimeout(() => {
-      const datePickerIsOpen = document.querySelector(
-        'div.block.translate-y-0.opacity-1.block'
-      )
-      if (datePickerIsOpen) {
-        setDatePickerOpen(true)
-      } else {
-        setDatePickerOpen(false)
-      }
-    }, 20)
-  }
-
-  useEffect(() => {
-    document.addEventListener('click', handleClickOnPage)
-
-    return () => {
-      document.removeEventListener('click', handleClickOnPage)
-    }
-  }, [])
+  const isDatePickerOpen = useOnDetectDatePickerOpen()
 
   console.log('sortedSalesBySKU', sortedSalesBySKU)
   console.log('filteredSalesUser', filteredSalesUser)
