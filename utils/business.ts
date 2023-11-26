@@ -65,3 +65,23 @@ export const combineCategoriesAndSales: CombineCategoriesAndSalesArgs = (
 
   return nonSortedSales.sort((a, b) => b.sales - a.sales)
 }
+
+type UserFav = {
+  id: number
+}[]
+export const checkIfIsUserFav = (
+  arrayOfUserIDs: UserFav,
+  currentUserID: string | null
+) => {
+  if (!arrayOfUserIDs.length || !currentUserID) {
+    return false
+  }
+
+  const pureArray = arrayOfUserIDs.map((item) => item.id)
+
+  if (pureArray.includes(+currentUserID)) {
+    return true
+  }
+
+  return false
+}

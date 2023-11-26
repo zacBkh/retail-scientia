@@ -10,15 +10,22 @@ const HomePage = async () => {
   const currentSession = await getServerSession(authOptions)
   console.log('currentSession', currentSession)
 
-  const allProducts = await getAllProducts()
+  const allProducts = await getAllProducts(currentSession?.user.id)
+
+  console.log('allProducts ----> *', allProducts[1].favouritedBy)
 
   return (
     <main className="flex flex-col items-center gap-y-4 text-black p-2">
       <DatePickerNewSale currentSession={currentSession} />
 
-      <ClientWrapper allProducts={allProducts} />
+      <ClientWrapper
+        currentUserID={currentSession?.user.id}
+        allProducts={allProducts}
+      />
     </main>
   )
 }
 
 export default HomePage
+
+// allProducts ----> * [ { id: 3 } ]

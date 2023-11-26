@@ -45,11 +45,7 @@ export default async function RootLayout({
             <main>{children}</main>
             {/* <ThemePanel /> */}
           </Theme>
-          <ToastContainer
-            theme="colored"
-            position="bottom-right"
-            pauseOnHover
-          />
+          <ToastContainer theme="light" position="bottom-right" pauseOnHover />
         </body>
       </Providers>
     </html>

@@ -13,11 +13,19 @@ import SearchBarMain from '../search-bar'
 
 import { getDateLS } from '@/utils/local-storage'
 
+import { checkIfIsUserFav } from '@/utils/business'
+
+import type { ProductsWithFav } from '@/types'
+
 interface ClientWrapperProps {
-  allProducts: Product[]
+  allProducts: ProductsWithFav[]
+  currentUserID: string | undefined
 }
 
-const ClientWrapper: FC<ClientWrapperProps> = ({ allProducts }) => {
+const ClientWrapper: FC<ClientWrapperProps> = ({
+  allProducts,
+  currentUserID,
+}) => {
   const {
     data: dateInLS,
     error,
@@ -68,6 +76,10 @@ const ClientWrapper: FC<ClientWrapperProps> = ({ allProducts }) => {
         ) : (
           productsToDisplay.map((product) => (
             <ProductCard
+              isFav={checkIfIsUserFav(
+                product.favouritedBy,
+                currentUserID ?? null
+              )}
               brandId={product.brandId}
               key={product.id}
               ean={product.ean}

@@ -15,6 +15,7 @@ export enum APP_LINKS {
 export enum REST_API_LINKS {
   SALE = 'api/sales',
   PRODUCTS = 'api/products',
+  PRODUCTS_FAV = 'api/products/toggle-fav',
 }
 
 // export const NAV_LINKS = [

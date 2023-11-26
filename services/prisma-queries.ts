@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Prisma, PrismaClient } from '@prisma/client'
 
+import { ProductsWithFav } from '@/types'
+
 // Hack so new prisma client is not created at every hot reload
 let db: PrismaClient
 if (process.env.NODE_ENV === 'production') {
@@ -19,12 +21,24 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Fetch all products
-export const getAllProducts = async () => {
+export const getAllProducts = async (userID: string | undefined) => {
   // const allProducts = await db.product.findMany({ take: 50 })
   const allProducts = await db.product.findMany({
     where: { img: { not: '' } },
+    include: { favouritedBy: { select: { id: true } } },
   })
-  return allProducts
+
+  const sortFn = (a: ProductsWithFav) => {
+    const arrayOfUserA = a.favouritedBy.map((x) => x.id)
+
+    if (userID && arrayOfUserA.includes(+userID)) {
+      return -1
+    } else {
+      return 0
+    }
+  }
+  const sortedByUserFav = allProducts.sort(sortFn)
+  return sortedByUserFav
 }
 
 export const addSales = async (
@@ -161,4 +175,35 @@ export const getSalesByBestSellerSku: GetSalesByTopSoldSKU = async (
   })
 
   return finalSKUOrder
+}
+
+export const addProductAsFav = async (
+  currentUserID: number,
+  productID: number,
+  isAlreadyFav: boolean
+) => {
+  // Get user's favourite
+  const user = await db.user.findUnique({
+    where: { id: currentUserID },
+    include: { favoriteProducts: { select: { id: true } } },
+  })
+
+  // Map them to an array
+  const userFavArrayIDSKU =
+    user?.favoriteProducts.map((product) => product.id) || []
+
+  // If already fav, pull, otherwise, push
+  const updatedFavoriteProductIds = isAlreadyFav
+    ? userFavArrayIDSKU.filter((id) => id !== productID)
+    : [...userFavArrayIDSKU, productID]
+
+  // Mutate the array on DB
+  await db.user.update({
+    where: { id: currentUserID },
+    data: {
+      favoriteProducts: {
+        set: updatedFavoriteProductIds.map((id) => ({ id })),
+      },
+    },
+  })
 }
