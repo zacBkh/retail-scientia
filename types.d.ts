@@ -8,6 +8,7 @@ export type APIAnswerBasic<T> = {
 
 export type APIResponseRegisterSales = APIAnswerBasic<string>
 export type APIResponseFindProducts = APIAnswerBasic<Product[]>
+export type APIResponseToggleFav = APIAnswerBasic<string>
 
 // LS
 export type SalesInLocalStorage = number[]
@@ -36,3 +37,13 @@ export type SalesWithCategory = {
   category1: string
   sales: number
 }[]
+
+export type ProductsWithFav = Prisma.ProductGetPayload<{
+  include: {
+    favouritedBy: {
+      select: {
+        id: true
+      }
+    }
+  }
+}>

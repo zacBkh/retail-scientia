@@ -1,11 +1,12 @@
 import { REST_API_LINKS } from '@/constants/URLs'
-const { PRODUCTS, SALE } = REST_API_LINKS
+const { PRODUCTS, SALE, PRODUCTS_FAV } = REST_API_LINKS
 
 import type {
   APIResponseFindProducts,
   APIResponseRegisterSales,
   SalesInLocalStorage,
   APIResponseFindUserSales,
+  APIResponseToggleFav,
 } from '@/types'
 
 interface RegisterSalesTypes {
@@ -55,7 +56,6 @@ export const getUserSalesInDB: GetFileredUserSalesInDB = async (
   datesQuery,
   byTopSeller
 ) => {
-  console.log('new query to fetch user sales', datesQuery)
   const response = await fetch(
     `/${SALE}/?dates=${datesQuery}&byTopSeller=${byTopSeller}`,
     {
@@ -69,7 +69,23 @@ export const getUserSalesInDB: GetFileredUserSalesInDB = async (
     throw error
   }
 
-  console.log('data from querYY', data)
+  return data
+}
 
+interface ToggleFavProductArgs {
+  (productID: number, isFav: boolean): Promise<APIResponseToggleFav>
+}
+
+// Add a sale in DB
+export const toggleFavProduct: ToggleFavProductArgs = async (
+  productID,
+  isFav
+) => {
+  const response = await fetch(`${PRODUCTS_FAV}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ productID, isFav }),
+  })
+  const data = await response.json()
   return data
 }

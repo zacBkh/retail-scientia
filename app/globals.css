@@ -135,6 +135,10 @@
   background-color: #75fa7a !important;
 } */
 
+.Toastify__toast-body {
+  font-family: '__Plus_Jakarta_Sans_d21556', sans-serif !important;
+}
+
 .card-dashboard {
   box-shadow: rgba(0, 0, 0, 0.04) 0px 5px 22px,
     rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px;
@@ -162,4 +166,12 @@
   top: 0;
   width: 100%;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+button:active {
+  transform: scale(0.9);
+}
+
+button:active:disabled {
+  transform: none !important;
 }

@@ -50,7 +50,6 @@ const DatePickerNewSale: FC<DatePickerNewSaleProps> = ({ currentSession }) => {
   })
 
   const checkIfAlreadySales = (data: APIResponseFindUserSales) => {
-    console.log('data', data)
     if (datesObject?.startDate === null) {
       return toast.warn('Please select a date.', {
         autoClose: 7000,
@@ -83,7 +82,6 @@ const DatePickerNewSale: FC<DatePickerNewSaleProps> = ({ currentSession }) => {
   )
 
   const handleValueChange = async (newValue: any) => {
-    console.log('newValue', newValue)
     setDatesObject(newValue)
   }
 

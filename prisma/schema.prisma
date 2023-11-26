@@ -46,6 +46,8 @@ model Product {
 
   brandId Int?
   brand   Brand? @relation(fields: [brandId], references: [id])
+
+  favouritedBy User[]
 }
 
 model Sale {
@@ -78,6 +80,8 @@ model User {
   isAdmin Boolean @default(false)
 
   brands Brand[]
+
+  favoriteProducts Product[]
 }
 
 model Brand {
