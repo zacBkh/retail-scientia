@@ -1,4 +1,5 @@
 // color should be "border-t-[color]"
+// to change bg color of the spinner: "border-red-500"
 
 import { FC } from 'react'
 

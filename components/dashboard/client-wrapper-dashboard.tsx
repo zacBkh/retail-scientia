@@ -5,7 +5,8 @@ import { FC, useState, useEffect } from 'react'
 import type { Session } from 'next-auth'
 
 import SWR_KEYS from '@/constants/SWR-keys'
-import useSWR, { mutate } from 'swr'
+import { mutate } from 'swr'
+import useSWRImmutable from 'swr/immutable'
 
 import { sumSalesValue } from '@/utils/db-data'
 
@@ -58,19 +59,21 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
     error,
     isLoading,
     isValidating,
-  } = useSWR(
+  } = useSWRImmutable(
     SWR_KEYS.GET_SALES_OF_USER_DB,
     () => getUserSalesInDB([datesObject?.startDate, datesObject?.endDate]),
     {
       revalidateOnMount: true,
     }
   )
+
+  // USELESS API NETWORK CALLS !! POTENTIAL TO IMPROVE WITH GROUPBY ORDER BY ??
   const {
     data: sortedSalesBySKU,
     error: errorsortedSalesBySKU,
     isLoading: isLoadingsortedSalesBySKU,
     isValidating: isValidatingsortedSalesBySKU,
-  } = useSWR(
+  } = useSWRImmutable(
     SWR_KEYS.GET_SALES_OF_USER_BY_BEST_SELLER_DB,
     () =>
       getUserSalesInDB([datesObject?.startDate, datesObject?.endDate], true),
