@@ -24,14 +24,16 @@ if (process.env.NODE_ENV === 'production') {
 export const getAllProducts = async (userID: string | undefined) => {
   // const allProducts = await db.product.findMany({ take: 50 })
   const allProducts = await db.product.findMany({
-    where: { img: { not: '' } },
+    // where: { img: { not: '' } },
     include: { favouritedBy: { select: { id: true } } },
   })
 
-  const sortFn = (a: ProductsWithFav) => {
-    const arrayOfUserA = a.favouritedBy.map((x) => x.id)
+  const sortFn = (products: ProductsWithFav) => {
+    // Building an array with only the favouritedBy
+    const arrayOfUserFav = products.favouritedBy.map((prod) => prod.id)
 
-    if (userID && arrayOfUserA.includes(+userID)) {
+    // If favourited product includes userID...
+    if (userID && arrayOfUserFav.includes(+userID)) {
       return -1
     } else {
       return 0

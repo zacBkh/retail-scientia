@@ -27,5 +27,3 @@ const HomePage = async () => {
 }
 
 export default HomePage
-
-// allProducts ----> * [ { id: 3 } ]
