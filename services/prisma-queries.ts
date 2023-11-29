@@ -25,6 +25,7 @@ export const getAllProducts = async (userID: string | undefined) => {
   // const allProducts = await db.product.findMany({ take: 50 })
   const allProducts = await db.product.findMany({
     // where: { img: { not: '' } },
+    take: 50,
     include: { favouritedBy: { select: { id: true } } },
   })
 
