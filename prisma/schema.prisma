@@ -94,3 +94,5 @@ model Brand {
   products Product[]
   users    User[]
 }
+
+// author     User        @relation(fields: [authorId], references: [id])
