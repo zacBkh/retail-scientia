@@ -20,39 +20,23 @@ if (process.env.NODE_ENV === 'production') {
   db = global.db
 }
 
-// Fetch all products
-// export const getAllProducts = async (userID: string | undefined) => {
-//   // const allProducts = await db.product.findMany({ take: 50 })
-//   const allProducts = await db.product.findMany({
-//     // where: { img: { not: '' } },
-//     take: 50,
-//     include: { favouritedBy: { select: { id: true } } },
-//   })
-
-//   const sortFn = (products: ProductsWithFav) => {
-//     // Building an array with only the favouritedBy
-//     const arrayOfUserFav = products.favouritedBy.map((prod) => prod.id)
-
-//     // If favourited product includes userID...
-//     if (userID && arrayOfUserFav.includes(+userID)) {
-//       return -1
-//     } else {
-//       return 0
-//     }
-//   }
-//   const sortedByUserFav = allProducts.sort(sortFn)
-//   return sortedByUserFav
-// }
-
-export const getSearchedProducts = async (
+export const getProducts = async (
   userID: string | undefined,
-  searchQuery?: string
+  searchQuery?: string,
+
+  skip = 0,
+  pageSize = 20
 ) => {
-  // const allProducts = await db.product.findMany({ take: 50 })
   const searchedProducts = await db.product.findMany({
     where: { description: { contains: searchQuery, mode: 'insensitive' } },
     include: { favouritedBy: { select: { id: true } } },
-    take: 10,
+    skip,
+    take: pageSize,
+    orderBy: {
+      favouritedBy: {
+        _count: 'desc',
+      },
+    },
   })
 
   const sortFn = (products: ProductsWithFav) => {
@@ -66,6 +50,7 @@ export const getSearchedProducts = async (
       return 0
     }
   }
+
   const sortedByUserFav = searchedProducts.sort(sortFn)
   return sortedByUserFav
 }

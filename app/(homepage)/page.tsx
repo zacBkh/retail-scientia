@@ -5,12 +5,14 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '../api/auth/[...nextauth]/route'
 import DatePickerNewSale from '@/components/date-selector/date-picker-new-sale'
 
-import { getSearchedProducts } from '@/services/prisma-queries'
+import { getProducts } from '@/services/prisma-queries'
+import getProductsAction from '../actions'
 
 interface HomePageProps {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: { [search: string]: string | string[] | undefined }
 }
 
+// TODO TYPE SEARCH PARAMS
 // type PostsPageSearchParams = {
 //   page?: string;
 //   sort_by?: string;
@@ -19,32 +21,41 @@ interface HomePageProps {
 
 const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
   const currentSession = await getServerSession(authOptions)
-  console.log('currentSession', currentSession)
 
   const page =
     typeof searchParams.page === 'string' ? Number(searchParams.page) : 1
-  const limit =
-    typeof searchParams.limit === 'string' ? Number(searchParams.limit) : 10
+
   const search =
     typeof searchParams.search === 'string' ? searchParams.search : undefined
 
-  console.log('searchParams', searchParams)
-  console.log('search', search)
+  console.log('page ---->', page)
+  console.log('search ---->', search)
 
-  const productsToDisplay = await getSearchedProducts(
+  let dynamicSkip = 0
+  let take = 20
+  dynamicSkip = (page - 1) * take
+
+  console.log('dynamicSkip', dynamicSkip)
+
+  const productsToDisplay = await getProducts(
     currentSession?.user.id,
-    search
+    search,
+
+    dynamicSkip,
+    take
   )
 
-  console.log('productsToDisplay', productsToDisplay)
+  const length = productsToDisplay.length
+  console.log('length ----> ', length)
 
   return (
     <main className="flex flex-col items-center gap-y-4 text-black p-2 w-full">
       <DatePickerNewSale currentSession={currentSession} />
 
       <ClientWrapper
+        cursor={dynamicSkip}
         currentUserID={currentSession?.user.id}
-        allProducts={productsToDisplay}
+        fetchedProducts={productsToDisplay}
       />
     </main>
   )

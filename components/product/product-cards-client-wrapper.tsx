@@ -1,7 +1,7 @@
 'use client'
 
-import { FC, useState, useEffect, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
+import { FC, useState, useEffect, useTransition, useCallback } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import useSWR, { mutate } from 'swr'
 import SWR_KEYS from '@/constants/SWR-keys'
@@ -17,14 +17,18 @@ import { checkIfIsUserFav } from '@/utils/business'
 import type { ProductsWithFav } from '@/types'
 import { useDebounce } from 'use-debounce'
 
+import useAddQueryString from '@/hooks/useAddQueryStrings'
+
 interface ClientWrapperProps {
-  allProducts: ProductsWithFav[]
+  fetchedProducts: ProductsWithFav[]
   currentUserID: string | undefined
+  cursor: number
 }
 
 const ClientWrapper: FC<ClientWrapperProps> = ({
-  allProducts,
+  fetchedProducts,
   currentUserID,
+  cursor,
 }) => {
   const {
     data: dateInLS,
@@ -35,21 +39,38 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
     revalidateOnMount: true,
   })
 
+  const [productsToDisplay, setProductsToDisplay] = useState(fetchedProducts)
+
+  useEffect(() => {
+    if (!cursor) {
+      return
+    }
+
+    console.log('fetchedProducts', fetchedProducts)
+    setProductsToDisplay((prev) => [...prev, ...fetchedProducts])
+  }, [cursor])
+
   const isDateSet = dateInLS?.length
 
   const [searchQuery, setSearchQuery] = useState('')
   const [debouncedQuery] = useDebounce(searchQuery, 500)
 
   const router = useRouter()
+  const { push } = useRouter()
+
+  const searchParams = useSearchParams()!
+  const addQueryString = useAddQueryString(searchParams.toString()) // custom hook that will append additional params
 
   const [isPending, startTransition] = useTransition()
 
   useEffect(() => {
     if (!debouncedQuery) {
-      return router.push(`/`)
+      startTransition(() => {
+        push(`?${addQueryString('search', null)}`, { scroll: false }) // remove param
+      })
     } else {
       startTransition(() => {
-        router.push(`?search=${debouncedQuery}`)
+        push(`?${addQueryString('search', debouncedQuery)}`, { scroll: false })
       })
     }
   }, [debouncedQuery, router])
@@ -62,7 +83,21 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
     setSearchQuery(query)
   }
 
-  console.log('---------isPending--------', isPending)
+  const [isPendingPagination, startTransitionPagination] = useTransition()
+
+  const [pageCount, setPageCount] = useState(1)
+
+  useEffect(() => {
+    if (!pageCount) {
+      return
+    }
+
+    startTransitionPagination(() => {
+      push(`?${addQueryString('page', pageCount.toString())}`, {
+        scroll: false,
+      })
+    })
+  }, [pageCount, router])
 
   return (
     <div
@@ -83,7 +118,7 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
           !isDateSet ? 'pointer-events-none' : ''
         } flex flex-wrap gap-x-2 gap-y-2 justify-between items-center`}
       >
-        {allProducts.map((product) => (
+        {productsToDisplay.map((product) => (
           <ProductCard
             isFav={checkIfIsUserFav(
               product.favouritedBy,
@@ -110,6 +145,10 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
           />
         ))}
       </div>
+
+      <button onClick={() => setPageCount((prev) => prev + 1)}>
+        Load more
+      </button>
     </div>
   )
 }

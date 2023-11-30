@@ -2,6 +2,8 @@ import { FC, useState } from 'react'
 
 import { Button, Flex, AlertDialog, Text, Checkbox } from '@radix-ui/themes'
 
+import COLORS from '@/constants/colors-temp'
+
 interface AlertDialogRxProps {
   buttonTriggerTxt: string
   headerTxt: string
@@ -45,7 +47,11 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
     <>
       <AlertDialog.Root onOpenChange={handleToggleDialog}>
         <AlertDialog.Trigger disabled={isDisabled}>
-          <Button>{buttonTriggerTxt}</Button>
+          <button
+            className={`bg-[#00a2c7] text-sm font-semibold text-center rounded text-white py-1`}
+          >
+            {buttonTriggerTxt}
+          </button>
         </AlertDialog.Trigger>
         <AlertDialog.Content style={{ maxWidth: 450 }}>
           <AlertDialog.Title>{headerTxt}</AlertDialog.Title>
