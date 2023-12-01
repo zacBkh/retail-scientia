@@ -5,6 +5,8 @@ import { Button, Flex, AlertDialog, Text, Checkbox } from '@radix-ui/themes'
 import COLORS from '@/constants/colors-temp'
 import { DISABLED_STYLE } from '@/constants/disabled-css'
 
+import Ckeckbox from '../checkbox'
+
 interface AlertDialogRxProps {
   buttonTriggerTxt: string
   headerTxt: string
@@ -35,8 +37,8 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
 }) => {
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false)
 
-  const handleCheckboxChange = (evt: boolean) => {
-    setIsCheckboxChecked(evt)
+  const handleCheckboxChange = () => {
+    setIsCheckboxChecked((prev) => !prev)
   }
 
   const handleToggleDialog = (isDialogOpen: boolean) => {
@@ -89,12 +91,10 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
           </div>
 
           <div className="mt-6">
-            <Text as="label" size="2">
-              <Flex gap="2">
-                <Checkbox onCheckedChange={handleCheckboxChange} /> I hereby
-                confirm the information I entered are accurate.
-              </Flex>
-            </Text>
+            <Ckeckbox
+              onCheckedChange={handleCheckboxChange}
+              isCheckboxChecked={isCheckboxChecked}
+            />
 
             <Flex gap="3" mt="4" justify="end">
               <AlertDialog.Cancel>
