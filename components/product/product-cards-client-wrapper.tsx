@@ -1,30 +1,33 @@
 'use client'
 
-import { FC, useState } from 'react'
-
-import { Product } from '@prisma/client'
+import { FC, useState, useEffect, useTransition } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import useSWR, { mutate } from 'swr'
 import SWR_KEYS from '@/constants/SWR-keys'
 
 import ProductCard from '@/components/product/product-card'
 
-import SearchBarMain from '../search-bar'
+import SearchBarMainV2 from '../search-bar-v2'
 
 import { getDateLS } from '@/utils/local-storage'
 
 import { checkIfIsUserFav } from '@/utils/business'
 
 import type { ProductsWithFav } from '@/types'
+import { useDebounce } from 'use-debounce'
+
+import useAddQueryString from '@/hooks/useAddQueryStrings'
 
 interface ClientWrapperProps {
-  allProducts: ProductsWithFav[]
+  fetchedProducts: ProductsWithFav[]
   currentUserID: string | undefined
 }
 
 const ClientWrapper: FC<ClientWrapperProps> = ({
-  allProducts,
+  fetchedProducts,
   currentUserID,
+  // cursor,
 }) => {
   const {
     data: dateInLS,
@@ -38,30 +41,79 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
   const isDateSet = dateInLS?.length
 
   const [searchQuery, setSearchQuery] = useState('')
+  const [debouncedQuery] = useDebounce(searchQuery, 500)
 
-  const filteredProducts = allProducts.filter((sku) =>
-    sku.description.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const router = useRouter()
+  const { push } = useRouter()
 
-  const productsToDisplay = searchQuery.trim().length
-    ? filteredProducts
-    : allProducts
+  const searchParams = useSearchParams()!
+  const addQueryString = useAddQueryString(searchParams.toString()) // custom hook that will append additional params
+
+  const [isPending, startTransition] = useTransition()
+
+  useEffect(() => {
+    if (!debouncedQuery) {
+      startTransition(() => {
+        push(`?${addQueryString('search', null)}`, { scroll: false }) // remove param
+      })
+    } else {
+      startTransition(() => {
+        push(`?${addQueryString('search', debouncedQuery)}`, { scroll: false })
+      })
+    }
+  }, [debouncedQuery, router])
 
   const onClickSkuListHandler = () => {
     mutate(SWR_KEYS.GET_DATE_LS)
   }
 
+  const handleSearch = (query: string) => {
+    setSearchQuery(query)
+  }
+
+  const [isPendingPagination, startTransitionPagination] = useTransition()
+
+  const [pageCount, setPageCount] = useState(1)
+
+  useEffect(() => {
+    if (!pageCount) {
+      return
+    }
+
+    startTransitionPagination(() => {
+      push(`?${addQueryString('page', pageCount.toString())}`, {
+        scroll: false,
+      })
+    })
+  }, [pageCount, router])
+
+  const [productsToDisplay, setProductsToDisplay] = useState(fetchedProducts)
+
+  useEffect(() => {
+    // If search query or on page 1, replace state
+    if (pageCount === 1) {
+      return setProductsToDisplay(fetchedProducts)
+    }
+
+    // if no search query and not on page 1, append
+    if (!searchQuery.length) {
+      // if no search query
+      return setProductsToDisplay((prev) => [...prev, ...fetchedProducts])
+    }
+  }, [pageCount, fetchedProducts])
+
   return (
     <div
       onClick={!isDateSet ? onClickSkuListHandler : undefined}
-      className={`${
+      className={`w-full ${
         !isDateSet ? 'opacity-50 blur-[2px] cursor-not-allowed' : ''
       } flex flex-col gap-y-4`}
     >
-      <SearchBarMain
+      <SearchBarMainV2
         isDateSet={isDateSet}
         searchQuery={searchQuery}
-        onSearch={(query) => setSearchQuery(query)}
+        onSearch={handleSearch}
+        isSearching={isPending}
       />
 
       <div
@@ -69,39 +121,37 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
           !isDateSet ? 'pointer-events-none' : ''
         } flex flex-wrap gap-x-2 gap-y-2 justify-between items-center`}
       >
-        {!productsToDisplay.length ? (
-          <span className="px-5 mx-auto text-center">
-            Your query does not match any of the products...{' '}
-          </span>
-        ) : (
-          productsToDisplay.map((product) => (
-            <ProductCard
-              isFav={checkIfIsUserFav(
-                product.favouritedBy,
-                currentUserID ?? null
-              )}
-              brandId={product.brandId}
-              key={product.id}
-              ean={product.ean}
-              reference={product.reference}
-              axis={product.axis}
-              description={product.description}
-              category1={product.category1}
-              category2={product.category2}
-              gender={product.gender}
-              img={
-                product.img !== ''
-                  ? product.img
-                  : 'fallback_picture/hermes/hermes-logo'
-              }
-              regularPrice={product.regularPrice}
-              size={product.size}
-              timePeriod={product.timePeriod}
-              id={product.id}
-            />
-          ))
-        )}
+        {productsToDisplay.map((product) => (
+          <ProductCard
+            isFav={checkIfIsUserFav(
+              product.favouritedBy,
+              currentUserID ?? null
+            )}
+            brandId={product.brandId}
+            key={product.id}
+            ean={product.ean}
+            reference={product.reference}
+            axis={product.axis}
+            description={product.description}
+            category1={product.category1}
+            category2={product.category2}
+            gender={product.gender}
+            img={product.img}
+            regularPrice={product.regularPrice}
+            size={product.size}
+            timePeriod={product.timePeriod}
+            id={product.id}
+          />
+        ))}
       </div>
+
+      {!searchQuery.length ? (
+        <button onClick={() => setPageCount((prev) => prev + 1)}>
+          Load more
+        </button>
+      ) : (
+        ''
+      )}
     </div>
   )
 }

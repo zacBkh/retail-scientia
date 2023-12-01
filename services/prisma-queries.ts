@@ -13,35 +13,51 @@ if (process.env.NODE_ENV === 'production') {
   if (!global.db) {
     // @ts-ignore
     global.db = new PrismaClient()
-    console.log('Development: Created DB connection.')
+    console.log('Development: Established DB connection.')
   }
 
   // @ts-ignore
   db = global.db
 }
 
-// Fetch all products
-export const getAllProducts = async (userID: string | undefined) => {
-  // const allProducts = await db.product.findMany({ take: 50 })
-  const allProducts = await db.product.findMany({
-    // where: { img: { not: '' } },
-    take: 50,
+export const getProducts = async (
+  userID: string | undefined,
+  searchQuery?: string,
+
+  skip = 0,
+  pageSize = 20
+) => {
+  const searchedProducts = await db.product.findMany({
+    where: { description: { contains: searchQuery, mode: 'insensitive' } },
+
     include: { favouritedBy: { select: { id: true } } },
+
+    skip: searchQuery?.length ? 0 : skip,
+    take: searchQuery?.length ? 120 : pageSize,
+    orderBy: {
+      favouritedBy: {
+        _count: 'desc',
+      },
+    },
   })
 
-  const sortFn = (products: ProductsWithFav) => {
-    // Building an array with only the favouritedBy
-    const arrayOfUserFav = products.favouritedBy.map((prod) => prod.id)
+  console.log('searchedProducts', searchedProducts)
 
-    // If favourited product includes userID...
-    if (userID && arrayOfUserFav.includes(+userID)) {
-      return -1
-    } else {
-      return 0
-    }
-  }
-  const sortedByUserFav = allProducts.sort(sortFn)
-  return sortedByUserFav
+  return searchedProducts
+  // const sortFn = (products: ProductsWithFav) => {
+  //   // Building an array with only the favouritedBy
+  //   const arrayOfUserFav = products.favouritedBy.map((prod) => prod.id)
+
+  //   // If favourited product includes userID...
+  //   if (userID && arrayOfUserFav.includes(+userID)) {
+  //     return -1
+  //   } else {
+  //     return 0
+  //   }
+  // }
+
+  // const sortedByUserFav = searchedProducts.sort(sortFn)
+  // return sortedByUserFav
 }
 
 export const addSales = async (

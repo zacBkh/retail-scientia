@@ -40,7 +40,9 @@ const TableOfSKUs: FC<TableOfSKUsProps> = ({
     saleDate = dayjs(subInfo) // Replace with your actual date
     subInfoDsiplay = saleDate.fromNow()
   } else {
-    subInfoDsiplay = `Sold ${subInfo as number} times`
+    subInfoDsiplay = `Sold ${subInfo as number} ${
+      (subInfo as number) > 1 ? 'times' : 'time'
+    }`
   }
 
   return (

@@ -3,8 +3,6 @@
 import { useState, useEffect, FC } from 'react'
 import Datepicker from 'react-tailwindcss-datepicker'
 
-import type { DateValueType, DateRangeType } from 'react-tailwindcss-datepicker'
-
 import useSWR, { mutate } from 'swr'
 
 import { getDateLS } from '@/utils/local-storage'
@@ -26,6 +24,8 @@ import { dateToStringForQuery } from '@/utils/dates'
 import { zIndexes } from '@/constants/z-indexes'
 
 import useOnDetectDatePickerOpen from '@/hooks/useOnDetectDatePickerOpen'
+
+import useSWRImmutable from 'swr/immutable'
 
 interface DatePickerNewSaleProps {
   currentSession: Session | null
@@ -69,14 +69,11 @@ const DatePickerNewSale: FC<DatePickerNewSaleProps> = ({ currentSession }) => {
     error: errorUserSales,
     isLoading: isLoadingUserSales,
     isValidating: isValidatingUserSales,
-  } = useSWR(
+  } = useSWRImmutable(
     GET_SALES_OF_USER_DB,
     () =>
       getUserSalesInDB([datesObject?.startDate, datesObject?.endDate ?? '']),
     {
-      // revalidateIfStale: false,
-      // revalidateOnFocus: false,
-      // revalidateOnReconnect: false,
       onSuccess: (data, key, config) => checkIfAlreadySales(data),
     }
   )

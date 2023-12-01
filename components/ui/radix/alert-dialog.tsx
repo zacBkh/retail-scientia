@@ -2,6 +2,11 @@ import { FC, useState } from 'react'
 
 import { Button, Flex, AlertDialog, Text, Checkbox } from '@radix-ui/themes'
 
+import COLORS from '@/constants/colors-temp'
+import { DISABLED_STYLE } from '@/constants/disabled-css'
+
+import Ckeckbox from '../checkbox'
+
 interface AlertDialogRxProps {
   buttonTriggerTxt: string
   headerTxt: string
@@ -32,8 +37,8 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
 }) => {
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false)
 
-  const handleCheckboxChange = (evt: boolean) => {
-    setIsCheckboxChecked(evt)
+  const handleCheckboxChange = () => {
+    setIsCheckboxChecked((prev) => !prev)
   }
 
   const handleToggleDialog = (isDialogOpen: boolean) => {
@@ -45,7 +50,11 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
     <>
       <AlertDialog.Root onOpenChange={handleToggleDialog}>
         <AlertDialog.Trigger disabled={isDisabled}>
-          <Button>{buttonTriggerTxt}</Button>
+          <button
+            className={`bg-[#00a2c7] text-sm font-semibold text-center rounded text-white py-1 px-3`}
+          >
+            {buttonTriggerTxt}
+          </button>
         </AlertDialog.Trigger>
         <AlertDialog.Content style={{ maxWidth: 450 }}>
           <AlertDialog.Title>{headerTxt}</AlertDialog.Title>
@@ -73,7 +82,10 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
                 <p>
                   The value for this day is{' '}
                   <span className="font-semibold">{ttlCartValue} </span>, for
-                  <span className="font-semibold"> {ttlQty} products.</span>
+                  <span className="font-semibold">
+                    {' '}
+                    {ttlQty} {ttlQty && ttlQty > 1 ? 'products' : 'product'}.
+                  </span>
                 </p>
               </div>
             ) : (
@@ -82,28 +94,29 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
           </div>
 
           <div className="mt-6">
-            <Text as="label" size="2">
-              <Flex gap="2">
-                <Checkbox onCheckedChange={handleCheckboxChange} /> I hereby
-                confirm the information I entered are accurate.
-              </Flex>
-            </Text>
+            <Ckeckbox
+              onCheckedChange={handleCheckboxChange}
+              isCheckboxChecked={isCheckboxChecked}
+            />
 
             <Flex gap="3" mt="4" justify="end">
               <AlertDialog.Cancel>
-                <Button variant="soft" color="gray">
+                <button
+                  className={`bg-[#0000330f] text-sm font-semibold text-center rounded text-[#0007149f] py-1 px-3`}
+                >
                   {btnCancelTxt ?? 'Cancel'}
-                </Button>
+                </button>
               </AlertDialog.Cancel>
               <AlertDialog.Action>
-                <Button
-                  disabled={!isCheckboxChecked}
+                <button
                   onClick={onValidateAction}
-                  variant="solid"
-                  color="red"
+                  disabled={!isCheckboxChecked}
+                  className={`${DISABLED_STYLE} bg-[#e5484d] text-sm font-semibold text-center rounded text-white ${
+                    isCheckboxChecked ? 'text-white' : 'text-[#0007149f]'
+                  } py-2 px-3`}
                 >
                   {btnConfirmTxt ?? 'Continue'}
-                </Button>
+                </button>
               </AlertDialog.Action>
             </Flex>
           </div>

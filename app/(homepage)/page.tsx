@@ -1,26 +1,53 @@
-import { getAllProducts } from '@/services/prisma-queries'
-
+import { FC } from 'react'
 import ClientWrapper from '@/components/product/product-cards-client-wrapper'
 
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../api/auth/[...nextauth]/route'
 import DatePickerNewSale from '@/components/date-selector/date-picker-new-sale'
 
-const HomePage = async () => {
+import { getProducts } from '@/services/prisma-queries'
+import getProductsAction from '../actions'
+
+interface HomePageProps {
+  searchParams: { [search: string]: string | string[] | undefined }
+}
+
+// TODO TYPE SEARCH PARAMS
+// type PostsPageSearchParams = {
+//   page?: string;
+//   sort_by?: string;
+//   sort_order?: "asc" | "desc";
+// };
+
+const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
   const currentSession = await getServerSession(authOptions)
-  console.log('currentSession', currentSession)
 
-  const allProducts = await getAllProducts(currentSession?.user.id)
+  const page =
+    typeof searchParams.page === 'string' ? Number(searchParams.page) : 1
 
-  console.log('allProducts ----> *', allProducts[1].favouritedBy)
+  const search =
+    typeof searchParams.search === 'string' ? searchParams.search : undefined
+
+  let dynamicSkip = 0
+  let take = 20
+  dynamicSkip = (page - 1) * take
+
+  const productsToDisplay = await getProducts(
+    currentSession?.user.id,
+    search,
+
+    dynamicSkip,
+    take
+  )
 
   return (
-    <main className="flex flex-col items-center gap-y-4 text-black p-2">
+    <main className="flex flex-col items-center gap-y-4 text-black p-2 w-full">
       <DatePickerNewSale currentSession={currentSession} />
 
       <ClientWrapper
+        // cursor={dynamicSkip}
         currentUserID={currentSession?.user.id}
-        allProducts={allProducts}
+        fetchedProducts={productsToDisplay}
       />
     </main>
   )
