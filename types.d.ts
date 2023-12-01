@@ -47,3 +47,10 @@ export type ProductsWithFav = Prisma.ProductGetPayload<{
     }
   }
 }>
+
+export interface GetFilteredUserSalesInDB {
+  (
+    dateQuery?: string[],
+    byTopSeller?: boolean
+  ): Promise<APIResponseFindUserSales>
+}

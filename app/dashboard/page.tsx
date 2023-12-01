@@ -11,15 +11,15 @@ const Dashboard = async () => {
 
   // Initial defautl value = todays sales
   // const [todayDate] = new Date().toISOString().split('T')
-  const totalSalesOfUser = await findSalesOfUser(
-    Number(currentSession?.user.id)
-  )
+  // const totalSalesOfUser = await findSalesOfUser(
+  //   Number(currentSession?.user.id)
+  // )
 
   return (
     <>
       <DashboardClientWrapper
         currentSession={currentSession}
-        totalSalesOfUser={totalSalesOfUser}
+        // totalSalesOfUser={totalSalesOfUser}
       />
     </>
   )
