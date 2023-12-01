@@ -53,7 +53,7 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
       <DatePickerNewSale currentSession={currentSession} />
 
       <ClientWrapper
-        cursor={dynamicSkip}
+        // cursor={dynamicSkip}
         currentUserID={currentSession?.user.id}
         fetchedProducts={productsToDisplay}
       />

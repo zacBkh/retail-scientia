@@ -29,9 +29,11 @@ export const getProducts = async (
 ) => {
   const searchedProducts = await db.product.findMany({
     where: { description: { contains: searchQuery, mode: 'insensitive' } },
+
     include: { favouritedBy: { select: { id: true } } },
-    skip,
-    take: pageSize,
+
+    skip: searchQuery?.length ? 0 : skip,
+    take: searchQuery?.length ? 120 : pageSize,
     orderBy: {
       favouritedBy: {
         _count: 'desc',
@@ -39,20 +41,23 @@ export const getProducts = async (
     },
   })
 
-  const sortFn = (products: ProductsWithFav) => {
-    // Building an array with only the favouritedBy
-    const arrayOfUserFav = products.favouritedBy.map((prod) => prod.id)
+  console.log('searchedProducts', searchedProducts)
 
-    // If favourited product includes userID...
-    if (userID && arrayOfUserFav.includes(+userID)) {
-      return -1
-    } else {
-      return 0
-    }
-  }
+  return searchedProducts
+  // const sortFn = (products: ProductsWithFav) => {
+  //   // Building an array with only the favouritedBy
+  //   const arrayOfUserFav = products.favouritedBy.map((prod) => prod.id)
 
-  const sortedByUserFav = searchedProducts.sort(sortFn)
-  return sortedByUserFav
+  //   // If favourited product includes userID...
+  //   if (userID && arrayOfUserFav.includes(+userID)) {
+  //     return -1
+  //   } else {
+  //     return 0
+  //   }
+  // }
+
+  // const sortedByUserFav = searchedProducts.sort(sortFn)
+  // return sortedByUserFav
 }
 
 export const addSales = async (

@@ -3,6 +3,7 @@ import { FC, useState } from 'react'
 import { Button, Flex, AlertDialog, Text, Checkbox } from '@radix-ui/themes'
 
 import COLORS from '@/constants/colors-temp'
+import { DISABLED_STYLE } from '@/constants/disabled-css'
 
 interface AlertDialogRxProps {
   buttonTriggerTxt: string
@@ -48,7 +49,7 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
       <AlertDialog.Root onOpenChange={handleToggleDialog}>
         <AlertDialog.Trigger disabled={isDisabled}>
           <button
-            className={`bg-[#00a2c7] text-sm font-semibold text-center rounded text-white py-1`}
+            className={`bg-[#00a2c7] text-sm font-semibold text-center rounded text-white py-1 px-3`}
           >
             {buttonTriggerTxt}
           </button>
@@ -97,19 +98,22 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
 
             <Flex gap="3" mt="4" justify="end">
               <AlertDialog.Cancel>
-                <Button variant="soft" color="gray">
+                <button
+                  className={`bg-[#0000330f] text-sm font-semibold text-center rounded text-[#0007149f] py-1 px-3`}
+                >
                   {btnCancelTxt ?? 'Cancel'}
-                </Button>
+                </button>
               </AlertDialog.Cancel>
               <AlertDialog.Action>
-                <Button
-                  disabled={!isCheckboxChecked}
+                <button
                   onClick={onValidateAction}
-                  variant="solid"
-                  color="red"
+                  disabled={!isCheckboxChecked}
+                  className={`${DISABLED_STYLE} bg-[#e5484d] text-sm font-semibold text-center rounded text-white ${
+                    isCheckboxChecked ? 'text-white' : 'text-[#0007149f]'
+                  } py-2 px-3`}
                 >
                   {btnConfirmTxt ?? 'Continue'}
-                </Button>
+                </button>
               </AlertDialog.Action>
             </Flex>
           </div>

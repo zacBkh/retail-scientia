@@ -22,13 +22,13 @@ import useAddQueryString from '@/hooks/useAddQueryStrings'
 interface ClientWrapperProps {
   fetchedProducts: ProductsWithFav[]
   currentUserID: string | undefined
-  cursor: number
+  // cursor: number
 }
 
 const ClientWrapper: FC<ClientWrapperProps> = ({
   fetchedProducts,
   currentUserID,
-  cursor,
+  // cursor,
 }) => {
   const {
     data: dateInLS,
@@ -38,17 +38,6 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
   } = useSWR(SWR_KEYS.GET_DATE_LS, () => getDateLS(), {
     revalidateOnMount: true,
   })
-
-  const [productsToDisplay, setProductsToDisplay] = useState(fetchedProducts)
-
-  useEffect(() => {
-    if (!cursor) {
-      return
-    }
-
-    console.log('fetchedProducts', fetchedProducts)
-    setProductsToDisplay((prev) => [...prev, ...fetchedProducts])
-  }, [cursor])
 
   const isDateSet = dateInLS?.length
 
@@ -99,6 +88,21 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
     })
   }, [pageCount, router])
 
+  const [productsToDisplay, setProductsToDisplay] = useState(fetchedProducts)
+
+  useEffect(() => {
+    // If search query or on page 1, replace state
+    if (pageCount === 1) {
+      return setProductsToDisplay(fetchedProducts)
+    }
+
+    // if no search query and not on page 1, append
+    if (!searchQuery.length) {
+      // if no search query
+      return setProductsToDisplay((prev) => [...prev, ...fetchedProducts])
+    }
+  }, [pageCount, fetchedProducts])
+
   return (
     <div
       onClick={!isDateSet ? onClickSkuListHandler : undefined}
@@ -146,9 +150,13 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
         ))}
       </div>
 
-      <button onClick={() => setPageCount((prev) => prev + 1)}>
-        Load more
-      </button>
+      {!searchQuery.length ? (
+        <button onClick={() => setPageCount((prev) => prev + 1)}>
+          Load more
+        </button>
+      ) : (
+        ''
+      )}
     </div>
   )
 }
