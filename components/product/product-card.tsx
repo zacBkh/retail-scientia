@@ -16,11 +16,6 @@ import { toggleFavProduct } from '@/services/fetchers-api'
 
 import { toast } from 'react-toastify'
 
-import SWR_KEYS from '@/constants/SWR-keys'
-
-import { useSWRConfig } from 'swr'
-import useSWRImmutable from 'swr/immutable'
-
 type ProductWithFav = Product & { isFav: boolean }
 
 const ProductCard: FC<ProductWithFav> = ({

@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'production') {
   if (!global.db) {
     // @ts-ignore
     global.db = new PrismaClient()
-    console.log('Development: Created DB connection.')
+    console.log('Development: Established DB connection.')
   }
 
   // @ts-ignore

@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, useState, useEffect, useTransition, useCallback } from 'react'
+import { FC, useState, useEffect, useTransition } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import useSWR, { mutate } from 'swr'
@@ -22,7 +22,6 @@ import useAddQueryString from '@/hooks/useAddQueryStrings'
 interface ClientWrapperProps {
   fetchedProducts: ProductsWithFav[]
   currentUserID: string | undefined
-  // cursor: number
 }
 
 const ClientWrapper: FC<ClientWrapperProps> = ({
@@ -137,11 +136,7 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
             category1={product.category1}
             category2={product.category2}
             gender={product.gender}
-            img={
-              product.img !== ''
-                ? product.img
-                : 'fallback_picture/hermes/hermes-logo'
-            }
+            img={product.img}
             regularPrice={product.regularPrice}
             size={product.size}
             timePeriod={product.timePeriod}

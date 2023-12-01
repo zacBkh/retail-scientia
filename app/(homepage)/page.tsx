@@ -28,14 +28,9 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
   const search =
     typeof searchParams.search === 'string' ? searchParams.search : undefined
 
-  console.log('page ---->', page)
-  console.log('search ---->', search)
-
   let dynamicSkip = 0
   let take = 20
   dynamicSkip = (page - 1) * take
-
-  console.log('dynamicSkip', dynamicSkip)
 
   const productsToDisplay = await getProducts(
     currentSession?.user.id,
@@ -44,9 +39,6 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
     dynamicSkip,
     take
   )
-
-  const length = productsToDisplay.length
-  console.log('length ----> ', length)
 
   return (
     <main className="flex flex-col items-center gap-y-4 text-black p-2 w-full">

@@ -82,7 +82,10 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
                 <p>
                   The value for this day is{' '}
                   <span className="font-semibold">{ttlCartValue} </span>, for
-                  <span className="font-semibold"> {ttlQty} products.</span>
+                  <span className="font-semibold">
+                    {' '}
+                    {ttlQty} {ttlQty && ttlQty > 1 ? 'products' : 'product'}.
+                  </span>
                 </p>
               </div>
             ) : (
