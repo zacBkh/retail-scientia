@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Prisma, PrismaClient } from '@prisma/client'
-
-import { ProductsWithFav } from '@/types'
+import { PrismaClient } from '@prisma/client'
 
 // Hack so new prisma client is not created at every hot reload
 let db: PrismaClient
@@ -121,7 +119,7 @@ export const findSalesOfUser: FindSalesOfUserArgs = async (
     //     },
     //   },
     // },
-    include: { productSold: true },
+    include: { productSold: true, seller: true },
 
     where: {
       sellerId: userID,
@@ -137,6 +135,7 @@ export const findSalesOfUser: FindSalesOfUserArgs = async (
     },
   })
 
+  console.log('userSales --->', userSales)
   return userSales
 }
 

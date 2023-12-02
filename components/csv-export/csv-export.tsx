@@ -13,16 +13,10 @@ interface CSVExportProps {
 }
 
 const CSVExport: FC<CSVExportProps> = ({ sales }) => {
-  const isoDateString = '2023-12-01T00:00:00.000Z'
-
-  const parsedDate = dayjs(isoDateString).format('DD/MM/YYYY')
-  console.log('parsedDate', parsedDate)
+  console.log('sales', sales)
 
   const headers = [
-    { label: 'Sale ID', key: 'id' },
     { label: 'Date', key: 'date' },
-    { label: 'Product ID', key: 'productId' },
-    { label: 'Seller ID', key: 'sellerId' },
     { label: 'Product EAN', key: 'ean' },
     { label: 'Product Description', key: 'description' },
     { label: 'Product Size', key: 'size' },
@@ -32,26 +26,17 @@ const CSVExport: FC<CSVExportProps> = ({ sales }) => {
     { label: 'Product Regular Price', key: 'regularPrice' },
     { label: 'Product Gender', key: 'gender' },
     { label: 'Product Time Period', key: 'timePeriod' },
-    { label: 'Product Brand ID', key: 'brandId' },
+    { label: 'Seller Name', key: 'name' },
+    { label: 'Seller Country', key: 'country' },
+    { label: 'Seller POS', key: 'pointOfSale' },
   ]
 
   const data =
     sales?.map((sale) => ({
-      idSale: sale.id,
       date: dayjs(sale.date).format('MM/DD/YYYY'),
-      productId: sale.productId,
-      sellerId: sale.sellerId,
-      productSoldId: sale.productSold.id,
       ...sale.productSold,
+      ...sale.seller,
     })) || []
-
-  console.log('data', data)
-
-  //   const data = [
-  //     { firstname: 'Ahmed', lastname: 'Tomi', email: 'ah@smthing.co.com' },
-  //     { firstname: 'Raed', lastname: 'Labes', email: 'rl@smthing.co.com' },
-  //     { firstname: 'Yezzi', lastname: 'Min l3b', email: 'ymin@cocococo.com' },
-  //   ]
 
   return (
     <>
@@ -63,27 +48,3 @@ const CSVExport: FC<CSVExportProps> = ({ sales }) => {
 }
 
 export default CSVExport
-
-// {
-//     "id": 130,
-//     "createdAt": "2023-12-01T19:44:18.117Z",
-//     "updatedAt": "2023-12-01T19:44:18.117Z",
-//     "date": "2023-12-01T00:00:00.000Z",
-//     "productId": 120,
-//     "sellerId": 4,
-//     "productSold": {
-//         "id": 120,
-//         "reference": "108409V0",
-//         "ean": "3346130413639",
-//         "description": "H24 Refreshing Deodorant Spray 150ml",
-//         "size": "150ml",
-//         "img": "",
-//         "axis": "Perfume",
-//         "category1": "H24",
-//         "category2": "H24 Dérivés",
-//         "regularPrice": 42,
-//         "gender": "MEN",
-//         "timePeriod": "2024-01",
-//         "brandId": 1
-//     }
-// }

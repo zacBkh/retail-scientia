@@ -21,7 +21,7 @@ export type CartItemType = Pick<
 
 // Sales of a user with the product populated
 export type SalesWithProducts = Prisma.SaleGetPayload<{
-  include: { productSold: true }
+  include: { productSold: true; seller: true }
 }>[]
 
 export type APIResponseFindUserSales = APIAnswerBasic<SalesWithProducts>
