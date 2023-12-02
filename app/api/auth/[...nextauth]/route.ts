@@ -8,8 +8,9 @@ import { findAUser } from '@/services/prisma-queries'
 import { compare } from 'bcrypt'
 
 /*To add properties to session: 
- Add them to jwt (token) in the jwt callback
-Retrieve them from the session callback
+- Add to the return of authorize function
+- Add them to jwt (token) in the jwt callback
+- Retrieve them from the session callback
 */
 
 export const authOptions: AuthOptions = {
@@ -22,18 +23,22 @@ export const authOptions: AuthOptions = {
           ...session.user,
           id: token.id,
           brands: token.brands,
+          accountType: token.accountType,
         },
       }
+      console.log('enrichedSession', enrichedSession)
       return enrichedSession
     },
 
     jwt: ({ token, user }) => {
       if (user) {
+        console.log('user JWT', user)
         // if user JUST logged in, this will be available in jwt in session since we put the info below in the jwt
         const u = user as unknown as any
         return {
           ...token,
           id: u.id,
+          accountType: u.accountType,
           brands: u.brands,
         }
       }
@@ -85,6 +90,7 @@ export const authOptions: AuthOptions = {
           email: user.email,
           name: user.name,
           brands: user.brands,
+          accountType: user.accountType,
         }
       },
     }),

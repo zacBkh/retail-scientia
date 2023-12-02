@@ -4,50 +4,49 @@ import { FC, useState, useEffect } from 'react'
 
 import type { Session } from 'next-auth'
 
-import SWR_KEYS from '@/constants/SWR-keys'
 import { mutate } from 'swr'
 import useSWRImmutable from 'swr/immutable'
 
 import { sumSalesValue } from '@/utils/db-data'
+import {
+  extractUniqueCategoryFromSales,
+  combineCategoriesAndSales,
+} from '@/utils/business'
+import { dateToStringForQuery } from '@/utils/dates'
 
 import DatePickerDashboard from './date-picker-dashboard'
 
 import { getUserSalesInDB } from '@/services/fetchers-api'
 
-import { dateToStringForQuery } from '@/utils/dates'
-
 import type { DateValueType } from 'react-tailwindcss-datepicker'
-import { DateRangeTypeExt, SalesWithProducts } from '@/types'
+import type { DateRangeTypeExt, SalesWithProducts } from '@/types'
+
 import { ModeOfProductTable } from '@/constants/db-queries'
 import COLORS from '@/constants/colors-temp'
+import { zIndexes } from '@/constants/z-indexes'
+import SWR_KEYS from '@/constants/SWR-keys'
 
 import PieChart from '../charts/pie-chart'
 
 import TableOfSKUs from './latest-product-sold'
 
-import {
-  extractUniqueCategoryFromSales,
-  combineCategoriesAndSales,
-} from '@/utils/business'
-
 import CardHeaderKPIs from './card-kpis-header'
 
 import ShowMoreButtonDashboard from '../ui/button-show-more-dashboard'
-
 import OverlayDarkener from '../ui/overlay-darkener'
-
-import { zIndexes } from '@/constants/z-indexes'
 
 import useOnDetectDatePickerOpen from '@/hooks/useOnDetectDatePickerOpen'
 
+import CSVExport from '../csv-export/csv-export'
+
 interface DashboardClientWrapperProps {
   currentSession: Session | null
-  totalSalesOfUser: SalesWithProducts
+  // totalSalesOfUser: SalesWithProducts
 }
 
 const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
   currentSession,
-  totalSalesOfUser,
+  // totalSalesOfUser,
 }) => {
   const [datesObject, setDatesObject] = useState({
     startDate: dateToStringForQuery(new Date()),
@@ -126,11 +125,18 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
       />
 
       <div className={`${COLORS.grey_bg} px-2`}>
-        <div className="p-3 ">
-          <DatePickerDashboard
-            datesObject={datesObject}
-            onNewDateObject={handleNewDateObject}
-          />
+        <div className="p-3">
+          <div className="flex items-center justify-between gap-x-2">
+            <DatePickerDashboard
+              datesObject={datesObject}
+              onNewDateObject={handleNewDateObject}
+            />
+            {!isDatePickerOpen ? (
+              <CSVExport sales={filteredSalesUser?.result} />
+            ) : (
+              ''
+            )}
+          </div>
 
           <div className="my-3 flex gap-x-3 justify-between">
             <CardHeaderKPIs

@@ -7,6 +7,7 @@ import type {
   SalesInLocalStorage,
   APIResponseFindUserSales,
   APIResponseToggleFav,
+  GetFilteredUserSalesInDB,
 } from '@/types'
 
 interface RegisterSalesTypes {
@@ -44,15 +45,8 @@ export const getProductDetails: GetProductDetailsArgs = async () => {
   return data
 }
 
-interface GetFileredUserSalesInDB {
-  (
-    dateQuery?: string[],
-    byTopSeller?: boolean
-  ): Promise<APIResponseFindUserSales>
-}
-
 // Dashboard - get user sales
-export const getUserSalesInDB: GetFileredUserSalesInDB = async (
+export const getUserSalesInDB: GetFilteredUserSalesInDB = async (
   datesQuery,
   byTopSeller
 ) => {

@@ -21,7 +21,7 @@ export type CartItemType = Pick<
 
 // Sales of a user with the product populated
 export type SalesWithProducts = Prisma.SaleGetPayload<{
-  include: { productSold: true }
+  include: { productSold: true; seller: true }
 }>[]
 
 export type APIResponseFindUserSales = APIAnswerBasic<SalesWithProducts>
@@ -30,8 +30,6 @@ export type DateRangeTypeExt = {
   startDate: string
   endDate: string
 }
-
-import { HERMES_LINE_NAME } from './constants/business'
 
 export type SalesWithCategory = {
   category1: string
@@ -47,3 +45,10 @@ export type ProductsWithFav = Prisma.ProductGetPayload<{
     }
   }
 }>
+
+export interface GetFilteredUserSalesInDB {
+  (
+    dateQuery?: string[],
+    byTopSeller?: boolean
+  ): Promise<APIResponseFindUserSales>
+}
