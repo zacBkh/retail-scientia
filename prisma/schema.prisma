@@ -22,6 +22,14 @@ enum Axis {
   Skincare
 }
 
+enum AccountType {
+  Staff
+  Marketing
+  Training
+  Sales
+  Admin
+}
+
 model Product {
   id Int @id @default(autoincrement())
 
@@ -69,15 +77,16 @@ model User {
   createdAt DateTime @default(now())
 
   name     String
-  email    String @unique
+  email    String  @unique
   password String
+  staffID  String?
 
   country     String
   pointOfSale String
 
   sales Sale[] // a user has many sales (disambiguating relations)
 
-  isAdmin Boolean @default(false)
+  accountType AccountType @default(Staff)
 
   brands Brand[]
 
@@ -94,5 +103,3 @@ model Brand {
   products Product[]
   users    User[]
 }
-
-// author     User        @relation(fields: [authorId], references: [id])

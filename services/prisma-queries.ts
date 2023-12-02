@@ -39,8 +39,6 @@ export const getProducts = async (
     },
   })
 
-  console.log('searchedProducts', searchedProducts)
-
   return searchedProducts
   // const sortFn = (products: ProductsWithFav) => {
   //   // Building an array with only the favouritedBy
@@ -93,7 +91,7 @@ export const findAUser = async (email: string) => {
       email: email,
     },
   })
-
+  console.log('user ---> auth', user)
   return user
 }
 

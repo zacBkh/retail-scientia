@@ -2,6 +2,7 @@ export enum CLIENT_NAMES {
   DDF = 'Dubai Duty Free',
 }
 
+// Useless ?
 export enum HERMES_LINE_NAME {
   TERRE_DHERMES = "Terre d'Hermès",
   MINIATURES_AND_NOMADS = 'Miniatures & Nomads',

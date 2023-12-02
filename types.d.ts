@@ -31,8 +31,6 @@ export type DateRangeTypeExt = {
   endDate: string
 }
 
-import { HERMES_LINE_NAME } from './constants/business'
-
 export type SalesWithCategory = {
   category1: string
   sales: number
