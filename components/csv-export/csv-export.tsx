@@ -8,6 +8,8 @@ import dayjs from 'dayjs'
 
 import { FaFileExcel } from 'react-icons/fa6'
 
+import { toast } from 'react-toastify'
+
 interface CSVExportProps {
   sales: SalesWithProducts | undefined
 }
@@ -44,7 +46,11 @@ const CSVExport: FC<CSVExportProps> = ({ sales }) => {
 
   return (
     <>
-      <CSVLink data={data} headers={headers}>
+      <CSVLink
+        onClick={() => toast.success('Report downloaded', { toastId: 'CSV' })}
+        data={data}
+        headers={headers}
+      >
         <FaFileExcel className={'text-purple-400'} />
       </CSVLink>
     </>
