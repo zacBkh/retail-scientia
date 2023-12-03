@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 
 import useSWR, { mutate } from 'swr'
 import SWR_KEYS from '@/constants/SWR-keys'
+const { GET_UNIQUE_CATEGORY, GET_BRANDS_OF_USER } = SWR_KEYS
 
 import ProductCard from '@/components/product/product-card'
 
@@ -20,7 +21,15 @@ import { useDebounce } from 'use-debounce'
 import useAddQueryString from '@/hooks/useAddQueryStrings'
 
 import SelectProductLine from '../ui/radix/select-product-line'
-import { getUniqueCategories } from '@/services/fetchers-api'
+import {
+  getUniqueCategories,
+  getUniqueBrandsOfUser,
+} from '@/services/fetchers-api'
+
+import { URL_PARAMS_KEYS } from '@/constants/URLs'
+const { PAGE, SEARCH, BRANDS_IDS, CATEGORY_1 } = URL_PARAMS_KEYS
+
+import Switcher from '../ui/radix/switcher'
 
 interface ClientWrapperProps {
   fetchedProducts: ProductsWithFav[]
@@ -66,11 +75,11 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
   useEffect(() => {
     if (!debouncedQuery) {
       startTransition(() => {
-        push(`?${addQueryString('search', null)}`, { scroll: false }) // remove param
+        push(`?${addQueryString(SEARCH, null)}`, { scroll: false }) // remove param
       })
     } else {
       startTransition(() => {
-        push(`?${addQueryString('search', debouncedQuery.toLowerCase())}`, {
+        push(`?${addQueryString(SEARCH, debouncedQuery.toLowerCase())}`, {
           scroll: false,
         })
       })
@@ -95,7 +104,7 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
     }
 
     startTransitionPagination(() => {
-      push(`?${addQueryString('page', pageCount.toString())}`, {
+      push(`?${addQueryString(PAGE, pageCount.toString())}`, {
         scroll: false,
       })
     })
@@ -106,27 +115,10 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
   // on load more and filter change...
   useEffect(() => {
     if (shouldReplaceWithFreshDate) {
-      console.log('1')
       return setProductsToDisplay(fetchedProducts)
     } else {
-      console.log('2')
       setProductsToDisplay((prev) => [...prev, ...fetchedProducts])
     }
-
-    // console.log('')
-    // // If on page 1, replace state
-    // if (pageCount === 1) {
-    //   return setProductsToDisplay(fetchedProducts)
-    // } else {
-    //   setProductsToDisplay((prev) => [...prev, ...fetchedProducts])
-    // }
-
-    // if no search query and not on page 1, append
-    // if (!searchQuery.length) {
-    //   console.log('***2***')
-    //   // return setProductsToDisplay((prev) => [...prev, ...fetchedProducts])
-    //   return setProductsToDisplay(fetchedProducts)
-    // }
   }, [pageCount, [searchParams.values()]])
 
   return (
@@ -143,9 +135,23 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
         isSearching={isPending}
       />
 
-      <SelectProductLine
-        fetcher={() => getUniqueCategories(arrayOfUsersBrandsID ?? null)}
-      />
+      <div className="flex flex-wrap gap-y-5 justify-between items-center">
+        <SelectProductLine
+          SWR_KEY={GET_UNIQUE_CATEGORY}
+          fetcher={() => getUniqueCategories(arrayOfUsersBrandsID ?? null)}
+          QUERY_STRING_KEY={CATEGORY_1}
+          placeholder={'Select a line'}
+        />
+
+        <SelectProductLine
+          SWR_KEY={GET_BRANDS_OF_USER}
+          fetcher={() => getUniqueBrandsOfUser(currentUserID)}
+          QUERY_STRING_KEY={BRANDS_IDS}
+          placeholder={'Select a brand'}
+        />
+
+        <Switcher />
+      </div>
 
       <div
         className={`${

@@ -7,6 +7,9 @@ import DatePickerNewSale from '@/components/date-selector/date-picker-new-sale'
 
 import { getProducts } from '@/services/prisma-queries'
 
+import { URL_PARAMS_KEYS } from '@/constants/URLs'
+const { PAGE, SEARCH, CATEGORY_1, SHOW_ONLY_FAV } = URL_PARAMS_KEYS
+
 interface HomePageProps {
   searchParams: { [search: string]: string | string[] | undefined }
 }
@@ -25,14 +28,21 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
     currentSession?.user.brands.map((brand) => brand.id) ?? []
 
   const page =
-    typeof searchParams.page === 'string' ? Number(searchParams.page) : 1
+    typeof searchParams[PAGE] === 'string' ? Number(searchParams.page) : 1
 
   const search =
-    typeof searchParams.search === 'string' ? searchParams.search : undefined
+    typeof searchParams[SEARCH] === 'string'
+      ? (searchParams[SEARCH] as string)
+      : undefined
 
   const category1Query =
-    typeof searchParams.category1 === 'string'
-      ? searchParams.category1
+    typeof searchParams[CATEGORY_1] === 'string'
+      ? (searchParams[CATEGORY_1] as string)
+      : undefined
+
+  const showOnlyFav =
+    typeof searchParams[SHOW_ONLY_FAV] === 'string'
+      ? (searchParams[SHOW_ONLY_FAV] as string)
       : undefined
 
   let dynamicSkip = 0
@@ -40,6 +50,10 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
   dynamicSkip = (+page - 1) * take
 
   const productsToDisplay = await getProducts(
+    currentSession?.user.id,
+
+    showOnlyFav ? true : false,
+
     arrayOfUsersBrandsID,
 
     search,

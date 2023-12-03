@@ -5,9 +5,12 @@ import {
   getUniqueCategory1,
 } from '@/services/prisma-queries'
 
-export async function GET(request: NextRequest) {
-  const brandIDs = request.nextUrl.searchParams.get('brandsIDs') ?? null
+import { URL_PARAMS_KEYS } from '@/constants/URLs'
+const { BRANDS_IDS } = URL_PARAMS_KEYS
 
+export async function GET(request: NextRequest) {
+  const brandIDs = request.nextUrl.searchParams.get(BRANDS_IDS) ?? null
+  console.log('brandIDs', brandIDs)
   if (!brandIDs) {
     return NextResponse.json(
       {

@@ -19,6 +19,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export const getProducts = async (
+  userID: string | undefined,
+
+  showOnlyFav: boolean,
+
   arrayOfBrandsID: number[] | undefined,
 
   searchQuery?: string,
@@ -27,10 +31,6 @@ export const getProducts = async (
   skip = 0,
   pageSize = 20
 ) => {
-  console.log('searchQuery', searchQuery)
-  console.log('searchQuery.length', searchQuery?.length)
-  console.log('skip from prisma query', skip)
-  console.log('category1Query', category1Query)
   const searchedProducts = await db.product.findMany({
     // Return procuct
     where: {
@@ -41,6 +41,19 @@ export const getProducts = async (
             in: arrayOfBrandsID,
           },
         },
+
+        // Return only fav
+        showOnlyFav && userID
+          ? {
+              favouritedBy: {
+                some: {
+                  id: {
+                    equals: +userID,
+                  },
+                },
+              },
+            }
+          : {},
 
         // if search query, filter by it
         searchQuery
@@ -60,18 +73,11 @@ export const getProducts = async (
     },
 
     include: { favouritedBy: { select: { id: true } } },
-    // orderBy: {
-    //   favouritedBy: {
-    //     _count: 'desc',
-    //   },
-    // },
 
-    orderBy: { sales: { _count: 'desc' } },
+    orderBy: showOnlyFav ? { sales: { _count: 'desc' } } : undefined,
+
     skip: searchQuery?.length ? 0 : skip,
     take: searchQuery?.length ? 120 : pageSize,
-
-    // skip,
-    // take: pageSize,
   })
 
   return searchedProducts
@@ -266,5 +272,19 @@ export const getUniqueCategory1 = async (userBrandsIDs: string[]) => {
     distinct: ['category1'],
   })
   const uniqueCat = queryUnique.map((item) => item.category1)
+
   return uniqueCat
+}
+
+export const getUniqueBrands = async (userID: string) => {
+  const userIDNumber = +userID
+  const brands = await db.user.findUnique({
+    where: { id: userIDNumber },
+    select: { brands: { select: { name: true } } },
+  })
+
+  const brandArray = brands?.brands?.map((brand) => brand.name)
+  console.log('brandArray', brandArray)
+
+  return brandArray
 }

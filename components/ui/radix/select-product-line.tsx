@@ -7,9 +7,6 @@ import useSWRImmutable from 'swr/immutable'
 
 import COLORS from '@/constants/colors-temp'
 
-import SWR_KEYS from '@/constants/SWR-keys'
-import { getUniqueCategories } from '@/services/fetchers-api'
-
 import useAddQueryString from '@/hooks/useAddQueryStrings'
 import Spinner from '../spinner'
 
@@ -19,20 +16,25 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 interface SelectProductLineProps {
-  activeLine?: string // move to enum ??
-
   fetcher: () => Promise<APIResponseBasic<string[]>>
+  SWR_KEY: string
+
+  QUERY_STRING_KEY: string // enum ??
+  placeholder: string
 }
 
 const SelectProductLine: FC<SelectProductLineProps> = ({
   fetcher,
-  activeLine,
+  SWR_KEY,
+
+  QUERY_STRING_KEY,
+  placeholder,
 }) => {
   const {
     data: uniqueOptions,
     error,
     isLoading,
-  } = useSWRImmutable(SWR_KEYS.GET_UNIQUE_CATEGORY, () => fetcher())
+  } = useSWRImmutable(SWR_KEY, () => fetcher())
 
   const [isOpen, setIsOpen] = useState(false)
   const [isPlaceholderMode, setIsPlaceholderMode] = useState(true)
@@ -47,39 +49,37 @@ const SelectProductLine: FC<SelectProductLineProps> = ({
   const addQueryString = useAddQueryString(searchParams.toString())
 
   const handleOptionChange = (newItem: string) => {
-    if (newItem === placeholderValue) {
+    if (newItem === placeholder) {
       setIsPlaceholderMode(true)
 
-      router.push(`?${addQueryString('category1', null)}`, {
-        scroll: false,
+      startTransition(() => {
+        router.push(`?${addQueryString(QUERY_STRING_KEY, null)}`, {
+          scroll: false,
+        })
       })
     } else {
       setIsPlaceholderMode(false)
 
       startTransition(() => {
-        router.push(`?${addQueryString('category1', newItem.toLowerCase())}`, {
-          scroll: false,
-        })
+        router.push(
+          `?${addQueryString(QUERY_STRING_KEY, newItem.toLowerCase())}`,
+          {
+            scroll: false,
+          }
+        )
       })
     }
   }
 
-  const cssSelectSkeletonCommon = 'w-1/2'
-  const placeholderValue = 'Select any line'
-
   const optionsWithClear = uniqueOptions && [
-    placeholderValue,
+    placeholder,
     // null as unknown as string,
     ...uniqueOptions?.result,
   ]
   return (
     <>
       {isLoading ? (
-        <Skeleton
-          height={32}
-          className=""
-          containerClassName={cssSelectSkeletonCommon}
-        />
+        <Skeleton height={32} className="" containerClassName={'w-[40%]'} />
       ) : (
         <Select.Root
           disabled={isLoading}
@@ -87,13 +87,13 @@ const SelectProductLine: FC<SelectProductLineProps> = ({
           onOpenChange={(prev) => setIsOpen(prev)}
           onValueChange={handleOptionChange}
         >
-          <div className="flex items-center gap-x-2 w-full">
+          <div className={`flex items-center gap-x-2 w-1/2`}>
             <Select.Trigger
               data-placeholder={isPlaceholderMode ? true : undefined}
-              className={`!border-none box !shadow-none ${cssSelectSkeletonCommon} ${
+              className={`!border-none box !shadow-none w-[85%] ${
                 COLORS.turquoiseLight_bg
               } ${isOpen ? selectActiveStyle : ''} `}
-              placeholder={placeholderValue}
+              placeholder={placeholder}
             />
             {isPending && (
               <Spinner style="border-gray-400 border-t-black !w-4 !h-4" />
