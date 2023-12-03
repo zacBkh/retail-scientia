@@ -13,9 +13,10 @@ interface CSVExportProps {
 }
 
 const CSVExport: FC<CSVExportProps> = ({ sales }) => {
+  console.log('sales -->', sales)
   const headers = [
     // Product
-    { label: 'Date', key: 'date' },
+    { label: 'Date - MM/DD/YYYY', key: 'date' },
     { label: 'Product EAN', key: 'ean' },
     { label: 'Product Description', key: 'description' },
     { label: 'Product Size', key: 'size' },
@@ -30,6 +31,8 @@ const CSVExport: FC<CSVExportProps> = ({ sales }) => {
     { label: 'Staff ID', key: 'staffID' },
     { label: 'Seller Country', key: 'country' },
     { label: 'Seller POS', key: 'pointOfSale' },
+    // Brand
+    { label: 'Brand', key: 'brand.name' },
   ]
 
   const data =

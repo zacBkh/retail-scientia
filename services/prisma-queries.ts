@@ -117,7 +117,8 @@ export const findSalesOfUser: FindSalesOfUserArgs = async (
     //     },
     //   },
     // },
-    include: { productSold: true, seller: true },
+    // include: { productSold: true, seller: true },
+    include: { productSold: { include: { brand: true } }, seller: true },
 
     where: {
       sellerId: userID,
