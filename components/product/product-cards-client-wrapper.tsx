@@ -19,6 +19,8 @@ import { useDebounce } from 'use-debounce'
 
 import useAddQueryString from '@/hooks/useAddQueryStrings'
 
+import SelectProductLine from '../ui/radix/select-product-line'
+
 interface ClientWrapperProps {
   fetchedProducts: ProductsWithFav[]
   currentUserID: string | undefined
@@ -115,6 +117,8 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
         onSearch={handleSearch}
         isSearching={isPending}
       />
+
+      <SelectProductLine />
 
       <div
         className={`${

@@ -22,11 +22,16 @@ interface HomePageProps {
 const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
   const currentSession = await getServerSession(authOptions)
 
+  console.log('searchParams', searchParams)
+
   const page =
     typeof searchParams.page === 'string' ? Number(searchParams.page) : 1
 
   const search =
     typeof searchParams.search === 'string' ? searchParams.search : undefined
+
+  const filter =
+    typeof searchParams.search === 'string' ? searchParams.filter : undefined
 
   let dynamicSkip = 0
   let take = 20
