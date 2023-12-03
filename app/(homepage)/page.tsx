@@ -6,7 +6,6 @@ import { authOptions } from '../api/auth/[...nextauth]/route'
 import DatePickerNewSale from '@/components/date-selector/date-picker-new-sale'
 
 import { getProducts } from '@/services/prisma-queries'
-import getProductsAction from '../actions'
 
 interface HomePageProps {
   searchParams: { [search: string]: string | string[] | undefined }
@@ -22,7 +21,8 @@ interface HomePageProps {
 const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
   const currentSession = await getServerSession(authOptions)
 
-  console.log('searchParams', searchParams)
+  const arrayOfUsersBrandsID =
+    currentSession?.user.brands.map((brand) => brand.id) ?? []
 
   const page =
     typeof searchParams.page === 'string' ? Number(searchParams.page) : 1
@@ -30,16 +30,20 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
   const search =
     typeof searchParams.search === 'string' ? searchParams.search : undefined
 
-  const filter =
-    typeof searchParams.search === 'string' ? searchParams.filter : undefined
+  const category1Query =
+    typeof searchParams.category1 === 'string'
+      ? searchParams.category1
+      : undefined
 
   let dynamicSkip = 0
   let take = 20
-  dynamicSkip = (page - 1) * take
+  dynamicSkip = (+page - 1) * take
 
   const productsToDisplay = await getProducts(
-    currentSession?.user.id,
+    arrayOfUsersBrandsID,
+
     search,
+    category1Query,
 
     dynamicSkip,
     take
@@ -50,9 +54,11 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
       <DatePickerNewSale currentSession={currentSession} />
 
       <ClientWrapper
-        // cursor={dynamicSkip}
+        currentPage={page}
         currentUserID={currentSession?.user.id}
+        arrayOfUsersBrandsID={arrayOfUsersBrandsID}
         fetchedProducts={productsToDisplay}
+        shouldReplaceWithFreshDate={page === 1 || category1Query !== undefined}
       />
     </main>
   )

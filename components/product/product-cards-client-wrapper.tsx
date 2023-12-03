@@ -20,16 +20,26 @@ import { useDebounce } from 'use-debounce'
 import useAddQueryString from '@/hooks/useAddQueryStrings'
 
 import SelectProductLine from '../ui/radix/select-product-line'
+import { getUniqueCategories } from '@/services/fetchers-api'
 
 interface ClientWrapperProps {
   fetchedProducts: ProductsWithFav[]
   currentUserID: string | undefined
+  arrayOfUsersBrandsID: number[]
+
+  currentPage: number
+
+  shouldReplaceWithFreshDate: boolean
 }
 
 const ClientWrapper: FC<ClientWrapperProps> = ({
   fetchedProducts,
   currentUserID,
-  // cursor,
+  arrayOfUsersBrandsID,
+
+  currentPage,
+
+  shouldReplaceWithFreshDate,
 }) => {
   const {
     data: dateInLS,
@@ -60,7 +70,9 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
       })
     } else {
       startTransition(() => {
-        push(`?${addQueryString('search', debouncedQuery)}`, { scroll: false })
+        push(`?${addQueryString('search', debouncedQuery.toLowerCase())}`, {
+          scroll: false,
+        })
       })
     }
   }, [debouncedQuery, router])
@@ -75,7 +87,7 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
 
   const [isPendingPagination, startTransitionPagination] = useTransition()
 
-  const [pageCount, setPageCount] = useState(1)
+  const [pageCount, setPageCount] = useState(currentPage ?? 1)
 
   useEffect(() => {
     if (!pageCount) {
@@ -91,18 +103,31 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
 
   const [productsToDisplay, setProductsToDisplay] = useState(fetchedProducts)
 
+  // on load more and filter change...
   useEffect(() => {
-    // If search query or on page 1, replace state
-    if (pageCount === 1) {
+    if (shouldReplaceWithFreshDate) {
+      console.log('1')
       return setProductsToDisplay(fetchedProducts)
+    } else {
+      console.log('2')
+      setProductsToDisplay((prev) => [...prev, ...fetchedProducts])
     }
 
+    // console.log('')
+    // // If on page 1, replace state
+    // if (pageCount === 1) {
+    //   return setProductsToDisplay(fetchedProducts)
+    // } else {
+    //   setProductsToDisplay((prev) => [...prev, ...fetchedProducts])
+    // }
+
     // if no search query and not on page 1, append
-    if (!searchQuery.length) {
-      // if no search query
-      return setProductsToDisplay((prev) => [...prev, ...fetchedProducts])
-    }
-  }, [pageCount, fetchedProducts])
+    // if (!searchQuery.length) {
+    //   console.log('***2***')
+    //   // return setProductsToDisplay((prev) => [...prev, ...fetchedProducts])
+    //   return setProductsToDisplay(fetchedProducts)
+    // }
+  }, [pageCount, [searchParams.values()]])
 
   return (
     <div
@@ -118,7 +143,9 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
         isSearching={isPending}
       />
 
-      <SelectProductLine />
+      <SelectProductLine
+        fetcher={() => getUniqueCategories(arrayOfUsersBrandsID ?? null)}
+      />
 
       <div
         className={`${

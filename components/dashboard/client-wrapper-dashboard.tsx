@@ -66,7 +66,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
     }
   )
 
-  // USELESS API NETWORK CALLS !! POTENTIAL TO IMPROVE WITH GROUPBY ORDER BY ??
+  // USELESS API NETWORK CALLS !! POTENTIAL TO IMPROVE WITH GROUPBY ORDER BY or distinct ??
   const {
     data: sortedSalesBySKU,
     error: errorsortedSalesBySKU,

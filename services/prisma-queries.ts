@@ -19,42 +19,74 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export const getProducts = async (
-  userID: string | undefined,
+  arrayOfBrandsID: number[] | undefined,
+
   searchQuery?: string,
+  category1Query?: string,
 
   skip = 0,
   pageSize = 20
 ) => {
+  console.log('searchQuery', searchQuery)
+  console.log('searchQuery.length', searchQuery?.length)
+  console.log('skip from prisma query', skip)
+  console.log('category1Query', category1Query)
   const searchedProducts = await db.product.findMany({
-    where: { description: { contains: searchQuery, mode: 'insensitive' } },
+    // Return procuct
+    where: {
+      AND: [
+        // Which belongs to brands of user
+        {
+          brandId: {
+            in: arrayOfBrandsID,
+          },
+        },
+
+        // if search query, filter by it
+        searchQuery
+          ? {
+              description: {
+                contains: searchQuery,
+                mode: 'insensitive',
+              },
+            }
+          : {},
+
+        // if category filter
+        category1Query
+          ? { category1: { equals: category1Query, mode: 'insensitive' } }
+          : {},
+      ],
+    },
 
     include: { favouritedBy: { select: { id: true } } },
+    // orderBy: {
+    //   favouritedBy: {
+    //     _count: 'desc',
+    //   },
+    // },
 
+    orderBy: { sales: { _count: 'desc' } },
     skip: searchQuery?.length ? 0 : skip,
     take: searchQuery?.length ? 120 : pageSize,
-    orderBy: {
-      favouritedBy: {
-        _count: 'desc',
-      },
-    },
+
+    // skip,
+    // take: pageSize,
   })
 
   return searchedProducts
-  // const sortFn = (products: ProductsWithFav) => {
-  //   // Building an array with only the favouritedBy
-  //   const arrayOfUserFav = products.favouritedBy.map((prod) => prod.id)
-
-  //   // If favourited product includes userID...
-  //   if (userID && arrayOfUserFav.includes(+userID)) {
-  //     return -1
-  //   } else {
-  //     return 0
-  //   }
-  // }
-
-  // const sortedByUserFav = searchedProducts.sort(sortFn)
-  // return sortedByUserFav
 }
+
+// export const getUniqueCategory1 = async (brandID: number) => {
+//   const queryUnique = await db.product.findMany({
+//     where: { brandId: brandID },
+//     orderBy: { sales: { _count: 'desc' } },
+//     select: { category1: true },
+//     distinct: ['category1'],
+//   })
+//   const uniqueCat = queryUnique.map((item) => item.category1)
+//   return uniqueCat
+// }
 
 export const addSales = async (
   date: Date,
@@ -223,4 +255,16 @@ export const addProductAsFav = async (
       },
     },
   })
+}
+
+export const getUniqueCategory1 = async (userBrandsIDs: string[]) => {
+  const userBrandsIDsNumber = userBrandsIDs.map((id) => Number(id))
+  const queryUnique = await db.product.findMany({
+    where: { brandId: { in: userBrandsIDsNumber } },
+    orderBy: { sales: { _count: 'desc' } },
+    select: { category1: true },
+    distinct: ['category1'],
+  })
+  const uniqueCat = queryUnique.map((item) => item.category1)
+  return uniqueCat
 }

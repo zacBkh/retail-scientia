@@ -83,3 +83,25 @@ export const toggleFavProduct: ToggleFavProductArgs = async (
   const data = await response.json()
   return data
 }
+
+import type { APIResponseBasic } from '@/types'
+
+interface GetUniqueCategoriesArgs {
+  (brandsIDs: number[] | null): Promise<APIResponseBasic<string[]>> // enum ??
+}
+
+// Get a unique list of category1
+export const getUniqueCategories: GetUniqueCategoriesArgs = async (
+  brandsIDs
+) => {
+  if (!brandsIDs || !brandsIDs.length) {
+    console.log('Error, no user ID')
+    return
+  }
+  const response = await fetch(`${PRODUCTS}?brandsIDs=${[brandsIDs]}`, {
+    method: 'GET',
+  })
+
+  const data = await response.json()
+  return data
+}

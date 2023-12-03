@@ -33,7 +33,7 @@ const SearchBarMain: FC<SearchBarMainProps> = ({
           variant="soft"
           type="search"
           size="3"
-          placeholder="Search any product"
+          placeholder="Search any item"
           ref={searchBarRef}
         />
 
