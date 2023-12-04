@@ -10,6 +10,8 @@ import { getProducts } from '@/services/prisma-queries'
 import { URL_PARAMS_KEYS } from '@/constants/URLs'
 const { PAGE, SEARCH, CATEGORY_1, SHOW_ONLY_FAV } = URL_PARAMS_KEYS
 
+import ScrollToTopBtn from '@/components/ui/scroll-to-top'
+
 interface HomePageProps {
   searchParams: { [search: string]: string | string[] | undefined }
 }
@@ -30,6 +32,8 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
   const page =
     typeof searchParams[PAGE] === 'string' ? Number(searchParams.page) : 1
 
+  console.log('page', page)
+
   const search =
     typeof searchParams[SEARCH] === 'string'
       ? (searchParams[SEARCH] as string)
@@ -45,9 +49,15 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
       ? (searchParams[SHOW_ONLY_FAV] as string)
       : undefined
 
-  let dynamicSkip = 0
+  const shouldPaginationBeActive =
+    category1Query === undefined && showOnlyFav === undefined
+  console.log('shouldPaginationBeActive', shouldPaginationBeActive)
+  console.log('category1Query', category1Query)
+  console.log('showOnlyFav', showOnlyFav)
+
+  let skip = 0
   let take = 20
-  dynamicSkip = (+page - 1) * take
+  skip = (+page - 1) * take
 
   const productsToDisplay = await getProducts(
     currentSession?.user.id,
@@ -59,7 +69,8 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
     search,
     category1Query,
 
-    dynamicSkip,
+    shouldPaginationBeActive,
+    skip,
     take
   )
 
@@ -72,7 +83,13 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
         currentUserID={currentSession?.user.id}
         arrayOfUsersBrandsID={arrayOfUsersBrandsID}
         fetchedProducts={productsToDisplay}
-        shouldReplaceWithFreshDate={page === 1 || category1Query !== undefined}
+        shouldReplaceWithFreshDate={page === 1}
+        isPaginationActive={shouldPaginationBeActive}
+      />
+
+      <ScrollToTopBtn
+        className={'self-end md:self-auto sticky bottom-3'}
+        iconStyle={'text-4xl text-zinc-500'}
       />
     </main>
   )

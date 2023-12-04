@@ -28,9 +28,12 @@ export const getProducts = async (
   searchQuery?: string,
   category1Query?: string,
 
+  shouldPaginationBeActive = true,
   skip = 0,
   pageSize = 20
 ) => {
+  console.log('skip', skip)
+  console.log('pageSize', pageSize)
   const searchedProducts = await db.product.findMany({
     // Return procuct
     where: {
@@ -76,8 +79,14 @@ export const getProducts = async (
 
     orderBy: showOnlyFav ? { sales: { _count: 'desc' } } : undefined,
 
-    skip: searchQuery?.length ? 0 : skip,
-    take: searchQuery?.length ? 120 : pageSize,
+    // skip: searchQuery?.length ? 0 : skip,
+    // take: searchQuery?.length ? 120 : pageSize,
+    ...(shouldPaginationBeActive
+      ? {
+          skip: searchQuery?.length ? 0 : skip,
+          take: searchQuery?.length ? 120 : pageSize,
+        }
+      : {}),
   })
 
   return searchedProducts

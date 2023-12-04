@@ -11,10 +11,11 @@ const { SHOW_ONLY_FAV } = URL_PARAMS_KEYS
 import Spinner from '../spinner'
 
 interface SwitcherProps {
-  a?: any
+  disable: boolean
 }
 
-const Switcher: FC<SwitcherProps> = ({}) => {
+const Switcher: FC<SwitcherProps> = ({ disable }) => {
+  console.log('disable', disable)
   const searchParams = useSearchParams()!
   const addQueryString = useAddQueryString(searchParams.toString())
 
@@ -39,11 +40,16 @@ const Switcher: FC<SwitcherProps> = ({}) => {
   }
 
   return (
-    <div className="flex items-center justify-center gap-x-2 -z-0">
+    <div className="flex items-center justify-center gap-x-2 w-1/2">
       <Text as="label" size="2">
         <Flex gap="2">
-          <Switch onCheckedChange={handleToggleSwitch} size="1" /> Favourites
-          only
+          <Switch
+            // disabled={true}
+            disabled={disable}
+            onCheckedChange={handleToggleSwitch}
+            size="1"
+          />
+          Favourites only
         </Flex>
       </Text>
       {isPending && (

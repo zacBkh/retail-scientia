@@ -21,6 +21,8 @@ interface SelectProductLineProps {
 
   QUERY_STRING_KEY: string // enum ??
   placeholder: string
+
+  onOpenSelect: (isOpen: boolean) => void
 }
 
 const SelectProductLine: FC<SelectProductLineProps> = ({
@@ -29,6 +31,8 @@ const SelectProductLine: FC<SelectProductLineProps> = ({
 
   QUERY_STRING_KEY,
   placeholder,
+
+  onOpenSelect,
 }) => {
   const {
     data: uniqueOptions,
@@ -49,7 +53,9 @@ const SelectProductLine: FC<SelectProductLineProps> = ({
   const addQueryString = useAddQueryString(searchParams.toString())
 
   const handleOptionChange = (newItem: string) => {
+    console.log('newItem', newItem)
     if (newItem === placeholder) {
+      console.log('6')
       setIsPlaceholderMode(true)
 
       startTransition(() => {
@@ -76,6 +82,16 @@ const SelectProductLine: FC<SelectProductLineProps> = ({
     // null as unknown as string,
     ...uniqueOptions?.result,
   ]
+
+  const handleOpenSelect = (isOpen: boolean) => {
+    setIsOpen(isOpen)
+
+    // Temporary hack to disable below switcher with a delay - https://github.com/radix-ui/primitives/issues/1658
+    setTimeout(() => {
+      onOpenSelect(isOpen)
+    }, 200)
+  }
+
   return (
     <>
       {isLoading ? (
@@ -84,10 +100,10 @@ const SelectProductLine: FC<SelectProductLineProps> = ({
         <Select.Root
           disabled={isLoading}
           open={isOpen}
-          onOpenChange={(prev) => setIsOpen(prev)}
+          onOpenChange={handleOpenSelect}
           onValueChange={handleOptionChange}
         >
-          <div className={`flex items-center gap-x-2 w-1/2`}>
+          <div className={`flex items-center justify-center gap-x-2 w-1/2`}>
             <Select.Trigger
               data-placeholder={isPlaceholderMode ? true : undefined}
               className={`!border-none box !shadow-none w-[85%] ${
