@@ -9,6 +9,10 @@ import {
   addSales,
 } from '@/services/prisma-queries'
 
+import { URL_PARAMS_KEYS } from '@/constants/URLs'
+
+const { BY_TOP_SELLER } = URL_PARAMS_KEYS
+
 export async function POST(request: Request) {
   const currentSession = await getServerSession(authOptions)
 
@@ -35,7 +39,7 @@ export async function GET(request: NextRequest) {
   try {
     const queryDates = request.nextUrl.searchParams.get('dates') ?? null
     const byTopSeller =
-      request.nextUrl.searchParams.get('byTopSeller') === 'true'
+      request.nextUrl.searchParams.get(BY_TOP_SELLER) === 'true'
 
     const currentSession = await getServerSession(authOptions)
 

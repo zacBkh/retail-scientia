@@ -175,3 +175,7 @@ button:active {
 button:active:disabled {
   transform: none !important;
 }
+
+html {
+  scroll-behavior: smooth;
+}

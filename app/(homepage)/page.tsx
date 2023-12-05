@@ -6,7 +6,11 @@ import { authOptions } from '../api/auth/[...nextauth]/route'
 import DatePickerNewSale from '@/components/date-selector/date-picker-new-sale'
 
 import { getProducts } from '@/services/prisma-queries'
-import getProductsAction from '../actions'
+
+import { URL_PARAMS_KEYS } from '@/constants/URLs'
+const { PAGE, SEARCH, CATEGORY_1, SHOW_ONLY_FAV } = URL_PARAMS_KEYS
+
+import ScrollToTopBtn from '@/components/ui/scroll-to-top'
 
 interface HomePageProps {
   searchParams: { [search: string]: string | string[] | undefined }
@@ -22,21 +26,51 @@ interface HomePageProps {
 const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
   const currentSession = await getServerSession(authOptions)
 
+  const arrayOfUsersBrandsID =
+    currentSession?.user.brands.map((brand) => brand.id) ?? []
+
   const page =
-    typeof searchParams.page === 'string' ? Number(searchParams.page) : 1
+    typeof searchParams[PAGE] === 'string' ? Number(searchParams.page) : 1
+
+  console.log('page', page)
 
   const search =
-    typeof searchParams.search === 'string' ? searchParams.search : undefined
+    typeof searchParams[SEARCH] === 'string'
+      ? (searchParams[SEARCH] as string)
+      : undefined
 
-  let dynamicSkip = 0
+  const category1Query =
+    typeof searchParams[CATEGORY_1] === 'string'
+      ? (searchParams[CATEGORY_1] as string)
+      : undefined
+
+  const showOnlyFav =
+    typeof searchParams[SHOW_ONLY_FAV] === 'string'
+      ? (searchParams[SHOW_ONLY_FAV] as string)
+      : undefined
+
+  const shouldPaginationBeActive =
+    category1Query === undefined && showOnlyFav === undefined
+  console.log('shouldPaginationBeActive', shouldPaginationBeActive)
+  console.log('category1Query', category1Query)
+  console.log('showOnlyFav', showOnlyFav)
+
+  let skip = 0
   let take = 20
-  dynamicSkip = (page - 1) * take
+  skip = (+page - 1) * take
 
   const productsToDisplay = await getProducts(
     currentSession?.user.id,
-    search,
 
-    dynamicSkip,
+    showOnlyFav ? true : false,
+
+    arrayOfUsersBrandsID,
+
+    search,
+    category1Query,
+
+    shouldPaginationBeActive,
+    skip,
     take
   )
 
@@ -45,9 +79,17 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
       <DatePickerNewSale currentSession={currentSession} />
 
       <ClientWrapper
-        // cursor={dynamicSkip}
+        currentPage={page}
         currentUserID={currentSession?.user.id}
+        arrayOfUsersBrandsID={arrayOfUsersBrandsID}
         fetchedProducts={productsToDisplay}
+        shouldReplaceWithFreshDate={page === 1}
+        isPaginationActive={shouldPaginationBeActive}
+      />
+
+      <ScrollToTopBtn
+        className={'self-end md:self-auto sticky bottom-3'}
+        iconStyle={'text-4xl text-zinc-500'}
       />
     </main>
   )

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 
 import useSWR, { mutate } from 'swr'
 import SWR_KEYS from '@/constants/SWR-keys'
+const { GET_UNIQUE_CATEGORY, GET_BRANDS_OF_USER } = SWR_KEYS
 
 import ProductCard from '@/components/product/product-card'
 
@@ -19,15 +20,40 @@ import { useDebounce } from 'use-debounce'
 
 import useAddQueryString from '@/hooks/useAddQueryStrings'
 
+import SelectProductLine from '../ui/radix/select-product-line'
+import {
+  getUniqueCategories,
+  getUniqueBrandsOfUser,
+} from '@/services/fetchers-api'
+
+import { URL_PARAMS_KEYS } from '@/constants/URLs'
+const { PAGE, SEARCH, BRANDS_IDS, CATEGORY_1 } = URL_PARAMS_KEYS
+
+import Switcher from '../ui/radix/switcher'
+import { Legend } from 'chart.js'
+
 interface ClientWrapperProps {
   fetchedProducts: ProductsWithFav[]
   currentUserID: string | undefined
+  arrayOfUsersBrandsID: number[]
+
+  currentPage: number
+
+  shouldReplaceWithFreshDate: boolean
+
+  isPaginationActive: boolean
 }
 
 const ClientWrapper: FC<ClientWrapperProps> = ({
   fetchedProducts,
   currentUserID,
-  // cursor,
+  arrayOfUsersBrandsID,
+
+  currentPage,
+
+  shouldReplaceWithFreshDate,
+
+  isPaginationActive,
 }) => {
   const {
     data: dateInLS,
@@ -51,14 +77,17 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
 
   const [isPending, startTransition] = useTransition()
 
+  // When user type in search bar
   useEffect(() => {
     if (!debouncedQuery) {
       startTransition(() => {
-        push(`?${addQueryString('search', null)}`, { scroll: false }) // remove param
+        push(`?${addQueryString(SEARCH, null)}`, { scroll: false }) // remove param
       })
     } else {
       startTransition(() => {
-        push(`?${addQueryString('search', debouncedQuery)}`, { scroll: false })
+        push(`?${addQueryString(SEARCH, debouncedQuery.toLowerCase())}`, {
+          scroll: false,
+        })
       })
     }
   }, [debouncedQuery, router])
@@ -73,15 +102,16 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
 
   const [isPendingPagination, startTransitionPagination] = useTransition()
 
-  const [pageCount, setPageCount] = useState(1)
+  const [pageCount, setPageCount] = useState(currentPage ?? 1)
 
+  // Once page count state changed, pass new query string
   useEffect(() => {
     if (!pageCount) {
       return
     }
 
     startTransitionPagination(() => {
-      push(`?${addQueryString('page', pageCount.toString())}`, {
+      push(`?${addQueryString(PAGE, pageCount.toString())}`, {
         scroll: false,
       })
     })
@@ -89,18 +119,24 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
 
   const [productsToDisplay, setProductsToDisplay] = useState(fetchedProducts)
 
+  // When receive new products
   useEffect(() => {
-    // If search query or on page 1, replace state
-    if (pageCount === 1) {
-      return setProductsToDisplay(fetchedProducts)
+    // If no pagination bcs filter, remove query params
+    if (!isPaginationActive) {
+      push(`?${addQueryString(PAGE, null)}`, { scroll: false })
     }
 
-    // if no search query and not on page 1, append
-    if (!searchQuery.length) {
-      // if no search query
-      return setProductsToDisplay((prev) => [...prev, ...fetchedProducts])
+    const areProductsTheSame = productsToDisplay == fetchedProducts
+
+    // If we are on page 1 or if current product are same than newly fetched
+    if (shouldReplaceWithFreshDate || areProductsTheSame) {
+      setProductsToDisplay(fetchedProducts)
+    } else {
+      setProductsToDisplay((prev) => [...prev, ...fetchedProducts])
     }
-  }, [pageCount, fetchedProducts])
+  }, [fetchedProducts])
+
+  const [isSelectOpen, setIsSelectOpen] = useState(false)
 
   return (
     <div
@@ -115,6 +151,26 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
         onSearch={handleSearch}
         isSearching={isPending}
       />
+
+      <div className="flex flex-wrap gap-y-2 justify-between items-center">
+        <SelectProductLine
+          SWR_KEY={GET_UNIQUE_CATEGORY}
+          fetcher={() => getUniqueCategories(arrayOfUsersBrandsID ?? null)}
+          QUERY_STRING_KEY={CATEGORY_1}
+          placeholder={'Select a line'}
+          onOpenSelect={(isOpen) => setIsSelectOpen(isOpen)}
+        />
+
+        <SelectProductLine
+          SWR_KEY={GET_BRANDS_OF_USER}
+          fetcher={() => getUniqueBrandsOfUser(currentUserID)}
+          QUERY_STRING_KEY={BRANDS_IDS}
+          placeholder={'Select a brand'}
+          onOpenSelect={(isOpen) => setIsSelectOpen(isOpen)}
+        />
+
+        <Switcher disable={isSelectOpen} />
+      </div>
 
       <div
         className={`${
@@ -145,7 +201,7 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
         ))}
       </div>
 
-      {!searchQuery.length ? (
+      {!searchQuery.length && isPaginationActive ? (
         <button onClick={() => setPageCount((prev) => prev + 1)}>
           Load more
         </button>

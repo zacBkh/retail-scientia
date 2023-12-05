@@ -26,7 +26,6 @@ export const authOptions: AuthOptions = {
           accountType: token.accountType,
         },
       }
-      console.log('enrichedSession', enrichedSession)
       return enrichedSession
     },
 
@@ -58,7 +57,7 @@ export const authOptions: AuthOptions = {
         password: {
           label: 'Password',
           type: 'password',
-          placeholder: '******',
+          placeholder: '*********',
         },
       },
       async authorize(credentials, req) {

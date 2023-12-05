@@ -1,14 +1,14 @@
 import type { Prisma, Product, Sales } from '@prisma/client'
 
 // Using generics (make this type flexible)
-export type APIAnswerBasic<T> = {
+export type APIResponseBasic<T> = {
   success: boolean
   result: T
 }
 
-export type APIResponseRegisterSales = APIAnswerBasic<string>
-export type APIResponseFindProducts = APIAnswerBasic<Product[]>
-export type APIResponseToggleFav = APIAnswerBasic<string>
+export type APIResponseRegisterSales = APIResponseBasic<string>
+export type APIResponseFindProducts = APIResponseBasic<Product[]>
+export type APIResponseToggleFav = APIResponseBasic<string>
 
 // LS
 export type SalesInLocalStorage = number[]
@@ -24,7 +24,7 @@ export type SalesWithProducts = Prisma.SaleGetPayload<{
   include: { productSold: true; seller: true }
 }>[]
 
-export type APIResponseFindUserSales = APIAnswerBasic<SalesWithProducts>
+export type APIResponseFindUserSales = APIResponseBasic<SalesWithProducts>
 
 export type DateRangeTypeExt = {
   startDate: string
