@@ -15,7 +15,6 @@ interface SwitcherProps {
 }
 
 const Switcher: FC<SwitcherProps> = ({ disable }) => {
-  console.log('disable', disable)
   const searchParams = useSearchParams()!
   const addQueryString = useAddQueryString(searchParams.toString())
 
@@ -44,7 +43,6 @@ const Switcher: FC<SwitcherProps> = ({ disable }) => {
       <Text as="label" size="2">
         <Flex gap="2">
           <Switch
-            // disabled={true}
             disabled={disable}
             onCheckedChange={handleToggleSwitch}
             size="1"

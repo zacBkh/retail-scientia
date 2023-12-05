@@ -106,7 +106,6 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
 
   // Once page count state changed, pass new query string
   useEffect(() => {
-    console.log('8 ran =')
     if (!pageCount) {
       return
     }
