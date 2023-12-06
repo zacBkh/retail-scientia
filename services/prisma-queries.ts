@@ -18,6 +18,8 @@ if (process.env.NODE_ENV === 'production') {
   db = global.db
 }
 
+import { DB_QUERIES } from '@/constants/db-queries'
+
 export const getProducts = async (
   userID: string | undefined,
 
@@ -28,12 +30,12 @@ export const getProducts = async (
   searchQuery?: string,
   category1Query?: string,
 
-  shouldPaginationBeActive = true,
-  skip = 0,
-  pageSize = 20
+  brandName?: string,
+  axisName?: string
 ) => {
-  console.log('skip', skip)
-  console.log('pageSize', pageSize)
+  const shouldTakeBeDisabled =
+    showOnlyFav || category1Query?.length ? true : false
+
   const searchedProducts = await db.product.findMany({
     // Return procuct
     where: {
@@ -72,36 +74,32 @@ export const getProducts = async (
         category1Query
           ? { category1: { equals: category1Query, mode: 'insensitive' } }
           : {},
+
+        // if brand filter
+        brandName
+          ? {
+              brand: { name: { equals: brandName, mode: 'insensitive' } },
+            }
+          : {},
+
+        // if axis filter
+        axisName
+          ? {
+              axis: { equals: axisName, mode: 'insensitive' },
+            }
+          : {},
       ],
     },
 
     include: { favouritedBy: { select: { id: true } } },
-
     orderBy: showOnlyFav ? { sales: { _count: 'desc' } } : undefined,
 
-    // skip: searchQuery?.length ? 0 : skip,
-    // take: searchQuery?.length ? 120 : pageSize,
-    ...(shouldPaginationBeActive
-      ? {
-          skip: searchQuery?.length ? 0 : skip,
-          take: searchQuery?.length ? 120 : pageSize,
-        }
-      : {}),
+    ...(shouldTakeBeDisabled ? {} : { take: DB_QUERIES.QTY_RECORDS_TO_RETURN }),
   })
 
+  console.log('searchedProducts', searchedProducts[1])
   return searchedProducts
 }
-
-// export const getUniqueCategory1 = async (brandID: number) => {
-//   const queryUnique = await db.product.findMany({
-//     where: { brandId: brandID },
-//     orderBy: { sales: { _count: 'desc' } },
-//     select: { category1: true },
-//     distinct: ['category1'],
-//   })
-//   const uniqueCat = queryUnique.map((item) => item.category1)
-//   return uniqueCat
-// }
 
 export const addSales = async (
   date: Date,
@@ -293,7 +291,18 @@ export const getUniqueBrands = async (userID: string) => {
   })
 
   const brandArray = brands?.brands?.map((brand) => brand.name)
-  console.log('brandArray', brandArray)
 
   return brandArray
+}
+export const getUniqueAxis = async (userBrandsIDs: string[]) => {
+  const userBrandsIDsNumber = userBrandsIDs.map((id) => Number(id))
+  const queryUnique = await db.product.findMany({
+    where: { brandId: { in: userBrandsIDsNumber } },
+    orderBy: { sales: { _count: 'desc' } },
+    select: { axis: true },
+    distinct: ['axis'],
+  })
+  const uniqueAxis = queryUnique.map((item) => item.axis)
+
+  return uniqueAxis
 }

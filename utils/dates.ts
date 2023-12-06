@@ -11,3 +11,15 @@ export const dateStringForQueryToDate = (date: string) => {
   })
   return formattedDate
 }
+
+import dayjs from 'dayjs'
+
+export const checkIfDateIsAfter = (dateSupplied: string | Date) => {
+  const today = dayjs()
+
+  if (dayjs(dateSupplied).isAfter(today)) {
+    return true
+  } else {
+    return false
+  }
+}

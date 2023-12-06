@@ -20,7 +20,7 @@ import { toast } from 'react-toastify'
 
 import CartTable from '@/components/cart/cart-table'
 
-import { dateStringForQueryToDate } from '@/utils/dates'
+import { dateStringForQueryToDate, checkIfDateIsAfter } from '@/utils/dates'
 import { sumSalesValueFromProdDetails } from '@/utils/db-data'
 
 const Cart = ({}) => {
@@ -75,13 +75,19 @@ const Cart = ({}) => {
       registerSale(finalDate, finalSales),
       {
         pending: 'Wait a minute...',
-        success: 'Your sales have been registered 👌',
+
+        success: {
+          render({ data }) {
+            return `${data?.result} 👌`
+          },
+        },
+
         error: 'There has been an issue, try again later',
       }
     )
+    console.log('registrationSale', registrationSale)
 
     if (registrationSale.success) {
-      console.log('Sale registered ✅', registrationSale)
       clearLocalStorage()
       mutate(SWR_KEYS.GET_CART_LS)
       mutate(SWR_KEYS.GET_CART_PRODUCT_DETAILS_DB)
@@ -89,6 +95,24 @@ const Cart = ({}) => {
     } else {
       console.log('Error in registering the sale ❌', registrationSale)
     }
+  }
+
+  const handleOpenDialog = () => {
+    if (dateStringForQueryToDate(dateInLS ?? '')) {
+      const isDateAfter = checkIfDateIsAfter(
+        dateStringForQueryToDate(dateInLS ?? '')
+      )
+      if (isDateAfter) {
+        toast.error('You have selected a date greater than today.'),
+          {
+            autoClose: 7000,
+            toastId: 'DATE_GREATER_THAN_TODAY',
+          }
+        return false
+      } else {
+        return true
+      }
+    } else return false
   }
 
   return (
@@ -120,6 +144,7 @@ const Cart = ({}) => {
           }}
           btnConfirmTxt="Validate Cart"
           onValidateAction={hanldeConfirmCart}
+          onOpenDialogLogic={handleOpenDialog}
         />
       )}
     </>
