@@ -24,9 +24,14 @@ export enum URL_PARAMS_KEYS {
   SEARCH = 'search',
   CATEGORY_1 = 'category1',
   SHOW_ONLY_FAV = 'favOnly',
+  AXIS = 'axis',
+  BRAND = 'brands',
 
-  USER_ID = 'userID',
+  // For API calls
   BRANDS_IDS = 'brands',
+  USER_ID = 'userID',
+  GET_UNIQUE_CAT = 'getUniqueCat',
+  GET_UNIQUE_AXIS = 'getUniqueAxis',
   BY_TOP_SELLER = 'byTopSeller',
 }
 

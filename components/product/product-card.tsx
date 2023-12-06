@@ -43,10 +43,10 @@ const ProductCard: FC<ProductWithFav> = ({
     const toastId = 'SALES_ALREADY_EXISTING'
     const autoClose = 2500
 
-    toast.success(
-      isFav ? 'Removed from favourites.' : 'Adddded to favourites.',
-      { toastId, autoClose }
-    )
+    toast.success(isFav ? 'Removed from favourites.' : 'Added to favourites.', {
+      toastId,
+      autoClose,
+    })
 
     const mutation = await toggleFavProduct(id, isFavourite)
 
