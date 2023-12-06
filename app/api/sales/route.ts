@@ -40,7 +40,9 @@ export async function POST(request: Request) {
   return NextResponse.json(
     {
       success: true,
-      result: `You successfully added ${saleRegistration.count} sales`,
+      result: `You successfully added ${saleRegistration.count} ${
+        saleRegistration.count > 1 ? 'sales' : 'sale'
+      }`,
     },
     { status: 201 }
   )
