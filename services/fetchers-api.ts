@@ -2,7 +2,8 @@ import { REST_API_LINKS } from '@/constants/URLs'
 const { PRODUCTS, SALE, PRODUCTS_FAV, USERS } = REST_API_LINKS
 
 import { URL_PARAMS_KEYS } from '@/constants/URLs'
-const { USER_ID, BRANDS_IDS, BY_TOP_SELLER } = URL_PARAMS_KEYS
+const { USER_ID, BRANDS_IDS, BY_TOP_SELLER, GET_UNIQUE_CAT, GET_UNIQUE_AXIS } =
+  URL_PARAMS_KEYS
 
 import type {
   APIResponseFindProducts,
@@ -89,21 +90,24 @@ export const toggleFavProduct: ToggleFavProductArgs = async (
 
 import type { APIResponseBasic } from '@/types'
 
-interface GetUniqueCategoriesArgs {
+interface GetUniqueBrandsOrAxisOfUserArgs {
   (brandsIDs: number[] | null): Promise<APIResponseBasic<string[]>> // enum of cat ??
 }
 
 // Get a unique list of category1
-export const getUniqueCategories: GetUniqueCategoriesArgs = async (
+export const getUniqueCategories: GetUniqueBrandsOrAxisOfUserArgs = async (
   brandsIDs
 ) => {
   if (!brandsIDs || !brandsIDs.length) {
     console.log('Error, no brandsIDs')
     return
   }
-  const response = await fetch(`${PRODUCTS}?${BRANDS_IDS}=${[brandsIDs]}`, {
-    method: 'GET',
-  })
+  const response = await fetch(
+    `${PRODUCTS}?${GET_UNIQUE_CAT}=true&${BRANDS_IDS}=${[brandsIDs]}`,
+    {
+      method: 'GET',
+    }
+  )
 
   const data = await response.json()
   return data
@@ -124,6 +128,25 @@ export const getUniqueBrandsOfUser: GetUniqueBrandsOfUserArgs = async (
   const response = await fetch(`${USERS}?${USER_ID}=${userID}`, {
     method: 'GET',
   })
+
+  const data = await response.json()
+  return data
+}
+
+// Get a unique list of axis for a given
+export const getUniqueAxisOfUser: GetUniqueBrandsOrAxisOfUserArgs = async (
+  brandsIDs
+) => {
+  if (!brandsIDs || !brandsIDs.length) {
+    console.log('Error, no brandsIDs')
+    return
+  }
+  const response = await fetch(
+    `${PRODUCTS}?${GET_UNIQUE_AXIS}=true&${BRANDS_IDS}=${[brandsIDs]}`,
+    {
+      method: 'GET',
+    }
+  )
 
   const data = await response.json()
   return data

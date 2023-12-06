@@ -40,7 +40,7 @@ model Product {
 
   img String?
 
-  axis      Axis
+  axis      String
   category1 String
   category2 String
 

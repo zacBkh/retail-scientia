@@ -8,7 +8,7 @@ import DatePickerNewSale from '@/components/date-selector/date-picker-new-sale'
 import { getProducts } from '@/services/prisma-queries'
 
 import { URL_PARAMS_KEYS } from '@/constants/URLs'
-const { PAGE, SEARCH, CATEGORY_1, SHOW_ONLY_FAV } = URL_PARAMS_KEYS
+const { SEARCH, CATEGORY_1, SHOW_ONLY_FAV, BRAND, AXIS } = URL_PARAMS_KEYS
 
 import ScrollToTopBtn from '@/components/ui/scroll-to-top'
 
@@ -29,11 +29,6 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
   const arrayOfUsersBrandsID =
     currentSession?.user.brands.map((brand) => brand.id) ?? []
 
-  const page =
-    typeof searchParams[PAGE] === 'string' ? Number(searchParams.page) : 1
-
-  console.log('page', page)
-
   const search =
     typeof searchParams[SEARCH] === 'string'
       ? (searchParams[SEARCH] as string)
@@ -44,20 +39,23 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
       ? (searchParams[CATEGORY_1] as string)
       : undefined
 
+  const brandQuery =
+    typeof searchParams[BRAND] === 'string'
+      ? (searchParams[BRAND] as string)
+      : undefined
+
+  console.log('brandQuery', brandQuery)
+
+  const axisQuery =
+    typeof searchParams[AXIS] === 'string'
+      ? (searchParams[AXIS] as string)
+      : undefined
+  console.log('axisQuery', axisQuery)
+
   const showOnlyFav =
     typeof searchParams[SHOW_ONLY_FAV] === 'string'
       ? (searchParams[SHOW_ONLY_FAV] as string)
       : undefined
-
-  const shouldPaginationBeActive =
-    category1Query === undefined && showOnlyFav === undefined
-  console.log('shouldPaginationBeActive', shouldPaginationBeActive)
-  console.log('category1Query', category1Query)
-  console.log('showOnlyFav', showOnlyFav)
-
-  let skip = 0
-  let take = 20
-  skip = (+page - 1) * take
 
   const productsToDisplay = await getProducts(
     currentSession?.user.id,
@@ -68,22 +66,21 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
 
     search,
     category1Query,
-
-    shouldPaginationBeActive,
-    skip,
-    take
+    brandQuery,
+    axisQuery
   )
+
+  const shouldPaginationBeActive =
+    category1Query === undefined && showOnlyFav === undefined
 
   return (
     <main className="flex flex-col items-center gap-y-4 text-black p-2 w-full">
       <DatePickerNewSale currentSession={currentSession} />
 
       <ClientWrapper
-        currentPage={page}
         currentUserID={currentSession?.user.id}
         arrayOfUsersBrandsID={arrayOfUsersBrandsID}
         fetchedProducts={productsToDisplay}
-        shouldReplaceWithFreshDate={page === 1}
         isPaginationActive={shouldPaginationBeActive}
       />
 
