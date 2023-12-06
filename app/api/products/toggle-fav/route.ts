@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../../auth/[...nextauth]/route'
 
-import { addProductAsFav } from '@/services/prisma-queries'
+import { toggleProductAsFav } from '@/services/prisma-queries'
 
 export async function POST(request: Request) {
   const currentSession = await getServerSession(authOptions)
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     )
   }
 
-  await addProductAsFav(+currentUserID, req.productID, req.isFav)
+  await toggleProductAsFav(+currentUserID, req.productID, req.isFav)
 
   const feedbackMsg = req.isFav
     ? 'Removed from favourites.'

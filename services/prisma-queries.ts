@@ -97,7 +97,6 @@ export const getProducts = async (
     ...(shouldTakeBeDisabled ? {} : { take: DB_QUERIES.QTY_RECORDS_TO_RETURN }),
   })
 
-  console.log('searchedProducts', searchedProducts[1])
   return searchedProducts
 }
 
@@ -239,7 +238,7 @@ export const getSalesByBestSellerSku: GetSalesByTopSoldSKU = async (
   return finalSKUOrder
 }
 
-export const addProductAsFav = async (
+export const toggleProductAsFav = async (
   currentUserID: number,
   productID: number,
   isAlreadyFav: boolean

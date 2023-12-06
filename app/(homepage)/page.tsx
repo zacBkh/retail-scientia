@@ -85,7 +85,7 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
       />
 
       <ScrollToTopBtn
-        className={'self-end md:self-auto sticky bottom-3'}
+        className={'self-end md:self-auto sticky bottom-3 opacity-70'}
         iconStyle={'text-4xl text-zinc-500'}
       />
     </main>
