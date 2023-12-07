@@ -36,8 +36,6 @@ interface ClientWrapperProps {
   fetchedProducts: ProductsWithFav[]
   currentUserID: string | undefined
   arrayOfUsersBrandsID: number[]
-
-  isPaginationActive: boolean
 }
 
 const ClientWrapper: FC<ClientWrapperProps> = ({

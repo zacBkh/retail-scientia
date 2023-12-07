@@ -7,7 +7,6 @@ export async function GET(request: NextRequest) {
   const userID =
     request.nextUrl.searchParams.get(URL_PARAMS_KEYS.USER_ID) ?? null
 
-  console.log('userID *-*-*-*-*-', userID)
   if (!userID) {
     return NextResponse.json(
       {

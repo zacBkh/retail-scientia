@@ -33,6 +33,7 @@ export const getProducts = async (
   brandName?: string,
   axisName?: string
 ) => {
+  console.log('GP RAN -')
   const shouldTakeBeDisabled =
     showOnlyFav || category1Query?.length ? true : false
 
@@ -178,7 +179,6 @@ export const findSalesOfUser: FindSalesOfUserArgs = async (
     },
   })
 
-  console.log('userSales --->', userSales)
   return userSales
 }
 
@@ -243,6 +243,8 @@ export const toggleProductAsFav = async (
   productID: number,
   isAlreadyFav: boolean
 ) => {
+  console.log('RAN')
+
   // Get user's favourite
   const user = await db.user.findUnique({
     where: { id: currentUserID },

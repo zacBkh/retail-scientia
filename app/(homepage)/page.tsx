@@ -44,13 +44,10 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
       ? (searchParams[BRAND] as string)
       : undefined
 
-  console.log('brandQuery', brandQuery)
-
   const axisQuery =
     typeof searchParams[AXIS] === 'string'
       ? (searchParams[AXIS] as string)
       : undefined
-  console.log('axisQuery', axisQuery)
 
   const showOnlyFav =
     typeof searchParams[SHOW_ONLY_FAV] === 'string'
@@ -73,15 +70,18 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
   const shouldPaginationBeActive =
     category1Query === undefined && showOnlyFav === undefined
 
+  console.log(
+    'showOnlyFav && !productsToDisplay.length',
+    showOnlyFav && !productsToDisplay.length
+  )
+
   return (
     <main className="flex flex-col items-center gap-y-4 text-black p-2 w-full">
       <DatePickerNewSale currentSession={currentSession} />
-
       <ClientWrapper
+        fetchedProducts={productsToDisplay}
         currentUserID={currentSession?.user.id}
         arrayOfUsersBrandsID={arrayOfUsersBrandsID}
-        fetchedProducts={productsToDisplay}
-        isPaginationActive={shouldPaginationBeActive}
       />
 
       <ScrollToTopBtn
