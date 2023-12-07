@@ -15,7 +15,6 @@ interface CSVExportProps {
 }
 
 const CSVExport: FC<CSVExportProps> = ({ sales }) => {
-  console.log('sales -->', sales)
   const headers = [
     // Product
     { label: 'Date - MM/DD/YYYY', key: 'date' },
@@ -44,14 +43,26 @@ const CSVExport: FC<CSVExportProps> = ({ sales }) => {
       ...sale.seller,
     })) || []
 
+  const handleDonwloadRequest = () => {
+    if (!sales?.length) {
+      toast.error(
+        <div>
+          There are no sales to download. <br /> Change the date or date range.
+        </div>,
+        { toastId: 'CSV' }
+      )
+      return false
+    } else {
+      toast.success('Report downloaded', { toastId: 'CSV' })
+    }
+  }
+
   return (
     <>
-      <CSVLink
-        onClick={() => toast.success('Report downloaded', { toastId: 'CSV' })}
-        data={data}
-        headers={headers}
-      >
-        <FaFileExcel className={'text-purple-400'} />
+      <CSVLink onClick={handleDonwloadRequest} data={data} headers={headers}>
+        <FaFileExcel
+          className={`text-purple-400 ${!sales?.length ? 'opacity-60' : ''}`}
+        />
       </CSVLink>
     </>
   )

@@ -19,7 +19,7 @@ import DatePickerDashboard from './date-picker-dashboard'
 import { getUserSalesInDB } from '@/services/fetchers-api'
 
 import type { DateValueType } from 'react-tailwindcss-datepicker'
-import type { DateRangeTypeExt, SalesWithProducts } from '@/types'
+import type { DateRangeTypeExt } from '@/types'
 
 import { ModeOfProductTable } from '@/constants/db-queries'
 import COLORS from '@/constants/colors-temp'
