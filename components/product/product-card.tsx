@@ -38,15 +38,20 @@ const ProductCard: FC<ProductWithFav> = ({
   const [isFavourite, setIsFavourite] = useState(isFav)
 
   const handleClickToggleFav = async () => {
-    setIsFavourite((prev) => !prev)
+    console.log('ask toggle fav, now its', isFavourite)
 
     const toastId = 'SALES_ALREADY_EXISTING'
     const autoClose = 2500
 
-    toast.success(isFav ? 'Removed from favourites.' : 'Added to favourites.', {
-      toastId,
-      autoClose,
-    })
+    toast.success(
+      isFavourite ? 'Removed from favourites.' : 'Added to favourites.',
+      {
+        toastId,
+        autoClose,
+      }
+    )
+
+    setIsFavourite((prev) => !prev)
 
     const mutation = await toggleFavProduct(id, isFavourite)
 

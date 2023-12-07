@@ -33,6 +33,7 @@ export const getProducts = async (
   brandName?: string,
   axisName?: string
 ) => {
+  console.log('GP RAN -')
   const shouldTakeBeDisabled =
     showOnlyFav || category1Query?.length ? true : false
 
@@ -97,7 +98,6 @@ export const getProducts = async (
     ...(shouldTakeBeDisabled ? {} : { take: DB_QUERIES.QTY_RECORDS_TO_RETURN }),
   })
 
-  console.log('searchedProducts', searchedProducts[1])
   return searchedProducts
 }
 
@@ -179,7 +179,6 @@ export const findSalesOfUser: FindSalesOfUserArgs = async (
     },
   })
 
-  console.log('userSales --->', userSales)
   return userSales
 }
 
@@ -239,11 +238,13 @@ export const getSalesByBestSellerSku: GetSalesByTopSoldSKU = async (
   return finalSKUOrder
 }
 
-export const addProductAsFav = async (
+export const toggleProductAsFav = async (
   currentUserID: number,
   productID: number,
   isAlreadyFav: boolean
 ) => {
+  console.log('RAN')
+
   // Get user's favourite
   const user = await db.user.findUnique({
     where: { id: currentUserID },

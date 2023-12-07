@@ -11,16 +11,28 @@ import {
 
 import { URL_PARAMS_KEYS } from '@/constants/URLs'
 
+import { checkIfDateIsAfter } from '@/utils/dates'
+
 const { BY_TOP_SELLER } = URL_PARAMS_KEYS
 
 export async function POST(request: Request) {
   const currentSession = await getServerSession(authOptions)
 
   const req = await request.json()
-  const { date, productIDs } = req
+  const { date: suppliedSalesDate, productIDs } = req
+
+  if (checkIfDateIsAfter(suppliedSalesDate)) {
+    return NextResponse.json(
+      {
+        success: false,
+        result: `The dates supplied is not valid`,
+      },
+      { status: 500 }
+    )
+  }
 
   const saleRegistration = await addSales(
-    new Date(date),
+    new Date(suppliedSalesDate),
     Number(currentSession?.user?.id),
     productIDs
   )
@@ -28,7 +40,9 @@ export async function POST(request: Request) {
   return NextResponse.json(
     {
       success: true,
-      result: `You successfully added ${saleRegistration.count} sales`,
+      result: `You successfully added ${saleRegistration.count} ${
+        saleRegistration.count > 1 ? 'sales' : 'sale'
+      }`,
     },
     { status: 201 }
   )

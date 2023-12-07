@@ -10,6 +10,8 @@ const { SHOW_ONLY_FAV } = URL_PARAMS_KEYS
 
 import Spinner from '../spinner'
 
+import COLORS from '@/constants/colors-temp'
+
 interface SwitcherProps {
   disable: boolean
 }
@@ -46,6 +48,7 @@ const Switcher: FC<SwitcherProps> = ({ disable }) => {
             disabled={disable}
             onCheckedChange={handleToggleSwitch}
             size="1"
+            color="violet"
           />
           Favourites only
         </Flex>

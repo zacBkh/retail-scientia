@@ -2,10 +2,11 @@ import { FC, useState } from 'react'
 
 import { Button, Flex, AlertDialog, Text, Checkbox } from '@radix-ui/themes'
 
-import COLORS from '@/constants/colors-temp'
 import { DISABLED_STYLE } from '@/constants/disabled-css'
 
 import Ckeckbox from '../checkbox'
+
+import { toast } from 'react-toastify'
 
 interface AlertDialogRxProps {
   buttonTriggerTxt: string
@@ -19,6 +20,7 @@ interface AlertDialogRxProps {
   isDisabled?: boolean
 
   onValidateAction: () => void
+  onOpenDialogLogic?: () => boolean
 }
 
 const AlertDialogRx: FC<AlertDialogRxProps> = ({
@@ -34,7 +36,10 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
   isDisabled,
 
   onValidateAction,
+  onOpenDialogLogic,
 }) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false)
 
   const handleCheckboxChange = () => {
@@ -45,11 +50,23 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
     console.log('isDialogOpen', isDialogOpen)
   }
 
+  const handleOpenDialogRequest = () => {
+    if (onOpenDialogLogic) {
+      const logicOpenDialog = onOpenDialogLogic()
+      logicOpenDialog === true ? setIsDialogOpen(true) : ''
+    } else {
+      return setIsDialogOpen(true)
+    }
+  }
+
   const { date, ttlCartValue, ttlQty } = salesDetails ?? {}
   return (
     <>
-      <AlertDialog.Root onOpenChange={handleToggleDialog}>
-        <AlertDialog.Trigger disabled={isDisabled}>
+      <AlertDialog.Root open={isDialogOpen} onOpenChange={handleToggleDialog}>
+        <AlertDialog.Trigger
+          onClick={handleOpenDialogRequest}
+          disabled={isDisabled}
+        >
           <button
             className={`bg-[#00a2c7] text-sm font-semibold text-center rounded text-white py-1 px-3`}
           >
@@ -100,7 +117,7 @@ const AlertDialogRx: FC<AlertDialogRxProps> = ({
             />
 
             <Flex gap="3" mt="4" justify="end">
-              <AlertDialog.Cancel>
+              <AlertDialog.Cancel onClick={() => setIsDialogOpen(false)}>
                 <button
                   className={`bg-[#0000330f] text-sm font-semibold text-center rounded text-[#0007149f] py-1 px-3`}
                 >

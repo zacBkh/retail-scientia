@@ -89,7 +89,6 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
 
   // If date changed, update the numbers
   useEffect(() => {
-    console.log('new dates!!')
     mutate(SWR_KEYS.GET_SALES_OF_USER_BY_BEST_SELLER_DB)
     mutate(SWR_KEYS.GET_SALES_OF_USER_DB)
   }, [datesObject?.startDate, datesObject?.endDate])
@@ -113,9 +112,6 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
     useState(false)
 
   const isDatePickerOpen = useOnDetectDatePickerOpen()
-
-  console.log('sortedSalesBySKU', sortedSalesBySKU)
-  console.log('filteredSalesUser', filteredSalesUser)
 
   return (
     <>

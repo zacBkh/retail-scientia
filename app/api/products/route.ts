@@ -23,8 +23,6 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    console.log('brandIDs', brandIDs)
-
     const uniqueCat = await getUniqueCategory1(brandIDs.split(','))
     return NextResponse.json(
       {
@@ -47,8 +45,6 @@ export async function GET(request: NextRequest) {
         { status: 500 }
       )
     }
-
-    console.log('ask for axis', brandIDs)
 
     const uniqueAxis = await getUniqueAxis(brandIDs.split(','))
     return NextResponse.json(

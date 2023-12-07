@@ -53,9 +53,7 @@ const SelectProductLine: FC<SelectProductLineProps> = ({
   const addQueryString = useAddQueryString(searchParams.toString())
 
   const handleOptionChange = (newItem: string) => {
-    console.log('newItem', newItem)
     if (newItem === placeholder) {
-      console.log('6')
       setIsPlaceholderMode(true)
 
       startTransition(() => {
@@ -94,16 +92,16 @@ const SelectProductLine: FC<SelectProductLineProps> = ({
 
   return (
     <>
-      {isLoading ? (
-        <Skeleton height={32} className="" containerClassName={'w-[40%]'} />
-      ) : (
-        <Select.Root
-          disabled={isLoading}
-          open={isOpen}
-          onOpenChange={handleOpenSelect}
-          onValueChange={handleOptionChange}
-        >
-          <div className={`flex items-center justify-center gap-x-2 w-1/2`}>
+      <Select.Root
+        disabled={isLoading}
+        open={isOpen}
+        onOpenChange={handleOpenSelect}
+        onValueChange={handleOptionChange}
+      >
+        <div className={`flex items-center justify-center gap-x-2 w-1/2`}>
+          {isLoading ? (
+            <Skeleton height={32} width={135} containerClassName={''} />
+          ) : (
             <Select.Trigger
               data-placeholder={isPlaceholderMode ? true : undefined}
               className={`!border-none box !shadow-none w-[85%] ${
@@ -111,22 +109,22 @@ const SelectProductLine: FC<SelectProductLineProps> = ({
               } ${isOpen ? selectActiveStyle : ''} `}
               placeholder={placeholder}
             />
-            {isPending && (
-              <Spinner style="border-gray-400 border-t-black !w-4 !h-4" />
-            )}
-          </div>
-          <Select.Content
-            className={`${COLORS.turquoiseLight_bg} !shadow-2xl`}
-            position="popper"
-          >
-            {optionsWithClear?.map((item: string) => (
-              <Select.Item key={item} value={item}>
-                {item}
-              </Select.Item>
-            ))}
-          </Select.Content>
-        </Select.Root>
-      )}
+          )}
+          {isPending && (
+            <Spinner style="border-gray-400 border-t-black !w-4 !h-4" />
+          )}
+        </div>
+        <Select.Content
+          className={`${COLORS.turquoiseLight_bg} !shadow-2xl`}
+          position="popper"
+        >
+          {optionsWithClear?.map((item: string) => (
+            <Select.Item key={item} value={item}>
+              {item}
+            </Select.Item>
+          ))}
+        </Select.Content>
+      </Select.Root>
     </>
   )
 }
