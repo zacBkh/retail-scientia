@@ -33,7 +33,6 @@ export const getProducts = async (
   brandName?: string,
   axisName?: string
 ) => {
-  console.log('GP RAN -')
   const shouldTakeBeDisabled =
     showOnlyFav || category1Query?.length ? true : false
 
@@ -238,13 +237,36 @@ export const getSalesByBestSellerSku: GetSalesByTopSoldSKU = async (
   return finalSKUOrder
 }
 
+export const getFavOfUser = async (
+  currentUserID: number,
+  productID: number
+) => {
+  // Get user's favourite
+  const product = await db.product.findUnique({
+    where: { id: productID },
+    // Only returns favouritedBy
+    select: {
+      favouritedBy: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  })
+  console.log('product ', product)
+  const mappedProducts = product?.favouritedBy.map((product) => product.id)
+  if (mappedProducts?.includes(currentUserID)) {
+    return true
+  } else {
+    return false
+  }
+}
+
 export const toggleProductAsFav = async (
   currentUserID: number,
   productID: number,
   isAlreadyFav: boolean
 ) => {
-  console.log('RAN')
-
   // Get user's favourite
   const user = await db.user.findUnique({
     where: { id: currentUserID },

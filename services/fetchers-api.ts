@@ -2,8 +2,14 @@ import { REST_API_LINKS } from '@/constants/URLs'
 const { PRODUCTS, SALE, PRODUCTS_FAV, USERS } = REST_API_LINKS
 
 import { URL_PARAMS_KEYS } from '@/constants/URLs'
-const { USER_ID, BRANDS_IDS, BY_TOP_SELLER, GET_UNIQUE_CAT, GET_UNIQUE_AXIS } =
-  URL_PARAMS_KEYS
+const {
+  USER_ID,
+  BRANDS_IDS,
+  BY_TOP_SELLER,
+  GET_UNIQUE_CAT,
+  GET_UNIQUE_AXIS,
+  PRODUCT_ID,
+} = URL_PARAMS_KEYS
 
 import type {
   APIResponseFindProducts,
@@ -11,6 +17,7 @@ import type {
   SalesInLocalStorage,
   APIResponseFindUserSales,
   APIResponseToggleFav,
+  APIResponseGetFav,
   GetFilteredUserSalesInDB,
 } from '@/types'
 
@@ -67,6 +74,22 @@ export const getUserSalesInDB: GetFilteredUserSalesInDB = async (
     throw error
   }
 
+  return data
+}
+
+interface GetFavProductArgs {
+  // (productID: number): Promise<APIResponseGetFav>
+  (productID: number): Promise<boolean>
+}
+
+// Add a sale in DB
+export const fetchIsProductFav: GetFavProductArgs = async (productID) => {
+  const response = await fetch(`${PRODUCTS_FAV}?${PRODUCT_ID}=${productID}`, {
+    method: 'GET',
+  })
+  const data = await response.json()
+
+  console.log('data favvv', data)
   return data
 }
 

@@ -15,7 +15,7 @@ export enum APP_LINKS {
 export enum REST_API_LINKS {
   SALE = 'api/sales',
   PRODUCTS = 'api/products',
-  PRODUCTS_FAV = 'api/products/toggle-fav',
+  PRODUCTS_FAV = 'api/products/fav',
   USERS = 'api/users',
 }
 
@@ -33,6 +33,7 @@ export enum URL_PARAMS_KEYS {
   GET_UNIQUE_CAT = 'getUniqueCat',
   GET_UNIQUE_AXIS = 'getUniqueAxis',
   BY_TOP_SELLER = 'byTopSeller',
+  PRODUCT_ID = 'productID',
 }
 
 // export const NAV_LINKS = [

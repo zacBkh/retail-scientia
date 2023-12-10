@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 
 import Image from 'next/image'
 
@@ -12,9 +12,14 @@ import { Flex, Text, Box, Separator } from '@radix-ui/themes'
 
 import HeartIcon from '../ui/icons/heart-fav'
 
-import { toggleFavProduct } from '@/services/fetchers-api'
+import { toggleFavProduct, fetchIsProductFav } from '@/services/fetchers-api'
 
 import { toast } from 'react-toastify'
+
+import { mutate } from 'swr'
+import useSWRImmutable from 'swr/immutable'
+
+import SWR_KEYS from '@/constants/SWR-keys'
 
 type ProductWithFav = Product & { isFav: boolean }
 
@@ -32,32 +37,45 @@ const ProductCard: FC<ProductWithFav> = ({
   regularPrice,
   size,
   timePeriod,
-
   isFav,
 }) => {
-  const [isFavourite, setIsFavourite] = useState(isFav)
+  const {
+    data: isProductFav,
+    error,
+    isLoading,
+    isValidating,
+  } = useSWRImmutable(
+    `${SWR_KEYS.GET_FAV_PRODUCTS}_${id}`,
+    () => fetchIsProductFav(id) ?? [],
+    { fallbackData: isFav }
+  )
 
   const handleClickToggleFav = async () => {
-    console.log('ask toggle fav, now its', isFavourite)
-
     const toastId = 'SALES_ALREADY_EXISTING'
     const autoClose = 2500
 
     toast.success(
-      isFavourite ? 'Removed from favourites.' : 'Added to favourites.',
+      isProductFav ? 'Removed from favourites.' : 'Added to favourites.',
       {
         toastId,
         autoClose,
       }
     )
 
-    setIsFavourite((prev) => !prev)
-
-    const mutation = await toggleFavProduct(id, isFavourite)
-
-    if (!mutation.success) {
-      return toast.error(mutation.result, { toastId, autoClose })
-    }
+    // Optimistic update
+    const optimisticIsFav = !isProductFav
+    mutate(
+      `${SWR_KEYS.GET_FAV_PRODUCTS}_${id}`,
+      toggleFavProduct(id, isProductFav),
+      {
+        // No need to do a refetch, populate cache with optimisticIsFav
+        populateCache() {
+          return optimisticIsFav
+        },
+        revalidate: false,
+        optimisticData: optimisticIsFav,
+      }
+    )
   }
 
   return (
@@ -83,8 +101,11 @@ const ProductCard: FC<ProductWithFav> = ({
         className="absolute top-[-7px] right-[-6px]"
         onClick={handleClickToggleFav}
       >
-        <HeartIcon isFav={isFavourite} />
+        <HeartIcon isFav={isProductFav} />
       </div>
+      <button onClick={() => mutate(`${SWR_KEYS.GET_FAV_PRODUCTS}_${id}`)}>
+        test
+      </button>
     </div>
   )
 }

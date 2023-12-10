@@ -9,6 +9,7 @@ export type APIResponseBasic<T> = {
 export type APIResponseRegisterSales = APIResponseBasic<string>
 export type APIResponseFindProducts = APIResponseBasic<Product[]>
 export type APIResponseToggleFav = APIResponseBasic<string>
+export type APIResponseGetFav = APIResponseBasic<boolean>
 
 // LS
 export type SalesInLocalStorage = number[]
