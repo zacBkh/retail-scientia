@@ -51,7 +51,8 @@ const ProductCard: FC<ProductWithFav> = ({
   )
 
   const handleClickToggleFav = async () => {
-    const toastId = 'SALES_ALREADY_EXISTING'
+    const toastId = `TOGGLE_FAV - ${isProductFav}`
+    // const toastId = 'SALES_ALREADY_EXISTING'
     const autoClose = 2500
 
     toast.success(
@@ -103,9 +104,6 @@ const ProductCard: FC<ProductWithFav> = ({
       >
         <HeartIcon isFav={isProductFav} />
       </div>
-      <button onClick={() => mutate(`${SWR_KEYS.GET_FAV_PRODUCTS}_${id}`)}>
-        test
-      </button>
     </div>
   )
 }
