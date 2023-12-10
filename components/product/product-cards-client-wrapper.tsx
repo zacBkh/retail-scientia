@@ -104,38 +104,40 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
         !isDateSet ? 'opacity-50 blur-[2px] cursor-not-allowed' : ''
       } flex flex-col gap-y-4`}
     >
-      <SearchBarMainV2
-        isDateSet={isDateSet}
-        searchQuery={searchQuery}
-        onSearch={handleSearch}
-        isSearching={isPending}
-      />
-
-      <div className="flex flex-wrap gap-y-3 justify-between items-center">
-        <SelectProductLine
-          SWR_KEY={GET_UNIQUE_CATEGORY}
-          fetcher={() => getUniqueCategories(arrayOfUsersBrandsID ?? null)}
-          QUERY_STRING_KEY={CATEGORY_1}
-          placeholder={'Select a line'}
-          onOpenSelect={(isOpen) => setIsSelectOpen(isOpen)}
+      <div className="flex flex-col gap-y-4 searchTools ">
+        <SearchBarMainV2
+          isDateSet={isDateSet}
+          searchQuery={searchQuery}
+          onSearch={handleSearch}
+          isSearching={isPending}
         />
 
-        <SelectProductLine
-          SWR_KEY={GET_BRANDS_OF_USER}
-          fetcher={() => getUniqueBrandsOfUser(currentUserID)}
-          QUERY_STRING_KEY={BRAND}
-          placeholder={'Select a brand'}
-          onOpenSelect={(isOpen) => setIsSelectOpen(isOpen)}
-        />
-        <SelectProductLine
-          SWR_KEY={GET_AXIS_OF_USER}
-          fetcher={() => getUniqueAxisOfUser(arrayOfUsersBrandsID ?? null)}
-          QUERY_STRING_KEY={AXIS}
-          placeholder={'Select an Axis'}
-          onOpenSelect={(isOpen) => setIsSelectOpen(isOpen)}
-        />
+        <div className="flex flex-wrap gap-y-3 justify-between items-center">
+          <SelectProductLine
+            SWR_KEY={GET_UNIQUE_CATEGORY}
+            fetcher={() => getUniqueCategories(arrayOfUsersBrandsID ?? null)}
+            QUERY_STRING_KEY={CATEGORY_1}
+            placeholder={'Select a line'}
+            onOpenSelect={(isOpen) => setIsSelectOpen(isOpen)}
+          />
 
-        <Switcher disable={isSelectOpen} />
+          <SelectProductLine
+            SWR_KEY={GET_BRANDS_OF_USER}
+            fetcher={() => getUniqueBrandsOfUser(currentUserID)}
+            QUERY_STRING_KEY={BRAND}
+            placeholder={'Select a brand'}
+            onOpenSelect={(isOpen) => setIsSelectOpen(isOpen)}
+          />
+          <SelectProductLine
+            SWR_KEY={GET_AXIS_OF_USER}
+            fetcher={() => getUniqueAxisOfUser(arrayOfUsersBrandsID ?? null)}
+            QUERY_STRING_KEY={AXIS}
+            placeholder={'Select an Axis'}
+            onOpenSelect={(isOpen) => setIsSelectOpen(isOpen)}
+          />
+
+          <Switcher disable={isSelectOpen} />
+        </div>
       </div>
 
       <div

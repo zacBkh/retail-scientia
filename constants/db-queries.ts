@@ -4,5 +4,5 @@ export enum ModeOfProductTable {
 }
 
 export enum DB_QUERIES {
-  QTY_RECORDS_TO_RETURN = 100,
+  QTY_RECORDS_TO_RETURN = 50,
 }

@@ -12,6 +12,8 @@ const { SEARCH, CATEGORY_1, SHOW_ONLY_FAV, BRAND, AXIS } = URL_PARAMS_KEYS
 
 import ScrollToTopBtn from '@/components/ui/scroll-to-top'
 
+import COLORS from '@/constants/colors-temp'
+
 interface HomePageProps {
   searchParams: { [search: string]: string | string[] | undefined }
 }
@@ -67,14 +69,6 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
     axisQuery
   )
 
-  const shouldPaginationBeActive =
-    category1Query === undefined && showOnlyFav === undefined
-
-  console.log(
-    'showOnlyFav && !productsToDisplay.length',
-    showOnlyFav && !productsToDisplay.length
-  )
-
   return (
     <main className="flex flex-col items-center gap-y-4 text-black p-2 w-full">
       <DatePickerNewSale currentSession={currentSession} />
@@ -84,6 +78,16 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
         arrayOfUsersBrandsID={arrayOfUsersBrandsID}
       />
 
+      <div className="text-center">
+        <p>Don't see the product you are looking for?</p>
+        <a
+          aria-label="Go to the top of the page"
+          href="#"
+          className={`text-[#6550b9] font-semibold block underline decoration-[#6550b9] decoration-2 underline-offset-2`}
+        >
+          Use filters to find products quickly!{' '}
+        </a>
+      </div>
       <ScrollToTopBtn
         className={'self-end md:self-auto sticky bottom-3 opacity-70'}
         iconStyle={'text-4xl text-zinc-500'}

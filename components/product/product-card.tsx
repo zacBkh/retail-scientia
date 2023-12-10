@@ -52,7 +52,6 @@ const ProductCard: FC<ProductWithFav> = ({
 
   const handleClickToggleFav = async () => {
     const toastId = `TOGGLE_FAV - ${isProductFav}`
-    // const toastId = 'SALES_ALREADY_EXISTING'
     const autoClose = 2500
 
     toast.success(
