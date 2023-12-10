@@ -128,7 +128,11 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
               onNewDateObject={handleNewDateObject}
             />
             {!isDatePickerOpen ? (
-              <CSVExport sales={filteredSalesUser?.result} />
+              <CSVExport
+                sales={filteredSalesUser?.result}
+                userName={currentSession?.user.name}
+                dates={datesObject}
+              />
             ) : (
               ''
             )}

@@ -10,11 +10,25 @@ import { FaFileExcel } from 'react-icons/fa6'
 
 import { toast } from 'react-toastify'
 
+import type { DateValueType } from 'react-tailwindcss-datepicker'
+
 interface CSVExportProps {
   sales: SalesWithProducts | undefined
+  userName: String | null | undefined
+  dates: DateValueType
 }
 
-const CSVExport: FC<CSVExportProps> = ({ sales }) => {
+const CSVExport: FC<CSVExportProps> = ({ sales, userName, dates }) => {
+  console.log('dates', dates)
+
+  const isSingleDate = dates?.startDate === dates?.endDate
+  let exportedFileName
+  if (isSingleDate) {
+    exportedFileName = `${userName} - Sales of ${dates?.startDate}`
+  } else {
+    exportedFileName = `${userName} - Sales from ${dates?.startDate} to ${dates?.endDate} `
+  }
+
   const headers = [
     // Product
     { label: 'Date - MM/DD/YYYY', key: 'date' },
@@ -59,7 +73,12 @@ const CSVExport: FC<CSVExportProps> = ({ sales }) => {
 
   return (
     <>
-      <CSVLink onClick={handleDonwloadRequest} data={data} headers={headers}>
+      <CSVLink
+        onClick={handleDonwloadRequest}
+        data={data}
+        headers={headers}
+        filename={exportedFileName}
+      >
         <FaFileExcel
           className={`text-purple-400 ${!sales?.length ? 'opacity-60' : ''}`}
         />
