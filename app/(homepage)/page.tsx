@@ -79,7 +79,7 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
       />
 
       <div className="text-center">
-        <p>Don't see the product you are looking for?</p>
+        <p>Don&apos;t see the product you are looking for?</p>
         <a
           aria-label="Go to the top of the page"
           href="#"
