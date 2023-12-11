@@ -135,41 +135,46 @@ export const findAUser = async (email: string) => {
       email: email,
     },
   })
-  console.log('user ---> auth', user)
   return user
 }
 
 import type { SalesWithProducts } from '@/types'
 
 interface FindSalesOfUserArgs {
-  (userID: number, dateQuery?: string[] | null): Promise<SalesWithProducts>
+  (
+    userID: number,
+    dateQuery?: string[] | null,
+    brandsIDs?: string[]
+  ): Promise<SalesWithProducts>
 }
 
 // If no dateQuery supplied, it will get everything
 export const findSalesOfUser: FindSalesOfUserArgs = async (
   userID,
-  dateQuery
+  dateQuery,
+  brandsIDs
 ) => {
   const isSingleDate = dateQuery && dateQuery[0] === dateQuery[1]
   const userSales = await db.sale.findMany({
-    // include: {
-    //   productSold: {
-    //     select: {
-    //       id: true,
-    //       description: true,
-    //       size: true,
-    //     },
-    //   },
-    // },
-    // include: { productSold: true, seller: true },
+    // nested include
     include: { productSold: { include: { brand: true } }, seller: true },
 
     where: {
+      // Filter by user
       sellerId: userID,
+
+      // Filter by dates
       ...(dateQuery && {
         date: {
           gte: new Date(dateQuery[0]),
           lte: new Date(isSingleDate ? dateQuery[0] : dateQuery[1]),
+        },
+      }),
+
+      // Filter by brand(s)
+      ...(brandsIDs && {
+        productSold: {
+          brand: { name: { in: brandsIDs, mode: 'insensitive' } },
         },
       }),
     },
@@ -306,16 +311,34 @@ export const getUniqueCategory1 = async (userBrandsIDs: string[]) => {
   return uniqueCat
 }
 
-export const getUniqueBrands = async (userID: string) => {
+export const getUniqueBrands = async (
+  userID: string,
+  brandsNameOnly: boolean
+) => {
   const userIDNumber = +userID
+
+  let selectClause
+  if (brandsNameOnly) {
+    selectClause = { brands: { select: { name: true } } }
+  } else {
+    selectClause = { brands: { select: { name: true, logo: true, id: true } } }
+  }
+
   const brands = await db.user.findUnique({
     where: { id: userIDNumber },
-    select: { brands: { select: { name: true } } },
+    select: selectClause,
   })
 
-  const brandArray = brands?.brands?.map((brand) => brand.name)
+  if (brandsNameOnly) {
+    const brandArray = brands?.brands?.map((brand) => brand.name)
+    return brandArray
+  } else {
+    return brands?.brands
+  }
 
-  return brandArray
+  // const brandArray = brands?.brands?.map((brand) => {
+  //   brand.name, brand.logo, brand.id
+  // })
 }
 export const getUniqueAxis = async (userBrandsIDs: string[]) => {
   const userBrandsIDsNumber = userBrandsIDs.map((id) => Number(id))

@@ -29,11 +29,14 @@ export enum URL_PARAMS_KEYS {
 
   // For API calls
   BRANDS_IDS = 'brands',
+  BRANDS_NAMES = 'brands',
   USER_ID = 'userID',
   GET_UNIQUE_CAT = 'getUniqueCat',
   GET_UNIQUE_AXIS = 'getUniqueAxis',
   BY_TOP_SELLER = 'byTopSeller',
   PRODUCT_ID = 'productID',
+
+  BRANDS_NAME_ONLY = 'brandNameOnly',
 }
 
 // export const NAV_LINKS = [

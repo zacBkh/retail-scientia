@@ -9,6 +9,8 @@ const {
   GET_UNIQUE_CAT,
   GET_UNIQUE_AXIS,
   PRODUCT_ID,
+  BRANDS_NAMES,
+  BRANDS_NAME_ONLY,
 } = URL_PARAMS_KEYS
 
 import type {
@@ -59,10 +61,11 @@ export const getProductDetails: GetProductDetailsArgs = async () => {
 // Dashboard - get user sales
 export const getUserSalesInDB: GetFilteredUserSalesInDB = async (
   datesQuery,
-  byTopSeller
+  byTopSeller,
+  brandNames
 ) => {
   const response = await fetch(
-    `/${SALE}/?dates=${datesQuery}&${BY_TOP_SELLER}=${byTopSeller}`,
+    `/${SALE}/?dates=${datesQuery}&${BY_TOP_SELLER}=${byTopSeller}&${BRANDS_NAMES}=${brandNames}`,
     {
       method: 'GET',
     }
@@ -136,19 +139,34 @@ export const getUniqueCategories: GetUniqueBrandsOrAxisOfUserArgs = async (
   return data
 }
 
+export interface GetUniqueBrandsRespFull {
+  name: string
+  logo: string
+  id: string
+}
+
 interface GetUniqueBrandsOfUserArgs {
-  (userID: string | undefined): Promise<APIResponseBasic<string[]>> // enum of brands ??
+  (userID: string | undefined, brandsNameOnly?: boolean): Promise<
+    APIResponseBasic<GetUniqueBrandsRespFull[] | string[]>
+  > // enum of brands ??
 }
 
 // Get a unique list of brands of a user
 export const getUniqueBrandsOfUser: GetUniqueBrandsOfUserArgs = async (
-  userID
+  userID,
+  brandsNameOnly
 ) => {
   if (!userID || !userID.length) {
     console.log('Error, no user ID')
     return
   }
-  const response = await fetch(`${USERS}?${USER_ID}=${userID}`, {
+  let link
+  if (brandsNameOnly) {
+    link = `${USERS}?${USER_ID}=${userID}&${BRANDS_NAME_ONLY}=true`
+  } else {
+    link = `${USERS}?${USER_ID}=${userID}`
+  }
+  const response = await fetch(link, {
     method: 'GET',
   })
 
