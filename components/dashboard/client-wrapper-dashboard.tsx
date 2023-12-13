@@ -87,6 +87,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
     data: uniqueBrands,
     error: errorUniqueBrands,
     isLoading: isLoadingUniqueBrands,
+    isValidating: isValidatingUniqueBrands,
   } = useSWRImmutable(
     GET_BRANDS_OF_USER_FULL,
     () => getUniqueBrandsOfUser(currentSession?.user.id),
@@ -144,6 +145,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
   const [isShowLastSalesExpanded, setIsShowLastSalesExpanded] = useState(false)
   const [isShowTopSellersExpanded, setIsShowTopSellersExpanded] =
     useState(false)
+  const [isShowBrandsExpanded, setIsShowBrandsExpanded] = useState(false)
 
   const isDatePickerOpen = useOnDetectDatePickerOpen()
 
@@ -165,7 +167,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
       />
 
       <div className={`${COLORS.grey_bg} px-2`}>
-        <div className="p-3">
+        <div className="p-3 flex flex-col gap-y-2">
           <div className="flex items-center justify-between gap-x-2">
             <DatePickerDashboard
               datesObject={datesObject}
@@ -182,17 +184,34 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
             )}
           </div>
 
-          {((uniqueBrands?.result || []) as GetUniqueBrandsRespFull[]).map(
-            (brand) => (
-              <BrandsDisplayer
-                key={brand.id}
-                name={brand.name}
-                pic={brand.logo}
-              />
-            )
-          )}
+          <div className="flex flex-col items-center gap-y-2">
+            <ShowMoreButtonDashboard
+              isDataEmpty={!uniqueBrands}
+              onToggleBtn={(newState) => setIsShowBrandsExpanded(newState)}
+              isExpandedView={isShowBrandsExpanded}
+              txt={'Filter Brands'}
+              noFallback
+            />
 
-          <div className="my-3 flex gap-x-3 justify-between">
+            {isShowBrandsExpanded
+              ? ((uniqueBrands?.result || []) as GetUniqueBrandsRespFull[]).map(
+                  (brand) => (
+                    <BrandsDisplayer
+                      key={brand.id}
+                      name={brand.name}
+                      pic={brand.logo}
+                      onSelectBrand={handleSelectBrand}
+                      selectedBrands={selectedBrands}
+                      isLoading={
+                        isLoadingUniqueBrands || isValidatingUniqueBrands
+                      }
+                    />
+                  )
+                )
+              : ''}
+          </div>
+
+          <div className="flex gap-x-3 justify-between">
             <CardHeaderKPIs
               isLoading={isLoading || isValidating}
               text="Value"
@@ -221,7 +240,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
 
           {/* LAST SALES */}
           <div
-            className={`flex flex-col gap-y-3 py-4 px-4 card-dashboard w-full md:w-1/2`}
+            className={`flex flex-col gap-y-3 py-2 px-4 card-dashboard w-full md:w-1/2`}
           >
             <span className="text-lg font-bold my-2">Latest Sales</span>
             {filteredSalesUser?.result
@@ -237,7 +256,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
                 />
               ))}
             <ShowMoreButtonDashboard
-              isSalesEmpty={isSalesEmpty}
+              isDataEmpty={isSalesEmpty}
               onToggleBtn={(newState) => setIsShowLastSalesExpanded(newState)}
               isExpandedView={isShowLastSalesExpanded}
             />
@@ -245,7 +264,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
 
           {/* TOP SELLERS */}
           <div
-            className={` flex flex-col gap-y-3 py-4 px-4 mb-4 card-dashboard w-full md:w-1/2`}
+            className={`flex flex-col gap-y-3 py-2 px-4 mb-4 card-dashboard w-full md:w-1/2`}
           >
             <span className="text-lg font-bold my-2">Top Sellers</span>
             {sortedSalesBySKU?.result
@@ -264,7 +283,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
                 />
               ))}
             <ShowMoreButtonDashboard
-              isSalesEmpty={isSalesEmpty}
+              isDataEmpty={isSalesEmpty}
               onToggleBtn={(newState) => setIsShowTopSellersExpanded(newState)}
               isExpandedView={isShowTopSellersExpanded}
             />

@@ -335,10 +335,6 @@ export const getUniqueBrands = async (
   } else {
     return brands?.brands
   }
-
-  // const brandArray = brands?.brands?.map((brand) => {
-  //   brand.name, brand.logo, brand.id
-  // })
 }
 export const getUniqueAxis = async (userBrandsIDs: string[]) => {
   const userBrandsIDsNumber = userBrandsIDs.map((id) => Number(id))
