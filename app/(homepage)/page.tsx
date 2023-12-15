@@ -26,6 +26,8 @@ interface HomePageProps {
 export const revalidate = 0
 
 const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
+  console.log('searchParams', searchParams)
+
   const currentSession = await getServerSession(authOptions)
 
   const arrayOfUsersBrandsID =
@@ -56,10 +58,12 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
       ? (searchParams[SHOW_ONLY_FAV] as string)
       : undefined
 
+  console.log('showOnlyFav', showOnlyFav)
+
   const productsToDisplay = await getProducts(
     currentSession?.user.id,
 
-    showOnlyFav ? true : false,
+    showOnlyFav === 'true' ? true : false,
 
     arrayOfUsersBrandsID,
 
