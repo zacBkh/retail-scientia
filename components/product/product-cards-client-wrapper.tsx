@@ -54,6 +54,8 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
     revalidateOnMount: true,
   })
 
+  console.log('fetchedProducts MAIN PAGE', fetchedProducts)
+
   const isDateSet = dateInLS?.length
 
   const [searchQuery, setSearchQuery] = useState('')
