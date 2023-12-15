@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { FC } from 'react'
 import ClientWrapper from '@/components/product/product-cards-client-wrapper'
 
@@ -11,8 +13,6 @@ import { URL_PARAMS_KEYS } from '@/constants/URLs'
 const { SEARCH, CATEGORY_1, SHOW_ONLY_FAV, BRAND, AXIS } = URL_PARAMS_KEYS
 
 import ScrollToTopBtn from '@/components/ui/scroll-to-top'
-
-import COLORS from '@/constants/colors-temp'
 
 interface HomePageProps {
   searchParams: { [search: string]: string | string[] | undefined }

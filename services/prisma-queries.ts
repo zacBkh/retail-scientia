@@ -33,6 +33,8 @@ export const getProducts = async (
   brandName?: string,
   axisName?: string
 ) => {
+  console.log('getProductRan', showOnlyFav)
+
   const shouldTakeBeDisabled =
     showOnlyFav || category1Query?.length ? true : false
 
