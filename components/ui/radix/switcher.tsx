@@ -10,17 +10,15 @@ const { SHOW_ONLY_FAV } = URL_PARAMS_KEYS
 
 import Spinner from '../spinner'
 
-import COLORS from '@/constants/colors-temp'
-
 interface SwitcherProps {
   disable: boolean
 }
 
 const Switcher: FC<SwitcherProps> = ({ disable }) => {
+  const router = useRouter()
+
   const searchParams = useSearchParams()!
   const addQueryString = useAddQueryString(searchParams.toString())
-
-  const router = useRouter()
 
   const [isPending, startTransition] = useTransition()
 
@@ -38,6 +36,7 @@ const Switcher: FC<SwitcherProps> = ({ disable }) => {
         })
       })
     }
+    router.refresh()
   }
 
   return (
