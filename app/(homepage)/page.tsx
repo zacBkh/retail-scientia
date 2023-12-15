@@ -23,7 +23,7 @@ interface HomePageProps {
 //   sort_order?: "asc" | "desc";
 // };
 
-export const revalidate = 0
+export const revalidate = 1
 
 const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
   const currentSession = await getServerSession(authOptions)
