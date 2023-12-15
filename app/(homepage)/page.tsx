@@ -26,8 +26,6 @@ interface HomePageProps {
 export const revalidate = 0
 
 const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
-  console.log('searchParams', searchParams)
-
   const currentSession = await getServerSession(authOptions)
 
   const arrayOfUsersBrandsID =
