@@ -19,14 +19,19 @@ interface CSVExportProps {
 }
 
 const CSVExport: FC<CSVExportProps> = ({ sales, userName, dates }) => {
-  console.log('dates', dates)
-
   const isSingleDate = dates?.startDate === dates?.endDate
+
+  console.log('dates ***', dates)
   let exportedFileName
-  if (isSingleDate) {
-    exportedFileName = `${userName} - Sales of ${dates?.startDate}`
+
+  if (dates?.startDate === null || dates?.endDate === null) {
+    exportedFileName = `${userName} - Total sales`
   } else {
-    exportedFileName = `${userName} - Sales from ${dates?.startDate} to ${dates?.endDate} `
+    if (isSingleDate) {
+      exportedFileName = `${userName} - Sales of ${dates?.startDate}`
+    } else {
+      exportedFileName = `${userName} - Sales from ${dates?.startDate} to ${dates?.endDate} `
+    }
   }
 
   const headers = [

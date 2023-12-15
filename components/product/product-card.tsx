@@ -54,14 +54,6 @@ const ProductCard: FC<ProductWithFav> = ({
     const toastId = `TOGGLE_FAV - ${isProductFav}`
     const autoClose = 2500
 
-    toast.success(
-      isProductFav ? 'Removed from favourites.' : 'Added to favourites.',
-      {
-        toastId,
-        autoClose,
-      }
-    )
-
     // Optimistic update
     const optimisticIsFav = !isProductFav
     mutate(
@@ -74,6 +66,14 @@ const ProductCard: FC<ProductWithFav> = ({
         },
         revalidate: false,
         optimisticData: optimisticIsFav,
+      }
+    )
+
+    toast.success(
+      isProductFav ? 'Removed from favourites.' : 'Added to favourites.',
+      {
+        toastId,
+        autoClose,
       }
     )
   }

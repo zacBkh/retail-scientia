@@ -13,7 +13,7 @@ import { URL_PARAMS_KEYS } from '@/constants/URLs'
 
 import { checkIfDateIsAfter } from '@/utils/dates'
 
-const { BY_TOP_SELLER } = URL_PARAMS_KEYS
+const { BY_TOP_SELLER, BRANDS_IDS } = URL_PARAMS_KEYS
 
 export async function POST(request: Request) {
   const currentSession = await getServerSession(authOptions)
@@ -51,9 +51,20 @@ export async function POST(request: Request) {
 // Send sales either by chroological order (findSalesOfUser) or by top ref sold (getSalesByBestSellerSku)
 export async function GET(request: NextRequest) {
   try {
+    // Getting query params
     const queryDates = request.nextUrl.searchParams.get('dates') ?? null
+
     const byTopSeller =
       request.nextUrl.searchParams.get(BY_TOP_SELLER) === 'true'
+
+    // Formatting optional brandsIDs to array of number
+    const reqBrandNames = request.nextUrl.searchParams.get(BRANDS_IDS)
+    const brandNames = reqBrandNames === 'undefined' ? null : reqBrandNames
+
+    let brandNamesArr
+    if (brandNames) {
+      brandNamesArr = brandNames?.split(',')
+    }
 
     const currentSession = await getServerSession(authOptions)
 
@@ -78,7 +89,8 @@ export async function GET(request: NextRequest) {
     } else {
       const filteredSalesUser = await findSalesOfUser(
         Number(currentSession?.user?.id),
-        arrayQueryDates
+        arrayQueryDates,
+        brandNamesArr
       )
 
       return NextResponse.json(

@@ -12,8 +12,6 @@ const { SEARCH, CATEGORY_1, SHOW_ONLY_FAV, BRAND, AXIS } = URL_PARAMS_KEYS
 
 import ScrollToTopBtn from '@/components/ui/scroll-to-top'
 
-import COLORS from '@/constants/colors-temp'
-
 interface HomePageProps {
   searchParams: { [search: string]: string | string[] | undefined }
 }
@@ -24,6 +22,8 @@ interface HomePageProps {
 //   sort_by?: string;
 //   sort_order?: "asc" | "desc";
 // };
+
+export const revalidate = 1
 
 const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
   const currentSession = await getServerSession(authOptions)
@@ -56,10 +56,12 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
       ? (searchParams[SHOW_ONLY_FAV] as string)
       : undefined
 
+  console.log('showOnlyFav', showOnlyFav)
+
   const productsToDisplay = await getProducts(
     currentSession?.user.id,
 
-    showOnlyFav ? true : false,
+    showOnlyFav === 'true' ? true : false,
 
     arrayOfUsersBrandsID,
 

@@ -27,6 +27,8 @@ import {
   getUniqueAxisOfUser,
 } from '@/services/fetchers-api'
 
+import type { APIResponseBasic } from '@/types'
+
 import { URL_PARAMS_KEYS } from '@/constants/URLs'
 const { SEARCH, BRAND, CATEGORY_1, AXIS } = URL_PARAMS_KEYS
 
@@ -123,7 +125,11 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
 
           <SelectProductLine
             SWR_KEY={GET_BRANDS_OF_USER}
-            fetcher={() => getUniqueBrandsOfUser(currentUserID)}
+            fetcher={async () =>
+              getUniqueBrandsOfUser(currentUserID, true) as Promise<
+                APIResponseBasic<string[]>
+              >
+            }
             QUERY_STRING_KEY={BRAND}
             placeholder={'Select a brand'}
             onOpenSelect={(isOpen) => setIsSelectOpen(isOpen)}

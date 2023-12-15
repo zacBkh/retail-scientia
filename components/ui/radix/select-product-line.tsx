@@ -52,7 +52,7 @@ const SelectProductLine: FC<SelectProductLineProps> = ({
   const searchParams = useSearchParams()!
   const addQueryString = useAddQueryString(searchParams.toString())
 
-  const handleOptionChange = (newItem: string) => {
+  const handleOptionChangeQueryParams = (newItem: string) => {
     if (newItem === placeholder) {
       setIsPlaceholderMode(true)
 
@@ -96,7 +96,7 @@ const SelectProductLine: FC<SelectProductLineProps> = ({
         disabled={isLoading}
         open={isOpen}
         onOpenChange={handleOpenSelect}
-        onValueChange={handleOptionChange}
+        onValueChange={handleOptionChangeQueryParams}
       >
         <div className={`flex items-center justify-center gap-x-2 w-1/2`}>
           {isLoading ? (

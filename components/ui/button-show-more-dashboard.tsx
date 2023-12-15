@@ -5,15 +5,23 @@ import { FaLongArrowAltDown } from 'react-icons/fa'
 interface ShowMoreButtonDashboardProps {
   onToggleBtn: (newShowQty: boolean) => void
   isExpandedView: boolean
-  isSalesEmpty: boolean
+  isDataEmpty: boolean
+
+  txt?: string
+
+  noFallback?: boolean
 }
 
 const ShowMoreButtonDashboard: FC<ShowMoreButtonDashboardProps> = ({
   onToggleBtn,
   isExpandedView,
-  isSalesEmpty,
+  isDataEmpty,
+
+  txt = 'Show',
+
+  noFallback,
 }) => {
-  if (isSalesEmpty) {
+  if (isDataEmpty && !noFallback) {
     return <p className="block text-center">Not much to show here! 😭</p>
   }
 
@@ -23,7 +31,7 @@ const ShowMoreButtonDashboard: FC<ShowMoreButtonDashboardProps> = ({
         onClick={() => onToggleBtn(isExpandedView ? false : true)}
         className="text-sm font-semibold inline-flex justify-end items-center gap-x-2"
       >
-        {`Show ${!isExpandedView ? 'more' : 'less'}`}
+        {txt ?? `Show ${!isExpandedView ? 'more' : 'less'}`}
         <FaLongArrowAltDown
           className={`transition-transform duration-200 ${
             !isExpandedView ? 'rotate-0' : '-rotate-180'

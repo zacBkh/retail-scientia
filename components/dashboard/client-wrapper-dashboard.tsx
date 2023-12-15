@@ -16,7 +16,10 @@ import { dateToStringForQuery } from '@/utils/dates'
 
 import DatePickerDashboard from './date-picker-dashboard'
 
-import { getUserSalesInDB } from '@/services/fetchers-api'
+import {
+  getUserSalesInDB,
+  getUniqueBrandsOfUser,
+} from '@/services/fetchers-api'
 
 import type { DateValueType } from 'react-tailwindcss-datepicker'
 import type { DateRangeTypeExt } from '@/types'
@@ -24,7 +27,13 @@ import type { DateRangeTypeExt } from '@/types'
 import { ModeOfProductTable } from '@/constants/db-queries'
 import COLORS from '@/constants/colors-temp'
 import { zIndexes } from '@/constants/z-indexes'
+
 import SWR_KEYS from '@/constants/SWR-keys'
+const {
+  GET_SALES_OF_USER_DB,
+  GET_BRANDS_OF_USER_FULL,
+  GET_SALES_OF_USER_BY_BEST_SELLER_DB,
+} = SWR_KEYS
 
 import PieChart from '../charts/pie-chart'
 
@@ -38,20 +47,23 @@ import OverlayDarkener from '../ui/overlay-darkener'
 import useOnDetectDatePickerOpen from '@/hooks/useOnDetectDatePickerOpen'
 
 import CSVExport from '../csv-export/csv-export'
+import BrandsDisplayer from '../brands/brands-displayer'
+
+import type { GetUniqueBrandsRespFull } from '@/services/fetchers-api'
 
 interface DashboardClientWrapperProps {
   currentSession: Session | null
-  // totalSalesOfUser: SalesWithProducts
 }
 
 const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
   currentSession,
-  // totalSalesOfUser,
 }) => {
   const [datesObject, setDatesObject] = useState({
     startDate: dateToStringForQuery(new Date()),
     endDate: dateToStringForQuery(new Date()),
   })
+
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
 
   const {
     data: filteredSalesUser,
@@ -59,8 +71,26 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
     isLoading,
     isValidating,
   } = useSWRImmutable(
-    SWR_KEYS.GET_SALES_OF_USER_DB,
-    () => getUserSalesInDB([datesObject?.startDate, datesObject?.endDate]),
+    GET_SALES_OF_USER_DB,
+    () =>
+      getUserSalesInDB(
+        [datesObject?.startDate, datesObject?.endDate],
+        undefined,
+        selectedBrands
+      ),
+    {
+      revalidateOnMount: true,
+    }
+  )
+
+  const {
+    data: uniqueBrands,
+    error: errorUniqueBrands,
+    isLoading: isLoadingUniqueBrands,
+    isValidating: isValidatingUniqueBrands,
+  } = useSWRImmutable(
+    GET_BRANDS_OF_USER_FULL,
+    () => getUniqueBrandsOfUser(currentSession?.user.id),
     {
       revalidateOnMount: true,
     }
@@ -69,11 +99,11 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
   // USELESS API NETWORK CALLS !! POTENTIAL TO IMPROVE WITH GROUPBY ORDER BY or distinct ??
   const {
     data: sortedSalesBySKU,
-    error: errorsortedSalesBySKU,
-    isLoading: isLoadingsortedSalesBySKU,
-    isValidating: isValidatingsortedSalesBySKU,
+    error: errorortedSalesBySKU,
+    isLoading: isLoadingSortedSalesBySKU,
+    isValidating: isValidatingSortedSalesBySKU,
   } = useSWRImmutable(
-    SWR_KEYS.GET_SALES_OF_USER_BY_BEST_SELLER_DB,
+    GET_SALES_OF_USER_BY_BEST_SELLER_DB,
     () =>
       getUserSalesInDB([datesObject?.startDate, datesObject?.endDate], true),
     {
@@ -89,9 +119,14 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
 
   // If date changed, update the numbers
   useEffect(() => {
-    mutate(SWR_KEYS.GET_SALES_OF_USER_BY_BEST_SELLER_DB)
-    mutate(SWR_KEYS.GET_SALES_OF_USER_DB)
+    mutate(GET_SALES_OF_USER_BY_BEST_SELLER_DB)
+    mutate(GET_SALES_OF_USER_DB)
   }, [datesObject?.startDate, datesObject?.endDate])
+
+  // If brand changed, update sales
+  useEffect(() => {
+    mutate(GET_SALES_OF_USER_DB)
+  }, [selectedBrands])
 
   const ttlSalesValue =
     filteredSalesUser && sumSalesValue(filteredSalesUser?.result ?? [])
@@ -110,9 +145,20 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
   const [isShowLastSalesExpanded, setIsShowLastSalesExpanded] = useState(false)
   const [isShowTopSellersExpanded, setIsShowTopSellersExpanded] =
     useState(false)
+  const [isShowBrandsExpanded, setIsShowBrandsExpanded] = useState(false)
 
   const isDatePickerOpen = useOnDetectDatePickerOpen()
 
+  const handleSelectBrand = (brandClicked: string) => {
+    if (!selectedBrands.includes(brandClicked)) {
+      return setSelectedBrands((prev) => [...prev, brandClicked])
+    } else {
+      const newSelectedBrands = selectedBrands.filter(
+        (selectedBrand) => selectedBrand !== brandClicked
+      )
+      setSelectedBrands(newSelectedBrands)
+    }
+  }
   return (
     <>
       <OverlayDarkener
@@ -121,7 +167,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
       />
 
       <div className={`${COLORS.grey_bg} px-2`}>
-        <div className="p-3">
+        <div className="p-3 flex flex-col gap-y-2">
           <div className="flex items-center justify-between gap-x-2">
             <DatePickerDashboard
               datesObject={datesObject}
@@ -138,7 +184,34 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
             )}
           </div>
 
-          <div className="my-3 flex gap-x-3 justify-between">
+          <div className="flex flex-col items-center gap-y-2">
+            <ShowMoreButtonDashboard
+              isDataEmpty={!uniqueBrands}
+              onToggleBtn={(newState) => setIsShowBrandsExpanded(newState)}
+              isExpandedView={isShowBrandsExpanded}
+              txt={'Filter Brands'}
+              noFallback
+            />
+
+            {isShowBrandsExpanded
+              ? ((uniqueBrands?.result || []) as GetUniqueBrandsRespFull[]).map(
+                  (brand) => (
+                    <BrandsDisplayer
+                      key={brand.id}
+                      name={brand.name}
+                      pic={brand.logo}
+                      onSelectBrand={handleSelectBrand}
+                      selectedBrands={selectedBrands}
+                      isLoading={
+                        isLoadingUniqueBrands || isValidatingUniqueBrands
+                      }
+                    />
+                  )
+                )
+              : ''}
+          </div>
+
+          <div className="flex gap-x-3 justify-between">
             <CardHeaderKPIs
               isLoading={isLoading || isValidating}
               text="Value"
@@ -167,7 +240,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
 
           {/* LAST SALES */}
           <div
-            className={`flex flex-col gap-y-3 py-4 px-4 card-dashboard w-full md:w-1/2`}
+            className={`flex flex-col gap-y-3 py-2 px-4 card-dashboard w-full md:w-1/2`}
           >
             <span className="text-lg font-bold my-2">Latest Sales</span>
             {filteredSalesUser?.result
@@ -183,7 +256,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
                 />
               ))}
             <ShowMoreButtonDashboard
-              isSalesEmpty={isSalesEmpty}
+              isDataEmpty={isSalesEmpty}
               onToggleBtn={(newState) => setIsShowLastSalesExpanded(newState)}
               isExpandedView={isShowLastSalesExpanded}
             />
@@ -191,7 +264,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
 
           {/* TOP SELLERS */}
           <div
-            className={` flex flex-col gap-y-3 py-4 px-4 mb-4 card-dashboard w-full md:w-1/2`}
+            className={`flex flex-col gap-y-3 py-2 px-4 mb-4 card-dashboard w-full md:w-1/2`}
           >
             <span className="text-lg font-bold my-2">Top Sellers</span>
             {sortedSalesBySKU?.result
@@ -200,7 +273,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
                 <TableOfSKUs
                   mode={ModeOfProductTable.TopSellersProducts}
                   isLoading={
-                    isLoadingsortedSalesBySKU || isValidatingsortedSalesBySKU
+                    isLoadingSortedSalesBySKU || isValidatingSortedSalesBySKU
                   }
                   key={`${item.productSold.id}-1`}
                   img={item.productSold.img}
@@ -210,7 +283,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
                 />
               ))}
             <ShowMoreButtonDashboard
-              isSalesEmpty={isSalesEmpty}
+              isDataEmpty={isSalesEmpty}
               onToggleBtn={(newState) => setIsShowTopSellersExpanded(newState)}
               isExpandedView={isShowTopSellersExpanded}
             />

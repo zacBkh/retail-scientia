@@ -1,4 +1,5 @@
 // import SEO_KEYWORDS from '@/constants/seo-keywords'
+export const dynamic = 'force-dynamic'
 
 export const metadata = {
   title: 'Welcome to Retail Scientia! 👋🏼',
