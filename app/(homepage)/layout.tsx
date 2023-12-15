@@ -1,4 +1,5 @@
 // import SEO_KEYWORDS from '@/constants/seo-keywords'
+export const revalidate = 0
 
 export const metadata = {
   title: 'Welcome to Retail Scientia! 👋🏼',
