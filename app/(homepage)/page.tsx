@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic'
-
 import { FC } from 'react'
 import ClientWrapper from '@/components/product/product-cards-client-wrapper'
 
@@ -24,6 +22,8 @@ interface HomePageProps {
 //   sort_by?: string;
 //   sort_order?: "asc" | "desc";
 // };
+
+export const revalidate = 0
 
 const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
   const currentSession = await getServerSession(authOptions)
