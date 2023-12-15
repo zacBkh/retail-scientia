@@ -19,7 +19,7 @@ import { toast } from 'react-toastify'
 import { mutate } from 'swr'
 import useSWRImmutable from 'swr/immutable'
 
-import SWR_KEYS from '@/constants/SWR-keys'
+import { SWR_KEYS } from '@/constants'
 
 type ProductWithFav = Product & { isFav: boolean }
 
@@ -54,14 +54,6 @@ const ProductCard: FC<ProductWithFav> = ({
     const toastId = `TOGGLE_FAV - ${isProductFav}`
     const autoClose = 2500
 
-    toast.success(
-      isProductFav ? 'Removed from favourites.' : 'Added to favourites.',
-      {
-        toastId,
-        autoClose,
-      }
-    )
-
     // Optimistic update
     const optimisticIsFav = !isProductFav
     mutate(
@@ -74,6 +66,14 @@ const ProductCard: FC<ProductWithFav> = ({
         },
         revalidate: false,
         optimisticData: optimisticIsFav,
+      }
+    )
+
+    toast.success(
+      isProductFav ? 'Removed from favourites.' : 'Added to favourites.',
+      {
+        toastId,
+        autoClose,
       }
     )
   }

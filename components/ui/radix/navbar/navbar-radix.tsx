@@ -4,7 +4,7 @@ import { FC, useState } from 'react'
 
 import React from 'react'
 import * as NavigationMenu from '@radix-ui/react-navigation-menu'
-import { Separator, Text } from '@radix-ui/themes'
+import { Separator } from '@radix-ui/themes'
 import classNames from 'classnames'
 import './styles.css'
 
@@ -12,7 +12,7 @@ import Link from 'next/link'
 
 import CartNavbarIcon from '@/components/cart/cart-navbar-icon'
 
-import { APP_LINKS } from '@/constants/URLs'
+import { APP_LINKS, zIndexes } from '@/constants'
 
 import { signOut } from 'next-auth/react'
 
@@ -28,7 +28,6 @@ import type { Session } from 'next-auth'
 import getCloudiImg from '@/utils/transform-cloudi-img'
 
 import OverlayDarkener from '../../overlay-darkener'
-import { zIndexes } from '@/constants/z-indexes'
 
 interface NavbarRxProps {
   session: Session | null

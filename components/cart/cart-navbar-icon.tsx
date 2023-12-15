@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { BsCart2 } from 'react-icons/bs'
 
 import useSWR from 'swr'
-import SWR_KEYS from '@/constants/SWR-keys'
+import { SWR_KEYS } from '@/constants'
 
 import { getSalesLSInJSObj } from '@/utils/local-storage'
 

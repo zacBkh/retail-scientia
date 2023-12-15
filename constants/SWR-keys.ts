@@ -1,4 +1,4 @@
-const SWR_KEYS = {
+export const SWR_KEYS = {
   GET_CART_LS: 'GET_CART_LS',
   GET_DATE_LS: 'GET_DATE_LS',
 
@@ -15,5 +15,3 @@ const SWR_KEYS = {
 
   GET_AXIS_OF_USER: 'GET_AXIS_OF_USER',
 }
-
-export default SWR_KEYS

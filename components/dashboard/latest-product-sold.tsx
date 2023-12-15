@@ -13,7 +13,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 
-import { ModeOfProductTable } from '@/constants/db-queries'
+import { ModeOfProductTable } from '@/constants'
 
 type EitherLastDateSoldOrCountSKU = Date | number
 

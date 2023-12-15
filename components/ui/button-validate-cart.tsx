@@ -7,7 +7,7 @@ import { getSalesLSInJSObj, clearLocalStorage } from '@/utils/local-storage'
 import { registerSale } from '@/services/fetchers-api'
 
 import { mutate } from 'swr'
-import SWR_KEYS from '@/constants/SWR-keys'
+import { SWR_KEYS } from '@/constants'
 
 interface ButtonProps {
   txt: string

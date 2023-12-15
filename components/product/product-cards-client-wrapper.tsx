@@ -4,8 +4,9 @@ import { FC, useState, useEffect, useTransition } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import useSWR, { mutate } from 'swr'
-import SWR_KEYS from '@/constants/SWR-keys'
+import { SWR_KEYS, URL_PARAMS_KEYS } from '@/constants'
 const { GET_UNIQUE_CATEGORY, GET_BRANDS_OF_USER, GET_AXIS_OF_USER } = SWR_KEYS
+const { SEARCH, BRAND, CATEGORY_1, AXIS } = URL_PARAMS_KEYS
 
 import ProductCard from '@/components/product/product-card'
 
@@ -28,9 +29,6 @@ import {
 } from '@/services/fetchers-api'
 
 import type { APIResponseBasic } from '@/types'
-
-import { URL_PARAMS_KEYS } from '@/constants/URLs'
-const { SEARCH, BRAND, CATEGORY_1, AXIS } = URL_PARAMS_KEYS
 
 import Switcher from '../ui/radix/switcher'
 

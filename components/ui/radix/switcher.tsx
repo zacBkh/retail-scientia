@@ -5,7 +5,7 @@ import { Text, Switch, Flex } from '@radix-ui/themes'
 
 import useAddQueryString from '@/hooks/useAddQueryStrings'
 
-import { URL_PARAMS_KEYS } from '@/constants/URLs'
+import { URL_PARAMS_KEYS } from '@/constants'
 const { SHOW_ONLY_FAV } = URL_PARAMS_KEYS
 
 import Spinner from '../spinner'

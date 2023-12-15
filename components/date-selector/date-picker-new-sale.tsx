@@ -7,7 +7,7 @@ import useSWR, { mutate } from 'swr'
 
 import { getDateLS } from '@/utils/local-storage'
 
-import SWR_KEYS from '@/constants/SWR-keys'
+import { SWR_KEYS, zIndexes } from '@/constants'
 const { GET_DATE_LS, GET_SALES_OF_USER_DB } = SWR_KEYS
 
 import { getUserSalesInDB } from '@/services/fetchers-api'
@@ -20,8 +20,6 @@ import { toast } from 'react-toastify'
 import OverlayDarkener from '../ui/overlay-darkener'
 
 import { dateToStringForQuery } from '@/utils/dates'
-
-import { zIndexes } from '@/constants/z-indexes'
 
 import useOnDetectDatePickerOpen from '@/hooks/useOnDetectDatePickerOpen'
 

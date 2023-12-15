@@ -12,7 +12,7 @@ import {
   specificItemQty,
 } from '@/utils/local-storage'
 
-import SWR_KEYS from '@/constants/SWR-keys'
+import { SWR_KEYS } from '@/constants'
 import useSWR from 'swr'
 
 import { Text, Button } from '@radix-ui/themes'

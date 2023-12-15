@@ -6,7 +6,7 @@ import {
   getUniqueCategory1,
 } from '@/services/prisma-queries'
 
-import { URL_PARAMS_KEYS } from '@/constants/URLs'
+import { URL_PARAMS_KEYS } from '@/constants'
 const { GET_UNIQUE_CAT, BRANDS_IDS, GET_UNIQUE_AXIS } = URL_PARAMS_KEYS
 
 export async function GET(request: NextRequest) {

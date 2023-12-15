@@ -1,6 +1,6 @@
 'use client'
 
-import SWR_KEYS from '@/constants/SWR-keys'
+import { SWR_KEYS } from '@/constants'
 import useSWR, { mutate } from 'swr'
 
 import { useState } from 'react'

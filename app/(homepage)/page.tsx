@@ -7,7 +7,7 @@ import DatePickerNewSale from '@/components/date-selector/date-picker-new-sale'
 
 import { getProducts } from '@/services/prisma-queries'
 
-import { URL_PARAMS_KEYS } from '@/constants/URLs'
+import { URL_PARAMS_KEYS } from '@/constants'
 const { SEARCH, CATEGORY_1, SHOW_ONLY_FAV, BRAND, AXIS } = URL_PARAMS_KEYS
 
 import ScrollToTopBtn from '@/components/ui/scroll-to-top'
