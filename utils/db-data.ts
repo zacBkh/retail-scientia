@@ -7,7 +7,7 @@ export const sumSalesValue = (salesOfUser: SalesWithProducts) => {
   }
 
   const totalValue = salesOfUser.reduce((acc, currValue) => {
-    return acc + currValue.productSold.regularPrice
+    return acc + currValue.productSold.currentPrice
   }, 0)
   return totalValue
 }
@@ -29,7 +29,7 @@ export const sumSalesValueFromProdDetails = (
   const totalValue = productCartDetails.reduce((acc, currProduct) => {
     return (
       acc +
-      currProduct.regularPrice * specificItemQty(salesInLS, currProduct.id)
+      currProduct.currentPrice * specificItemQty(salesInLS, currProduct.id)
     )
   }, 0)
   return totalValue

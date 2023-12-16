@@ -17,7 +17,7 @@ export type SalesInLocalStorage = number[]
 // Cart Item
 export type CartItemType = Pick<
   Product,
-  'id' | 'description' | 'img' | 'regularPrice' | 'size' | 'category1'
+  'id' | 'description' | 'img' | 'currentPrice' | 'size' | 'category1'
 > /* & { onUpdateQty: () => void } */
 
 // Sales of a user with the product populated

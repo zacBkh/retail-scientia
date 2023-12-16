@@ -56,8 +56,6 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
       ? (searchParams[SHOW_ONLY_FAV] as string)
       : undefined
 
-  console.log('showOnlyFav', showOnlyFav)
-
   const productsToDisplay = await getProducts(
     currentSession?.user.id,
 
@@ -71,6 +69,7 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
     axisQuery
   )
 
+  console.log('arrayOfUsersBrandsID', arrayOfUsersBrandsID)
   return (
     <main className="flex flex-col items-center gap-y-4 text-black p-2 w-full">
       <DatePickerNewSale currentSession={currentSession} />

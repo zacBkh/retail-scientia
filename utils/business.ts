@@ -50,7 +50,7 @@ export const combineCategoriesAndSales: CombineCategoriesAndSalesArgs = (
     //
     const onlySalesOfCurrentCat = sales
       .filter((sale) => sale.productSold.category1 === category1) // grab the sales from this cat
-      .map((sale) => sale.productSold.regularPrice) // keep only their price
+      .map((sale) => sale.productSold.currentPrice) // keep only their price
 
     // Sum their value
     const matchingTtlSale = onlySalesOfCurrentCat.reduce(

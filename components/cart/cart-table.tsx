@@ -53,7 +53,7 @@ const CartTable: FC<CartTableProps> = ({
                 <td className="text-center">
                   {Math.trunc(
                     specificItemQty(allSalesInLS ?? [], item.id) *
-                      item.regularPrice
+                      item.currentPrice
                   )}
                 </td>
               </tr>

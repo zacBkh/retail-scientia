@@ -34,7 +34,7 @@ const ProductCard: FC<ProductWithFav> = ({
   axis,
   img,
   reference,
-  regularPrice,
+  currentPrice,
   size,
   timePeriod,
   isFav,

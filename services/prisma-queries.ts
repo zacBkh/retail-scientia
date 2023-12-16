@@ -12,6 +12,7 @@ if (process.env.NODE_ENV === 'production') {
   // @ts-ignore
   if (!global.db) {
     // @ts-ignore
+    // global.db = new PrismaClient({ log: ['query'] })
     global.db = new PrismaClient()
     console.log('Development: Established DB connection.')
   }
@@ -35,10 +36,21 @@ export const getProducts = async (
   brandName?: string,
   axisName?: string
 ) => {
-  console.log('getProductRan', showOnlyFav)
+  console.log(
+    'ARGS -->',
+    userID,
+    showOnlyFav,
+    arrayOfBrandsID,
+    searchQuery,
+    category1Query,
+    brandName,
+    axisName
+  )
 
   const shouldTakeBeDisabled =
     showOnlyFav || category1Query?.length ? true : false
+
+  console.log('arrayOfBrandsID', arrayOfBrandsID)
 
   const searchedProducts = await db.product.findMany({
     // Return procuct

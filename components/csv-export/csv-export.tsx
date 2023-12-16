@@ -43,7 +43,7 @@ const CSVExport: FC<CSVExportProps> = ({ sales, userName, dates }) => {
     { label: 'Product Axis', key: 'axis' },
     { label: 'Product Category 1', key: 'category1' },
     { label: 'Product Category 2', key: 'category2' },
-    { label: 'Product Regular Price', key: 'regularPrice' },
+    { label: 'Product Regular Price', key: 'currentPrice' },
     { label: 'Product Gender', key: 'gender' },
     { label: 'Product Time Period', key: 'timePeriod' },
     // Seller

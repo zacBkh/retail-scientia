@@ -62,7 +62,7 @@
 //   console.log('salesByProduct', salesByProduct)
 // }
 
-// // createUser()
+// createUser()
 // getSalesByBestSellerSku()
 //   .then(async () => {
 //     await db.$disconnect()
