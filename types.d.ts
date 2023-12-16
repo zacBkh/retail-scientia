@@ -54,3 +54,6 @@ export interface GetFilteredUserSalesInDB {
     brandsIDs?: string[]
   ): Promise<APIResponseFindUserSales>
 }
+
+// Only POS
+export type AllPOS = Prisma.$PointOfSalePayload

@@ -50,7 +50,7 @@ model User {
   favoriteProducts Product[]   @relation("ProductToUser")
 
   pointOfSaleId Int
-  PointOfSale   PointOfSale @relation(fields: [pointOfSaleId], references: [id])
+  pointOfSale   PointOfSale @relation(fields: [pointOfSaleId], references: [id])
 }
 
 model Brand {

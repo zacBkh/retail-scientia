@@ -2,6 +2,83 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Hamburger Menu */
 
 /* We will apply the "open" class through React */
@@ -11,62 +88,6 @@
   height: 15px;
   transition: all 0.25s;
   position: relative;
-}
-
-.hamburger-top,
-.hamburger-middle,
-.hamburger-bottom {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 24px;
-  height: 2px;
-  @apply bg-[#404756];
-  transform: rotate(0);
-  transition: all 0.5s;
-}
-
-.hamburger-middle {
-  transform: translateY(6px);
-}
-
-.hamburger-bottom {
-  transform: translateY(12px);
-}
-
-/* This class will be added through JS */
-.open {
-  transform: rotate(90deg) translateY(0px);
-}
-
-.open .hamburger-top {
-  transform: rotate(45deg) translateY(6px) translate(6px);
-}
-
-/* We need only two bars to make a cross */
-.open .hamburger-middle {
-  display: none;
-}
-
-.open .hamburger-bottom {
-  transform: rotate(-45deg) translateY(6px) translate(-6px);
-}
-
-/* Animate hamburger menu */
-.transition-hamburger-menu {
-  animation-name: hamburgerMenuTransition;
-  animation-duration: 0.2s;
-  animation-fill-mode: forwards;
-  animation-timing-function: ease-out;
-}
-
-@keyframes hamburgerMenuTransition {
-  from {
-    opacity: 0%;
-  }
-  to {
-    opacity: 100%;
-  }
 }
 
 /* Cart icon bump */
@@ -124,16 +145,6 @@
   background-color: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(2px);
 }
-
-/* Toasters */
-/* .Toastify__toast-theme--light {
-  background-color: #00c2d121 !important;
-  background-color: #FFFFFF !important;
-} */
-
-/* .Toastify__progress-bar--success {
-  background-color: #75fa7a !important;
-} */
 
 .Toastify__toast-body {
   font-family: '__Plus_Jakarta_Sans_d21556', sans-serif !important;
