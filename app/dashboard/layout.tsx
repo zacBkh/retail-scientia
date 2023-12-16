@@ -3,11 +3,16 @@
 import { FC } from 'react'
 import Link from 'next/link'
 
-import { APP_LINKS, DASHBOARD_LINKS } from '@/constants'
+import { DASHBOARD_LINKS } from '@/constants'
+
+import { useSession } from 'next-auth/react'
 
 interface LayoutProps {
   children: React.ReactNode
 }
+
+import { AccountType } from '@prisma/client'
+const { Staff } = AccountType
 
 import { usePathname } from 'next/navigation'
 
@@ -25,16 +30,26 @@ import { Menu } from 'lucide-react'
 const CartLayout: FC<LayoutProps> = ({ children }) => {
   const pathname = usePathname()
 
+  const { data: session } = useSession()
+  const isStaff = session?.user?.accountType === Staff
+
+  if (isStaff) {
+    return <section className="flex flex-col gap-y-6">{children}</section>
+  }
+
   const commonLinkStyle =
     'flex gap-x-2 font-semibold text-sm py-2 px-4 rounded-lg'
 
   return (
-    <div className="p-3 ">
+    <div className="p-3">
       <Sheet modal={false}>
         <SheetTrigger className="underline active:transform-none">
           <Menu />
         </SheetTrigger>
-        <SheetContent side={'left'} className="bg-[#1C2536]">
+        <SheetContent
+          side={'left'}
+          className="bg-[#1C2536] w-[250px] sm:w-[540px]"
+        >
           <div className="flex flex-col gap-y-5">
             <SheetHeader className="mb-4 text-lg font-semibold text-white">
               Dashboard Menu
@@ -66,7 +81,7 @@ const CartLayout: FC<LayoutProps> = ({ children }) => {
         </SheetContent>
       </Sheet>
 
-      <section className="px-2 py-6 flex flex-col gap-y-6">{children}</section>
+      <section className="flex flex-col gap-y-6">{children}</section>
     </div>
   )
 }

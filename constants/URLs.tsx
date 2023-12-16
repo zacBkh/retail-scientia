@@ -10,8 +10,8 @@ export enum APP_LINKS {
   HOME = '/',
   CART = '/cart',
   DASHBOARD = '/dashboard',
-  POINT_OF_SALES = `${DASHBOARD}/point-of-sales`,
-  STAFF = `${DASHBOARD}/staff`,
+  POINT_OF_SALES = `${DASHBOARD}/admin/point-of-sales`,
+  STAFF = `${DASHBOARD}/admin/staff`,
 }
 
 const { DASHBOARD, POINT_OF_SALES, STAFF } = APP_LINKS

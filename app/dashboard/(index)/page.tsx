@@ -4,8 +4,8 @@ import { authOptions } from '../../api/auth/[...nextauth]/route'
 import { DashboardClientWrapper, AdminDashboard } from '@/components/dashboards'
 
 import { AccountType } from '@prisma/client'
-import { getPOS } from '@/services/prisma-queries'
 const { Admin, Staff } = AccountType
+import { getPOS } from '@/services/prisma-queries'
 
 const Dashboard = async () => {
   const currentSession = await getServerSession(authOptions)

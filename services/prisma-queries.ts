@@ -370,21 +370,26 @@ export const getUniqueAxis = async (userBrandsIDs: string[]) => {
   return uniqueAxis
 }
 
+import { AccountType } from '@prisma/client'
+export const getStaff = async () => {
+  const allStaff = await db.user.findMany({
+    where: {
+      accountType: AccountType.Staff,
+    },
+    include: { pointOfSale: true },
+  })
+
+  return allStaff
+}
+
+/* !SC */
+
+/*SC POS */
+
 // export const getUserPOS = async (userID: string | undefined) => {
 export const getPOS = async () => {
-  // if (!userID) {
-  //   console.log('no user ID supplied')
-  //   return
-  // }
-
-  // const userBrandsIDsNumber = userBrandsIDs.map((id) => Number(id))
-  // const queryUnique = await db.user.findUnique({
-  //   where: { id: +userID },
-  //   select: { pointOfSale: true },
-  // })
   const allPOS = await db.pointOfSale.findMany({
-    // where: { id: +userID },
-    // select: { pointOfSale: true },
+    include: { users: true },
   })
 
   return allPOS
