@@ -1,13 +1,15 @@
 import { FC } from 'react'
 
+import type { PointOfSale } from '@prisma/client'
+
 interface AdminDashboardProps {
-  a?: string
+  allPOS: PointOfSale[] | undefined
 }
 
-const AdminDashboard: FC<AdminDashboardProps> = ({ a }) => {
+const AdminDashboard: FC<AdminDashboardProps> = ({ allPOS }) => {
   return (
     <>
-      <p>Hi you're an admin</p>
+      <p>Admin Dashboard</p>
     </>
   )
 }

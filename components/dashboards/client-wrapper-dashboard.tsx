@@ -262,7 +262,7 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
 
           {/* TOP SELLERS */}
           <div
-            className={`flex flex-col gap-y-3 py-2 px-4 mb-4 card-dashboard w-full md:w-1/2`}
+            className={`flex flex-col gap-y-3 py-2 px-4 card-dashboard w-full md:w-1/2`}
           >
             <span className="text-lg font-bold my-2">Top Sellers</span>
             {sortedSalesBySKU?.result

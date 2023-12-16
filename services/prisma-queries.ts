@@ -23,6 +23,7 @@ if (process.env.NODE_ENV === 'production') {
 
 import { DB_QUERIES } from '@/constants'
 
+/*SC Products */
 export const getProducts = async (
   userID: string | undefined,
 
@@ -49,8 +50,6 @@ export const getProducts = async (
 
   const shouldTakeBeDisabled =
     showOnlyFav || category1Query?.length ? true : false
-
-  console.log('arrayOfBrandsID', arrayOfBrandsID)
 
   const searchedProducts = await db.product.findMany({
     // Return procuct
@@ -116,6 +115,50 @@ export const getProducts = async (
   return searchedProducts
 }
 
+export const findSpecificProducts = async (arrayOfIDs: number[]) => {
+  const products = await db.product.findMany({
+    where: {
+      id: {
+        in: arrayOfIDs,
+      },
+    },
+  })
+  return products
+}
+
+export const toggleProductAsFav = async (
+  currentUserID: number,
+  productID: number,
+  isAlreadyFav: boolean
+) => {
+  // Get user's favourite
+  const user = await db.user.findUnique({
+    where: { id: currentUserID },
+    include: { favoriteProducts: { select: { id: true } } },
+  })
+
+  // Map them to an array
+  const userFavArrayIDSKU =
+    user?.favoriteProducts.map((product) => product.id) || []
+
+  // If already fav, pull, otherwise, push
+  const updatedFavoriteProductIds = isAlreadyFav
+    ? userFavArrayIDSKU.filter((id) => id !== productID)
+    : [...userFavArrayIDSKU, productID]
+
+  // Mutate the array on DB
+  await db.user.update({
+    where: { id: currentUserID },
+    data: {
+      favoriteProducts: {
+        set: updatedFavoriteProductIds.map((id) => ({ id })),
+      },
+    },
+  })
+}
+/* !SC */
+
+/*SC Sales */
 export const addSales = async (
   date: Date,
   sellerId: number,
@@ -131,27 +174,6 @@ export const addSales = async (
   })
 
   return createdSales
-}
-
-export const findSpecificProducts = async (arrayOfIDs: number[]) => {
-  const products = await db.product.findMany({
-    where: {
-      id: {
-        in: arrayOfIDs,
-      },
-    },
-  })
-  return products
-}
-
-export const findAUser = async (email: string) => {
-  const user = await db.user.findUnique({
-    include: { brands: true },
-    where: {
-      email: email,
-    },
-  })
-  return user
 }
 
 import type { SalesWithProducts } from '@/types'
@@ -258,6 +280,19 @@ export const getSalesByBestSellerSku: GetSalesByTopSoldSKU = async (
   return finalSKUOrder
 }
 
+/* !SC */
+
+/*SC User */
+export const findAUser = async (email: string) => {
+  const user = await db.user.findUnique({
+    include: { brands: true },
+    where: {
+      email: email,
+    },
+  })
+  return user
+}
+
 export const getFavOfUser = async (
   currentUserID: number,
   productID: number
@@ -281,50 +316,6 @@ export const getFavOfUser = async (
   } else {
     return false
   }
-}
-
-export const toggleProductAsFav = async (
-  currentUserID: number,
-  productID: number,
-  isAlreadyFav: boolean
-) => {
-  // Get user's favourite
-  const user = await db.user.findUnique({
-    where: { id: currentUserID },
-    include: { favoriteProducts: { select: { id: true } } },
-  })
-
-  // Map them to an array
-  const userFavArrayIDSKU =
-    user?.favoriteProducts.map((product) => product.id) || []
-
-  // If already fav, pull, otherwise, push
-  const updatedFavoriteProductIds = isAlreadyFav
-    ? userFavArrayIDSKU.filter((id) => id !== productID)
-    : [...userFavArrayIDSKU, productID]
-
-  // Mutate the array on DB
-  await db.user.update({
-    where: { id: currentUserID },
-    data: {
-      favoriteProducts: {
-        set: updatedFavoriteProductIds.map((id) => ({ id })),
-      },
-    },
-  })
-}
-
-export const getUniqueCategory1 = async (userBrandsIDs: string[]) => {
-  const userBrandsIDsNumber = userBrandsIDs.map((id) => Number(id))
-  const queryUnique = await db.product.findMany({
-    where: { brandId: { in: userBrandsIDsNumber } },
-    orderBy: { sales: { _count: 'desc' } },
-    select: { category1: true },
-    distinct: ['category1'],
-  })
-  const uniqueCat = queryUnique.map((item) => item.category1)
-
-  return uniqueCat
 }
 
 export const getUniqueBrands = async (
@@ -352,6 +343,20 @@ export const getUniqueBrands = async (
     return brands?.brands
   }
 }
+
+export const getUniqueCategory1 = async (userBrandsIDs: string[]) => {
+  const userBrandsIDsNumber = userBrandsIDs.map((id) => Number(id))
+  const queryUnique = await db.product.findMany({
+    where: { brandId: { in: userBrandsIDsNumber } },
+    orderBy: { sales: { _count: 'desc' } },
+    select: { category1: true },
+    distinct: ['category1'],
+  })
+  const uniqueCat = queryUnique.map((item) => item.category1)
+
+  return uniqueCat
+}
+
 export const getUniqueAxis = async (userBrandsIDs: string[]) => {
   const userBrandsIDsNumber = userBrandsIDs.map((id) => Number(id))
   const queryUnique = await db.product.findMany({
@@ -364,3 +369,30 @@ export const getUniqueAxis = async (userBrandsIDs: string[]) => {
 
   return uniqueAxis
 }
+
+import { AccountType } from '@prisma/client'
+export const getStaff = async () => {
+  const allStaff = await db.user.findMany({
+    where: {
+      accountType: AccountType.Staff,
+    },
+    include: { pointOfSale: true },
+  })
+
+  return allStaff
+}
+
+/* !SC */
+
+/*SC POS */
+
+// export const getUserPOS = async (userID: string | undefined) => {
+export const getPOS = async () => {
+  const allPOS = await db.pointOfSale.findMany({
+    include: { users: true },
+  })
+
+  return allPOS
+}
+
+/* !SC */
