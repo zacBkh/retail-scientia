@@ -26,6 +26,7 @@ const Dashboard = async () => {
           {allStaff.map((elem) => (
             <ModelItem
               key={elem.id}
+              elemID={elem.id}
               line1={elem.name}
               line2={elem.pointOfSale?.name ?? 'N/A'}
               line3={elem.staffID ?? ''}
