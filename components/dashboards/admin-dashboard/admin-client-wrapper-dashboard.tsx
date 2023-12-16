@@ -32,7 +32,7 @@ const AdminDashboard: FC<AdminDashboardProps> = ({ allPOS }) => {
       </Sheet>
 
       {allPOS?.map((pos) => (
-        <p>{pos.name}</p>
+        <p key={pos.name}>{pos.name}</p>
       ))}
     </>
   )
