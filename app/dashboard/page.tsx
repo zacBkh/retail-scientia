@@ -5,14 +5,10 @@ import DashboardClientWrapper from '@/components/dashboard/client-wrapper-dashbo
 
 const Dashboard = async () => {
   const currentSession = await getServerSession(authOptions)
-  console.log('currentSession from server dashboard', currentSession?.user.id)
 
   return (
     <>
-      <DashboardClientWrapper
-        currentSession={currentSession}
-        // totalSalesOfUser={totalSalesOfUser}
-      />
+      <DashboardClientWrapper currentSession={currentSession} />
     </>
   )
 }

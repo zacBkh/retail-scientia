@@ -5,7 +5,7 @@ import { authOptions } from '../../auth/[...nextauth]/route'
 
 import { toggleProductAsFav, getFavOfUser } from '@/services/prisma-queries'
 
-import { URL_PARAMS_KEYS } from '@/constants/URLs'
+import { URL_PARAMS_KEYS } from '@/constants'
 const { PRODUCT_ID } = URL_PARAMS_KEYS
 
 // Know if the passed product is fav

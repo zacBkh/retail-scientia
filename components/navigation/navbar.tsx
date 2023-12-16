@@ -8,7 +8,7 @@ import Image from 'next/image'
 import HamburgerIcon from './hamburger-icon'
 import HamburgerMenu from './hamburger-menu'
 
-import { APP_LINKS } from '@/constants/URLs'
+import { APP_LINKS } from '@/constants'
 
 import CartNavbarIcon from '../cart/cart-navbar-icon'
 

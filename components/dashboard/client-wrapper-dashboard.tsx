@@ -24,11 +24,9 @@ import {
 import type { DateValueType } from 'react-tailwindcss-datepicker'
 import type { DateRangeTypeExt } from '@/types'
 
-import { ModeOfProductTable } from '@/constants/db-queries'
+import { ModeOfProductTable, zIndexes, SWR_KEYS } from '@/constants'
 import COLORS from '@/constants/colors-temp'
-import { zIndexes } from '@/constants/z-indexes'
 
-import SWR_KEYS from '@/constants/SWR-keys'
 const {
   GET_SALES_OF_USER_DB,
   GET_BRANDS_OF_USER_FULL,

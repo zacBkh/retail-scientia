@@ -1,7 +1,4 @@
-import { REST_API_LINKS } from '@/constants/URLs'
-const { PRODUCTS, SALE, PRODUCTS_FAV, USERS } = REST_API_LINKS
-
-import { URL_PARAMS_KEYS } from '@/constants/URLs'
+import { URL_PARAMS_KEYS, REST_API_LINKS } from '@/constants'
 const {
   USER_ID,
   BRANDS_IDS,
@@ -12,6 +9,8 @@ const {
   BRANDS_NAMES,
   BRANDS_NAME_ONLY,
 } = URL_PARAMS_KEYS
+
+const { PRODUCTS, SALE, PRODUCTS_FAV, USERS } = REST_API_LINKS
 
 import type {
   APIResponseFindProducts,

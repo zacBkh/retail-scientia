@@ -1,12 +1,10 @@
 import { FC, useState } from 'react'
 
-import { Button, Flex, AlertDialog, Text, Checkbox } from '@radix-ui/themes'
+import { Flex, AlertDialog } from '@radix-ui/themes'
 
 import { DISABLED_STYLE } from '@/constants/disabled-css'
 
 import Ckeckbox from '../checkbox'
-
-import { toast } from 'react-toastify'
 
 interface AlertDialogRxProps {
   buttonTriggerTxt: string

@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'production') {
   db = global.db
 }
 
-import { DB_QUERIES } from '@/constants/db-queries'
+import { DB_QUERIES } from '@/constants'
 
 export const getProducts = async (
   userID: string | undefined,

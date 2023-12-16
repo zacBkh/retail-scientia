@@ -1,6 +1,5 @@
 import { FC } from 'react'
 
-import { Text } from '@radix-ui/themes'
 // import SEO_KEYWORDS from '@/constants/seo-keywords'
 
 export const metadata = {

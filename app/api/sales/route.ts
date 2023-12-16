@@ -9,7 +9,7 @@ import {
   addSales,
 } from '@/services/prisma-queries'
 
-import { URL_PARAMS_KEYS } from '@/constants/URLs'
+import { URL_PARAMS_KEYS } from '@/constants'
 
 import { checkIfDateIsAfter } from '@/utils/dates'
 

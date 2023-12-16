@@ -5,9 +5,7 @@ import Datepicker from 'react-tailwindcss-datepicker'
 
 import type { DateValueType } from 'react-tailwindcss-datepicker'
 
-import { SHORTCUT_LABELS } from '@/constants/date-picker'
-
-import { zIndexes } from '@/constants/z-indexes'
+import { zIndexes, SHORTCUT_LABELS } from '@/constants'
 
 interface DatePickerDashboardProps {
   datesObject: DateValueType

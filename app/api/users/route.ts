@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { URL_PARAMS_KEYS } from '@/constants/URLs'
+import { URL_PARAMS_KEYS } from '@/constants'
 import { getUniqueBrands } from '@/services/prisma-queries'
 
 export async function GET(request: NextRequest) {
