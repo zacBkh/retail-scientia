@@ -1,5 +1,7 @@
 import NextAuth, { DefaultSession } from 'next-auth'
 
+import { AccountType } from '@prisma/client'
+
 declare module 'next-auth' {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
@@ -15,6 +17,7 @@ declare module 'next-auth' {
       /* Extending session by adding the id*/
       id: string
       brands: Brand[]
+      accountType: AccountType
     } & DefaultSession['user']
   }
 }
