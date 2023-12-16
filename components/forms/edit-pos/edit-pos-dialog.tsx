@@ -3,15 +3,13 @@
 import { FC, useState } from 'react'
 
 interface ButtonCltProps {
-  a?: string
+  POSId: number
+  POSName: string
 }
-
-import { Button } from '@/components/shad/ui/button'
-import { Plus } from 'lucide-react'
 
 import { toast } from 'react-toastify'
 
-import { addNewPOS } from '@/services/fetchers-api'
+import { addNewPOS, deletePOS } from '@/services/fetchers-api'
 
 import {
   Dialog,
@@ -27,13 +25,15 @@ import NewPOSForm from '@/components/forms/add-pos/form-add-pos'
 
 import type { TypeAddPostData } from '@/components/forms/add-pos/form-add-pos'
 
-const AddPOSDialog: FC<ButtonCltProps> = ({}) => {
+import { Pencil } from 'lucide-react'
+
+const EditPOSDialog: FC<ButtonCltProps> = ({ POSId, POSName }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const handleFormAddedComplete = async (newPOS: TypeAddPostData) => {
+  const handleDeletePOS = async () => {
     setIsDialogOpen(false)
 
-    await toast.promise(addNewPOS(newPOS), {
+    await toast.promise(deletePOS(POSId), {
       pending: 'Wait a minute...',
 
       success: {
@@ -45,27 +45,44 @@ const AddPOSDialog: FC<ButtonCltProps> = ({}) => {
       error: 'There has been an issue, try again later',
     })
   }
+  const handleConnectUserToPOS = async () => {
+    setIsDialogOpen(false)
+
+    console.log('suce')
+
+    // await toast.promise(deletePOS(POSId), {
+    //   pending: 'Wait a minute...',
+
+    //   success: {
+    //     render({ data }) {
+    //       return `${data?.result} 👌`
+    //     },
+    //   },
+
+    //   error: 'There has been an issue, try again later',
+    // })
+  }
 
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger onClick={() => setIsDialogOpen(true)} asChild>
-          <Button
-            className="p-0 underline hover:bg-transparent h-auto"
-            variant="ghost"
-          >
-            Add a new one <Plus className="ml-1" strokeWidth={2} size={20} />
-          </Button>
+          <Pencil className="ml-4" size={18} strokeWidth={1} />
         </DialogTrigger>
         <DialogContent className="max-w-[90vw] sm:max-w-[425px]">
           <DialogHeader className="text-left">
-            <DialogTitle>Add a Point of Sale</DialogTitle>
+            <DialogTitle>
+              Edit <span className="font-bold">{POSName}</span>
+            </DialogTitle>
             <DialogDescription className="mt-8">
-              Add a Point Of Sale to your business in a few clicks.
+              You can edit the name, country, add and remove staff or delete{' '}
+              {POSName} from your point of sales.
             </DialogDescription>
           </DialogHeader>
 
-          <NewPOSForm onFormAdded={handleFormAddedComplete} />
+          <p onClick={handleDeletePOS}>Delete POS</p>
+          <p onClick={handleConnectUserToPOS}>Add a user to this POS</p>
+          {/* <NewPOSForm onFormAdded={handleFormAddedComplete} /> */}
 
           <DialogFooter></DialogFooter>
         </DialogContent>
@@ -74,4 +91,4 @@ const AddPOSDialog: FC<ButtonCltProps> = ({}) => {
   )
 }
 
-export default AddPOSDialog
+export default EditPOSDialog

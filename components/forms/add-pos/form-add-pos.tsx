@@ -1,5 +1,7 @@
 'use client'
 
+import { FC } from 'react'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -17,6 +19,8 @@ import { Input } from '@/components/shad/ui/input'
 
 import { Button } from '@/components/shad/ui/button'
 
+import { APIResponseBasic } from '@/types'
+
 const formSchema = z.object({
   name: z
     .string()
@@ -32,7 +36,13 @@ const formSchema = z.object({
     }),
 })
 
-const NewPOSForm = () => {
+export type TypeAddPostData = z.infer<typeof formSchema>
+
+interface AddFormProps {
+  onFormAdded: (newPOS: z.infer<typeof formSchema>) => void
+}
+
+const NewPOSForm: FC<AddFormProps> = ({ onFormAdded }) => {
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,14 +53,14 @@ const NewPOSForm = () => {
   })
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log('FORM submit --->', values)
+  const onSubmitNewPOS = async (newPOS: z.infer<typeof formSchema>) => {
+    onFormAdded(newPOS)
   }
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmitNewPOS)}
         className="flex flex-col gap-y-6"
       >
         <FormField
@@ -58,14 +68,12 @@ const NewPOSForm = () => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name of the POS</FormLabel>
+              <FormLabel className="font-semibold">Name of the POS</FormLabel>
               <FormControl>
                 <Input placeholder="Bloomingdales Dubai Mall" {...field} />
               </FormControl>
               <div className="flex flex-col mt-1">
-                <FormDescription>
-                  This is the name of your new POS.
-                </FormDescription>
+                <FormDescription>Name of your new POS.</FormDescription>
                 <FormMessage />
               </div>
             </FormItem>
@@ -76,14 +84,12 @@ const NewPOSForm = () => {
           name="country"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Country</FormLabel>
+              <FormLabel className="font-semibold">Country</FormLabel>
               <FormControl>
                 <Input placeholder="United Arab Emirates" {...field} />
               </FormControl>
               <div className="flex flex-col mt-1">
-                <FormDescription>
-                  This is the country of your new POS.
-                </FormDescription>
+                <FormDescription>Country of your new POS.</FormDescription>
                 <FormMessage />
               </div>
             </FormItem>

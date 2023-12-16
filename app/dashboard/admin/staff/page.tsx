@@ -15,7 +15,6 @@ import {
 
 const Dashboard = async () => {
   const allStaff = await getStaff()
-  console.log('allStaff', allStaff)
   return (
     <>
       <Card className="col-span-3">

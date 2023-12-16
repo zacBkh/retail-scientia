@@ -395,4 +395,20 @@ export const getPOS = async () => {
   return allPOS
 }
 
+import { PointOfSale } from '@prisma/client'
+
+export const addNewPOS = async (formData: PointOfSale) => {
+  const allPOS = await db.pointOfSale.create({ data: formData })
+  return allPOS
+}
+
+export const deletePOS = async (POSId: number) => {
+  const deletedPOS = await db.pointOfSale.delete({
+    where: {
+      id: POSId,
+    },
+  })
+  return deletedPOS
+}
+
 /* !SC */

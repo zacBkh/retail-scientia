@@ -13,7 +13,7 @@ interface SearchBarMainProps {
   isSearching: boolean
 }
 
-const SearchBarMainV2: FC<SearchBarMainProps> = ({
+const SearchBarMain: FC<SearchBarMainProps> = ({
   onSearch,
   searchQuery,
   isDateSet,
@@ -68,4 +68,4 @@ const SearchBarMainV2: FC<SearchBarMainProps> = ({
   )
 }
 
-export default SearchBarMainV2
+export default SearchBarMain
