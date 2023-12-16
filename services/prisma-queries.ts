@@ -371,11 +371,11 @@ export const getUniqueAxis = async (userBrandsIDs: string[]) => {
 }
 
 // export const getUserPOS = async (userID: string | undefined) => {
-export const getPOS = async (userID: string | undefined) => {
-  if (!userID) {
-    console.log('no user ID supplied')
-    return
-  }
+export const getPOS = async () => {
+  // if (!userID) {
+  //   console.log('no user ID supplied')
+  //   return
+  // }
 
   // const userBrandsIDsNumber = userBrandsIDs.map((id) => Number(id))
   // const queryUnique = await db.user.findUnique({

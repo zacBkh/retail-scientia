@@ -1,4 +1,9 @@
-export { URL_PARAMS_KEYS, APP_LINKS, REST_API_LINKS } from './URLs'
+export {
+  URL_PARAMS_KEYS,
+  APP_LINKS,
+  REST_API_LINKS,
+  DASHBOARD_LINKS,
+} from './URLs'
 
 export { SWR_KEYS } from './SWR-keys'
 

@@ -190,3 +190,8 @@ button:active:disabled {
 html {
   scroll-behavior: smooth;
 }
+
+.drawerLinkActive {
+  background-color: rgba(255, 255, 255, 0.04);
+  color: white;
+}

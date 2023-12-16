@@ -10,7 +10,31 @@ export enum APP_LINKS {
   HOME = '/',
   CART = '/cart',
   DASHBOARD = '/dashboard',
+  POINT_OF_SALES = `${DASHBOARD}/point-of-sales`,
+  STAFF = `${DASHBOARD}/staff`,
 }
+
+const { DASHBOARD, POINT_OF_SALES, STAFF } = APP_LINKS
+
+import { BarChart, Store, UserRound } from 'lucide-react'
+
+export const DASHBOARD_LINKS = [
+  {
+    displayName: 'Overview',
+    link: DASHBOARD,
+    icon: <BarChart strokeWidth={2} />,
+  },
+  {
+    displayName: 'Point of Sales',
+    link: POINT_OF_SALES,
+    icon: <Store strokeWidth={2} />,
+  },
+  {
+    displayName: 'Staff',
+    link: STAFF,
+    icon: <UserRound strokeWidth={2} />,
+  },
+]
 
 export enum REST_API_LINKS {
   SALE = 'api/sales',
