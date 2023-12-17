@@ -37,17 +37,6 @@ export const getProducts = async (
   brandName?: string,
   axisName?: string
 ) => {
-  console.log(
-    'ARGS -->',
-    userID,
-    showOnlyFav,
-    arrayOfBrandsID,
-    searchQuery,
-    category1Query,
-    brandName,
-    axisName
-  )
-
   const shouldTakeBeDisabled =
     showOnlyFav || category1Query?.length ? true : false
 
@@ -386,12 +375,10 @@ export const getStaff = async () => {
 
 /*SC POS */
 
-// export const getUserPOS = async (userID: string | undefined) => {
 export const getPOS = async () => {
   const allPOS = await db.pointOfSale.findMany({
     include: { users: true },
   })
-
   return allPOS
 }
 

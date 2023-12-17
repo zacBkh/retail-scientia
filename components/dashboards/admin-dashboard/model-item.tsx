@@ -8,6 +8,8 @@ import {
 
 import EditPOSDialog from '@/components/forms/edit-pos/edit-pos-dialog'
 
+import type { User } from '@prisma/client'
+
 interface ModelItemProps {
   elemID: number
 
@@ -16,9 +18,17 @@ interface ModelItemProps {
   line3?: string
 
   image?: string
+
+  list?: User[]
 }
 
-const ModelItem: FC<ModelItemProps> = ({ elemID, line1, line2, line3 }) => {
+const ModelItem: FC<ModelItemProps> = ({
+  elemID,
+  line1,
+  line2,
+  line3,
+  list: usersOfThisPOS,
+}) => {
   return (
     <>
       <div className="flex items-center text-sm">
@@ -31,7 +41,11 @@ const ModelItem: FC<ModelItemProps> = ({ elemID, line1, line2, line3 }) => {
           <p>{line2}</p>
         </div>
         <div className="ml-auto">{line3}</div>
-        <EditPOSDialog POSName={line1} POSId={elemID} />
+        <EditPOSDialog
+          POSName={line1}
+          POSId={elemID}
+          usersOfThisPOS={usersOfThisPOS}
+        />
       </div>
     </>
   )

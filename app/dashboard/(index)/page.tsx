@@ -5,7 +5,6 @@ import { DashboardClientWrapper, AdminDashboard } from '@/components/dashboards'
 
 import { AccountType } from '@prisma/client'
 const { Admin, Staff } = AccountType
-import { getPOS } from '@/services/prisma-queries'
 
 const Dashboard = async () => {
   const currentSession = await getServerSession(authOptions)
@@ -15,8 +14,7 @@ const Dashboard = async () => {
   const userID = user?.id
 
   if (accountType === Admin) {
-    const allPOS = await getPOS()
-    return <AdminDashboard allPOS={allPOS} />
+    return <AdminDashboard />
   }
 
   if (accountType === Staff) {

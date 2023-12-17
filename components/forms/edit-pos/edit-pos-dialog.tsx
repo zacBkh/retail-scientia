@@ -2,14 +2,16 @@
 
 import { FC, useState } from 'react'
 
+import type { User } from '@prisma/client'
+
 interface ButtonCltProps {
   POSId: number
   POSName: string
+
+  usersOfThisPOS?: User[]
 }
-
 import { toast } from 'react-toastify'
-
-import { addNewPOS, deletePOS } from '@/services/fetchers-api'
+import { deletePOS } from '@/services/fetchers-api'
 
 import {
   Dialog,
@@ -21,13 +23,17 @@ import {
   DialogTrigger,
 } from '@/components/shad/ui/dialog'
 
-import NewPOSForm from '@/components/forms/add-pos/form-add-pos'
+import { Pencil, Users, Trash2 } from 'lucide-react'
 
-import type { TypeAddPostData } from '@/components/forms/add-pos/form-add-pos'
+import { Button } from '@/components/shad/ui/button'
 
-import { Pencil } from 'lucide-react'
+import EditUserOfPOS from './edit-user-of-pos'
 
-const EditPOSDialog: FC<ButtonCltProps> = ({ POSId, POSName }) => {
+const EditPOSDialog: FC<ButtonCltProps> = ({
+  POSId,
+  POSName,
+  usersOfThisPOS,
+}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleDeletePOS = async () => {
@@ -46,8 +52,6 @@ const EditPOSDialog: FC<ButtonCltProps> = ({ POSId, POSName }) => {
     })
   }
   const handleConnectUserToPOS = async () => {
-    setIsDialogOpen(false)
-
     console.log('suce')
 
     // await toast.promise(deletePOS(POSId), {
@@ -62,11 +66,15 @@ const EditPOSDialog: FC<ButtonCltProps> = ({ POSId, POSName }) => {
     //   error: 'There has been an issue, try again later',
     // })
   }
-
+  const [isAddUserToPOSActive, setIsAddUserToPOSActive] = useState(false)
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogTrigger onClick={() => setIsDialogOpen(true)} asChild>
+        <DialogTrigger
+          className="cursor-pointer"
+          onClick={() => setIsDialogOpen(true)}
+          asChild
+        >
           <Pencil className="ml-4" size={18} strokeWidth={1} />
         </DialogTrigger>
         <DialogContent className="max-w-[90vw] sm:max-w-[425px]">
@@ -80,9 +88,33 @@ const EditPOSDialog: FC<ButtonCltProps> = ({ POSId, POSName }) => {
             </DialogDescription>
           </DialogHeader>
 
-          <p onClick={handleDeletePOS}>Delete POS</p>
-          <p onClick={handleConnectUserToPOS}>Add a user to this POS</p>
-          {/* <NewPOSForm onFormAdded={handleFormAddedComplete} /> */}
+          <Button
+            className="w-fit"
+            size={'sm'}
+            onClick={() => setIsAddUserToPOSActive((prev) => !prev)}
+          >
+            {isAddUserToPOSActive
+              ? 'Cancel'
+              : 'Add/Remove a user from this POS'}
+            <Users strokeWidth={2} className="ml-4" />
+          </Button>
+
+          {isAddUserToPOSActive ? (
+            <EditUserOfPOS usersOfThisPOS={usersOfThisPOS} />
+          ) : (
+            ''
+          )}
+
+          <Button
+            disabled
+            variant="destructive"
+            className="w-fit"
+            size={'sm'}
+            onClick={handleDeletePOS}
+          >
+            Delete POS
+            <Trash2 strokeWidth={2} className="ml-4" />
+          </Button>
 
           <DialogFooter></DialogFooter>
         </DialogContent>

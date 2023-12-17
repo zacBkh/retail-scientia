@@ -1,6 +1,6 @@
 'use client'
 
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import Link from 'next/link'
 
 import { DASHBOARD_LINKS } from '@/constants'
@@ -40,15 +40,16 @@ const CartLayout: FC<LayoutProps> = ({ children }) => {
   const commonLinkStyle =
     'flex gap-x-2 font-semibold text-sm py-2 px-4 rounded-lg'
 
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   return (
     <div className="p-3">
-      <Sheet modal={false}>
+      <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen} modal={false}>
         <SheetTrigger className="underline active:transform-none">
           <Menu />
         </SheetTrigger>
         <SheetContent
           side={'left'}
-          className="bg-[#1C2536] w-[250px] sm:w-[540px]"
+          className="bg-[#1C2536] w-[220px] sm:w-[540px]"
         >
           <div className="flex flex-col gap-y-5">
             <SheetHeader className="mb-4 text-lg font-semibold text-white">
@@ -58,6 +59,7 @@ const CartLayout: FC<LayoutProps> = ({ children }) => {
             <div className="text-[#9DA4AE] flex flex-col gap-y-2">
               {DASHBOARD_LINKS.map((link) => (
                 <Link
+                  onClick={() => setIsDrawerOpen(false)}
                   key={link.displayName}
                   className={`${commonLinkStyle} ${
                     pathname === link.link ? 'drawerLinkActive' : ''

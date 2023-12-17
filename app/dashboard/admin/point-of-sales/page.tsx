@@ -16,7 +16,6 @@ import { Separator } from '@/components/shad/ui/separator'
 
 const Dashboard = async () => {
   const allPOS = await getPOS()
-
   return (
     <>
       <Card className="col-span-3">
@@ -41,6 +40,7 @@ const Dashboard = async () => {
               line1={elem.name}
               line2={elem.country}
               line3={`${elem.users.length} staff`}
+              list={elem.users} // list of staff of this POS
             />
           ))}
         </CardContent>
