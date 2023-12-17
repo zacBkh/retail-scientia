@@ -28,6 +28,8 @@ import {
 import { Menu } from 'lucide-react'
 
 const CartLayout: FC<LayoutProps> = ({ children }) => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
   const pathname = usePathname()
 
   const { data: session } = useSession()
@@ -40,7 +42,6 @@ const CartLayout: FC<LayoutProps> = ({ children }) => {
   const commonLinkStyle =
     'flex gap-x-2 font-semibold text-sm py-2 px-4 rounded-lg'
 
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   return (
     <div className="p-3">
       <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen} modal={false}>
