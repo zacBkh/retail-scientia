@@ -85,7 +85,6 @@ const Cart = ({}) => {
         error: 'There has been an issue, try again later',
       }
     )
-    console.log('registrationSale', registrationSale)
 
     if (registrationSale.success) {
       clearLocalStorage()

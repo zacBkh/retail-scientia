@@ -1,7 +1,4 @@
-import { getServerSession } from 'next-auth'
-import { authOptions } from '../../../api/auth/[...nextauth]/route'
-
-import { getStaff } from '@/services/prisma-queries'
+import { getUsers } from '@/services/prisma-queries'
 
 import { ModelItem } from '@/components/dashboards'
 
@@ -14,8 +11,7 @@ import {
 } from '@/components/shad/ui/card'
 
 const Dashboard = async () => {
-  const allStaff = await getStaff()
-  console.log('allStaff', allStaff)
+  const allStaff = await getUsers(true)
   return (
     <>
       <Card className="col-span-3">
@@ -27,6 +23,7 @@ const Dashboard = async () => {
           {allStaff.map((elem) => (
             <ModelItem
               key={elem.id}
+              elemID={elem.id}
               line1={elem.name}
               line2={elem.pointOfSale?.name ?? 'N/A'}
               line3={elem.staffID ?? ''}

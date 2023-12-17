@@ -1,6 +1,6 @@
 'use client'
 
-import { FC } from 'react'
+import { FC, useState } from 'react'
 
 interface ButtonCltProps {
   a?: string
@@ -8,6 +8,10 @@ interface ButtonCltProps {
 
 import { Button } from '@/components/shad/ui/button'
 import { Plus } from 'lucide-react'
+
+import { toast } from 'react-toastify'
+
+import { addNewPOS } from '@/services/fetchers-api'
 
 import {
   Dialog,
@@ -21,16 +25,36 @@ import {
 
 import NewPOSForm from '@/components/forms/add-pos/form-add-pos'
 
+import type { TypeAddPostData } from '@/components/forms/add-pos/form-add-pos'
+
 const AddPOSDialog: FC<ButtonCltProps> = ({}) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  const handleFormAddedComplete = async (newPOS: TypeAddPostData) => {
+    setIsDialogOpen(false)
+
+    await toast.promise(addNewPOS(newPOS), {
+      pending: 'Wait a minute...',
+
+      success: {
+        render({ data }) {
+          return `${data?.result} 👌`
+        },
+      },
+
+      error: 'There has been an issue, try again later',
+    })
+  }
+
   return (
     <>
-      <Dialog>
-        <DialogTrigger asChild>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger onClick={() => setIsDialogOpen(true)} asChild>
           <Button
             className="p-0 underline hover:bg-transparent h-auto"
             variant="ghost"
           >
-            Add POS <Plus className="ml-1" strokeWidth={2} size={20} />
+            Add a new one <Plus className="ml-1" strokeWidth={2} size={20} />
           </Button>
         </DialogTrigger>
         <DialogContent className="max-w-[90vw] sm:max-w-[425px]">
@@ -41,7 +65,7 @@ const AddPOSDialog: FC<ButtonCltProps> = ({}) => {
             </DialogDescription>
           </DialogHeader>
 
-          <NewPOSForm />
+          <NewPOSForm onFormAdded={handleFormAddedComplete} />
 
           <DialogFooter></DialogFooter>
         </DialogContent>

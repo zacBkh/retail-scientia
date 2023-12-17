@@ -37,17 +37,6 @@ export const getProducts = async (
   brandName?: string,
   axisName?: string
 ) => {
-  console.log(
-    'ARGS -->',
-    userID,
-    showOnlyFav,
-    arrayOfBrandsID,
-    searchQuery,
-    category1Query,
-    brandName,
-    axisName
-  )
-
   const shouldTakeBeDisabled =
     showOnlyFav || category1Query?.length ? true : false
 
@@ -371,28 +360,44 @@ export const getUniqueAxis = async (userBrandsIDs: string[]) => {
 }
 
 import { AccountType } from '@prisma/client'
-export const getStaff = async () => {
-  const allStaff = await db.user.findMany({
-    where: {
-      accountType: AccountType.Staff,
-    },
+export const getUsers = async (isStaffOnly: boolean) => {
+  const users = await db.user.findMany({
+    ...(isStaffOnly && {
+      where: { accountType: AccountType.Staff },
+    }),
+
     include: { pointOfSale: true },
   })
 
-  return allStaff
+  const usersWithoutPwd = users.map(({ password, ...user }) => user)
+  return usersWithoutPwd
 }
 
 /* !SC */
 
 /*SC POS */
 
-// export const getUserPOS = async (userID: string | undefined) => {
 export const getPOS = async () => {
   const allPOS = await db.pointOfSale.findMany({
     include: { users: true },
   })
-
   return allPOS
+}
+
+import { PointOfSale } from '@prisma/client'
+
+export const addNewPOS = async (formData: PointOfSale) => {
+  const allPOS = await db.pointOfSale.create({ data: formData })
+  return allPOS
+}
+
+export const deletePOS = async (POSId: number) => {
+  const deletedPOS = await db.pointOfSale.delete({
+    where: {
+      id: POSId,
+    },
+  })
+  return deletedPOS
 }
 
 /* !SC */

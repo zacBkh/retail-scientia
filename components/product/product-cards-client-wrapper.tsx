@@ -10,7 +10,7 @@ const { SEARCH, BRAND, CATEGORY_1, AXIS } = URL_PARAMS_KEYS
 
 import ProductCard from '@/components/product/product-card'
 
-import SearchBarMainV2 from '../search-bar-v2'
+import SearchBarMain from '../search-bar'
 
 import { getDateLS } from '@/utils/local-storage'
 
@@ -105,7 +105,7 @@ const ClientWrapper: FC<ClientWrapperProps> = ({
       } flex flex-col gap-y-4`}
     >
       <div className="flex flex-col gap-y-4 searchTools ">
-        <SearchBarMainV2
+        <SearchBarMain
           isDateSet={isDateSet}
           searchQuery={searchQuery}
           onSearch={handleSearch}

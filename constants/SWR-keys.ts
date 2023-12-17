@@ -14,4 +14,7 @@ export const SWR_KEYS = {
   GET_BRANDS_OF_USER_FULL: 'GET_BRANDS_OF_USER_FULL',
 
   GET_AXIS_OF_USER: 'GET_AXIS_OF_USER',
+
+  // Users & Staff
+  GET_USERS: 'GET_USERS',
 }

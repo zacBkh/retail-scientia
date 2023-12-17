@@ -41,6 +41,10 @@ export enum REST_API_LINKS {
   PRODUCTS = 'api/products',
   PRODUCTS_FAV = 'api/products/fav',
   USERS = 'api/users',
+
+  // Don't include active path --> '/'
+  POINT_OF_SALE = '/api/point-of-sale',
+  USERS_WO_PATH = '/api/users',
 }
 
 export enum URL_PARAMS_KEYS {
@@ -61,6 +65,10 @@ export enum URL_PARAMS_KEYS {
   PRODUCT_ID = 'productID',
 
   BRANDS_NAME_ONLY = 'brandNameOnly',
+
+  POS_TO_DELETE = 'POSToDelete',
+
+  STAFF_ONLY = 'staffOnly',
 }
 
 // export const NAV_LINKS = [

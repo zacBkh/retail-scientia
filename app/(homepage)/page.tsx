@@ -69,7 +69,6 @@ const HomePage: FC<HomePageProps> = async ({ searchParams }) => {
     axisQuery
   )
 
-  console.log('arrayOfUsersBrandsID', arrayOfUsersBrandsID)
   return (
     <main className="flex flex-col items-center gap-y-4 text-black p-2 w-full">
       <DatePickerNewSale currentSession={currentSession} />
