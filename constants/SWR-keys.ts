@@ -15,5 +15,6 @@ export const SWR_KEYS = {
 
   GET_AXIS_OF_USER: 'GET_AXIS_OF_USER',
 
-  POST_NEW_POST: 'POST_NEW_POST',
+  // Users & Staff
+  GET_USERS: 'GET_USERS',
 }

@@ -9,9 +9,11 @@ const {
   BRANDS_NAMES,
   BRANDS_NAME_ONLY,
   POS_TO_DELETE,
+  STAFF_ONLY,
 } = URL_PARAMS_KEYS
 
-const { PRODUCTS, SALE, PRODUCTS_FAV, USERS, POINT_OF_SALE } = REST_API_LINKS
+const { PRODUCTS, SALE, PRODUCTS_FAV, USERS, USERS_WO_PATH, POINT_OF_SALE } =
+  REST_API_LINKS
 
 import type {
   APIResponseFindProducts,
@@ -215,11 +217,32 @@ interface DeletePOSType {
 }
 
 export const deletePOS: DeletePOSType = async (POSId) => {
-  console.log('POSId', POSId)
   const response = await fetch(`${POINT_OF_SALE}?${POS_TO_DELETE}=${POSId}`, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
   })
-  const deletedPOS = await response.json()
-  return deletedPOS
+
+  const deletedPOS: APIResponseBasic<string> = await response.json()
+
+  if (!deletedPOS.success) {
+    return Promise.reject(deletedPOS.result)
+  } else {
+    return deletedPOS
+  }
+}
+
+import { User } from '@prisma/client'
+
+interface GetUserType {
+  (staffOnly?: boolean): Promise<APIResponseBasic<User[]>> // enum of brands ??
+}
+
+// Get all users
+export const getAllUsers: GetUserType = async (staffOnly) => {
+  const response = await fetch(`${USERS_WO_PATH}?${STAFF_ONLY}=${staffOnly}`, {
+    method: 'GET',
+  })
+
+  const data = await response.json()
+  return data
 }

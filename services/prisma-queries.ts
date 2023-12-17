@@ -360,15 +360,17 @@ export const getUniqueAxis = async (userBrandsIDs: string[]) => {
 }
 
 import { AccountType } from '@prisma/client'
-export const getStaff = async () => {
-  const allStaff = await db.user.findMany({
-    where: {
-      accountType: AccountType.Staff,
-    },
+export const getUsers = async (isStaffOnly: boolean) => {
+  const users = await db.user.findMany({
+    ...(isStaffOnly && {
+      where: { accountType: AccountType.Staff },
+    }),
+
     include: { pointOfSale: true },
   })
 
-  return allStaff
+  const usersWithoutPwd = users.map(({ password, ...user }) => user)
+  return usersWithoutPwd
 }
 
 /* !SC */

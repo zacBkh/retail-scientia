@@ -10,22 +10,36 @@ import { AccountType } from '@prisma/client'
 
 import { addNewPOS, deletePOS } from '@/services/prisma-queries'
 
-const noAccess = {
-  success: false,
-  result: `You don't have access to this resource.`,
-}
+import { Prisma } from '@prisma/client'
 
 export async function POST(request: Request) {
-  const currentSession = await getServerSession(authOptions)
-  const isAdmin = currentSession?.user.accountType === AccountType.Admin
-  if (!isAdmin) {
-    return NextResponse.json(noAccess, { status: 201 })
+  try {
+    const currentSession = await getServerSession(authOptions)
+    const isAdmin = currentSession?.user.accountType === AccountType.Admin
+
+    if (!isAdmin) {
+      throw new Error('You cannot delete a POS due to your account level.')
+    }
+
+    const newPOS = await request.json()
+    const newPOSFetch = await addNewPOS(newPOS)
+
+    return NextResponse.json(
+      {
+        success: true,
+        result: `${newPOSFetch.name} has been successfully added`,
+      },
+      { status: 201 }
+    )
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        result: error,
+      },
+      { status: 500 }
+    )
   }
-
-  const newPOS = await request.json()
-  const newPOSFetch = await addNewPOS(newPOS)
-
-  return NextResponse.json(noAccess, { status: 201 })
 }
 
 // export async function GET(request: NextRequest) {
@@ -34,56 +48,48 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: NextRequest) {}
 export async function DELETE(request: NextRequest) {
-  const currentSession = await getServerSession(authOptions)
-  const isAdmin = currentSession?.user.accountType === AccountType.Admin
-  if (!isAdmin) {
-    return NextResponse.json(noAccess, { status: 201 })
-  }
+  try {
+    const currentSession = await getServerSession(authOptions)
+    const isAdmin = currentSession?.user.accountType === AccountType.Admin
+    if (!isAdmin) {
+      throw new Error('You cannot delete a POS due to your account level.')
+    }
 
-  const POSIdToDelete = request.nextUrl.searchParams.get(POS_TO_DELETE) ?? null
-  console.log('POSIdToDelete', POSIdToDelete)
+    const POSIdToDelete =
+      request.nextUrl.searchParams.get(POS_TO_DELETE) ?? null
+    console.log('POSIdToDelete', POSIdToDelete)
 
-  if (!POSIdToDelete) {
+    if (!POSIdToDelete) {
+      throw new Error('There has been an error deleting the POS')
+    }
+
+    const deletePOSFetch = await deletePOS(+POSIdToDelete)
+    // console.log('deletePOSFetch -->', deletePOSFetch)
     return NextResponse.json(
       {
-        success: false,
-        result: `The point of sale is missing.`,
+        success: true,
+        result: `${deletePOSFetch.name} has been successfully deleted`,
       },
       { status: 201 }
     )
+  } catch (error) {
+    // if prisma db error
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return NextResponse.json(
+        {
+          success: false,
+          result: 'There has been a database error deleting the POS',
+        },
+        { status: 500 }
+      )
+    }
+    // if app error
+    return NextResponse.json(
+      {
+        success: false,
+        result: error,
+      },
+      { status: 500 }
+    )
   }
-
-  const deletePOSFetch = await deletePOS(+POSIdToDelete)
-  return NextResponse.json(
-    {
-      success: true,
-      result: `${deletePOSFetch.name} has been successfully deleted.`,
-    },
-    { status: 201 }
-  )
 }
-
-// Send sales either by chroological order (findSalesOfUser) or by top ref sold (getSalesByBestSellerSku)
-// export async function GET(request: NextRequest) {
-//   try {
-//     // Getting query params
-//     const queryDates = request.nextUrl.searchParams.get('dates') ?? null
-
-//     return NextResponse.json(
-//       {
-//         success: true,
-//         result: 'filteredSalesUserByTopSeller',
-//       },
-//       { status: 201 }
-//     )
-//   } catch (error) {
-//     return NextResponse.json(
-//       {
-//         success: false,
-//         result:
-//           'Something went wrong with your request, please try again later.',
-//       },
-//       { status: 500 }
-//     )
-//   }
-// }

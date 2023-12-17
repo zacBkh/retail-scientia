@@ -14,12 +14,6 @@ export type APIResponseGetFav = APIResponseBasic<boolean>
 // LS
 export type SalesInLocalStorage = number[]
 
-// Cart Item
-export type CartItemType = Pick<
-  Product,
-  'id' | 'description' | 'img' | 'currentPrice' | 'size' | 'category1'
-> /* & { onUpdateQty: () => void } */
-
 // Sales of a user with the product populated
 export type SalesWithProducts = Prisma.SaleGetPayload<{
   include: { productSold: true; seller: true }
@@ -62,3 +56,5 @@ export type AllPOS = Prisma.$PointOfSalePayload
 export type POSWithUsers = Prisma.PointOfSaleGetPayload<{
   include: { users: true }
 }>
+
+// When add or rm user from POS
