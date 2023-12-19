@@ -9,7 +9,8 @@ const {
   BRANDS_NAMES,
   BRANDS_NAME_ONLY,
   POS_TO_DELETE,
-  STAFF_ONLY,
+  ACCOUNT_TYPE,
+  POS_TO_EXCLUDE,
 } = URL_PARAMS_KEYS
 
 const { PRODUCTS, SALE, PRODUCTS_FAV, USERS, USERS_WO_PATH, POINT_OF_SALE } =
@@ -231,17 +232,26 @@ export const deletePOS: DeletePOSType = async (POSId) => {
   }
 }
 
-import { User } from '@prisma/client'
+import type { User, AccountType, PointOfSale } from '@prisma/client'
 
 interface GetUserType {
-  (staffOnly?: boolean): Promise<APIResponseBasic<User[]>> // enum of brands ??
+  (
+    accTypesToInclude?: AccountType[],
+    posToExclude?: PointOfSale['id']
+  ): Promise<APIResponseBasic<User[]>>
 }
 
 // Get all users
-export const getAllUsers: GetUserType = async (staffOnly) => {
-  const response = await fetch(`${USERS_WO_PATH}?${STAFF_ONLY}=${staffOnly}`, {
-    method: 'GET',
-  })
+export const getAllUsers: GetUserType = async (
+  accTypesToInclude,
+  posToExclude
+) => {
+  const response = await fetch(
+    `${USERS_WO_PATH}?${ACCOUNT_TYPE}=${accTypesToInclude}&${POS_TO_EXCLUDE}=${posToExclude}`,
+    {
+      method: 'GET',
+    }
+  )
 
   const data = await response.json()
   return data

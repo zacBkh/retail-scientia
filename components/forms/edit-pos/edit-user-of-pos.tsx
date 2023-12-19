@@ -24,9 +24,18 @@ import { getAllUsers } from '@/services/fetchers-api'
 interface EditUserOfPOSProps {
   mode: AddOrRemove
   usersOfThisPOS?: User[]
+
+  POSId: number
 }
 
-const EditUserOfPOS: FC<EditUserOfPOSProps> = ({ usersOfThisPOS, mode }) => {
+import { AccountType } from '@prisma/client'
+const { Staff, Marketing, Admin } = AccountType
+
+const EditUserOfPOS: FC<EditUserOfPOSProps> = ({
+  usersOfThisPOS,
+  mode,
+  POSId,
+}) => {
   const {
     data: allUsers,
     error,
@@ -34,7 +43,7 @@ const EditUserOfPOS: FC<EditUserOfPOSProps> = ({ usersOfThisPOS, mode }) => {
     isValidating,
   } = useSWRImmutable(
     mode === ADD_USER_TO_POS ? SWR_KEYS.GET_USERS : null,
-    () => getAllUsers(),
+    () => getAllUsers([Staff], POSId),
     {
       revalidateOnMount: true,
     }

@@ -1,19 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { URL_PARAMS_KEYS } from '@/constants'
-const { USER_ID, BRANDS_NAME_ONLY, STAFF_ONLY } = URL_PARAMS_KEYS
+const { USER_ID, BRANDS_NAME_ONLY, ACCOUNT_TYPE, POS_TO_EXCLUDE } =
+  URL_PARAMS_KEYS
 import { getUsers, getUniqueBrands } from '@/services/prisma-queries'
+
+import { AccountType } from '@prisma/client'
 
 export async function GET(request: NextRequest) {
   const userID = request.nextUrl.searchParams.get(USER_ID) ?? null
-  const isStaffOnly = request.nextUrl.searchParams.get(STAFF_ONLY)
-    ? true
-    : false
+  const specificAccTypes = request.nextUrl.searchParams.get(ACCOUNT_TYPE)
 
-  // If want all users
+  const posToExclude = request.nextUrl.searchParams.get(POS_TO_EXCLUDE)
+  const posToExcludeNumb = posToExclude
+    ? posToExclude?.split(',')?.map((pos) => +pos)
+    : undefined
+
+  // If does not want unique brands
   if (!userID) {
-    const allUsers = await getUsers(isStaffOnly)
-    console.log('allUsers', allUsers)
+    const allUsers = await getUsers(
+      specificAccTypes?.split(',') as AccountType[],
+      posToExcludeNumb
+    )
 
     return NextResponse.json(
       {

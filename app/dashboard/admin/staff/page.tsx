@@ -2,6 +2,8 @@ import { getUsers } from '@/services/prisma-queries'
 
 import { ModelItem } from '@/components/dashboards'
 
+import { AccountType } from '@prisma/client'
+
 import {
   Card,
   CardContent,
@@ -11,7 +13,7 @@ import {
 } from '@/components/shad/ui/card'
 
 const Dashboard = async () => {
-  const allStaff = await getUsers(true)
+  const allStaff = await getUsers([AccountType.Staff])
   return (
     <>
       <Card className="col-span-3">

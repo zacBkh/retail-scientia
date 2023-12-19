@@ -1,5 +1,7 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+
 import { FC, useState } from 'react'
 
 import type { User } from '@prisma/client'
@@ -38,6 +40,8 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
+  const router = useRouter()
+
   const handleDeletePOS = async () => {
     setIsDialogOpen(false)
 
@@ -51,10 +55,12 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
       },
       error: {
         render({ data }) {
-          return `${data} ❌ `
+          return `${data}`
         },
       },
     })
+
+    router.refresh()
   }
 
   const handleConnectUserToPOS = async () => {
@@ -111,7 +117,7 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
           <DialogHeader className="text-left">
             <DialogTitle>
               {displayElementsStateWise().header}
-              <span className="font-bold">{POSName}</span>
+              <span className="font-black">{POSName}</span>
             </DialogTitle>
             <DialogDescription className="mt-8">
               {displayElementsStateWise().subHeader}
@@ -134,6 +140,7 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
             <EditUserOfPOS
               mode={AddOrRemove.ADD_USER_TO_POS}
               usersOfThisPOS={usersOfThisPOS}
+              POSId={POSId}
             />
           ) : (
             ''
@@ -158,6 +165,7 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
             <EditUserOfPOS
               mode={AddOrRemove.REMOVE_USER_FROM_POS}
               usersOfThisPOS={usersOfThisPOS}
+              POSId={POSId}
             />
           ) : (
             ''

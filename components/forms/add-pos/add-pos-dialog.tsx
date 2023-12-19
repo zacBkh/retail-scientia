@@ -2,9 +2,7 @@
 
 import { FC, useState } from 'react'
 
-interface ButtonCltProps {
-  a?: string
-}
+import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/shad/ui/button'
 import { Plus } from 'lucide-react'
@@ -27,8 +25,10 @@ import NewPOSForm from '@/components/forms/add-pos/form-add-pos'
 
 import type { TypeAddPostData } from '@/components/forms/add-pos/form-add-pos'
 
-const AddPOSDialog: FC<ButtonCltProps> = ({}) => {
+const AddPOSDialog = ({}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  const router = useRouter()
 
   const handleFormAddedComplete = async (newPOS: TypeAddPostData) => {
     setIsDialogOpen(false)
@@ -44,6 +44,8 @@ const AddPOSDialog: FC<ButtonCltProps> = ({}) => {
 
       error: 'There has been an issue, try again later',
     })
+
+    router.refresh()
   }
 
   return (

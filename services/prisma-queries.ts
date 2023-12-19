@@ -3,6 +3,8 @@ export const dynamic = 'force-dynamic'
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { PrismaClient } from '@prisma/client'
 
+import { PointOfSale, AccountType } from '@prisma/client'
+
 // Hack so new prisma client is not created at every hot reload
 let db: PrismaClient
 if (process.env.NODE_ENV === 'production') {
@@ -359,11 +361,17 @@ export const getUniqueAxis = async (userBrandsIDs: string[]) => {
   return uniqueAxis
 }
 
-import { AccountType } from '@prisma/client'
-export const getUsers = async (isStaffOnly: boolean) => {
+export const getUsers = async (
+  accType?: AccountType[],
+  excludePOS?: PointOfSale['id'][]
+) => {
   const users = await db.user.findMany({
-    ...(isStaffOnly && {
-      where: { accountType: AccountType.Staff },
+    ...(accType && {
+      where: { accountType: { in: accType } },
+    }),
+
+    ...(excludePOS && {
+      where: { pointOfSaleId: { notIn: excludePOS } },
     }),
 
     include: { pointOfSale: true },
@@ -383,8 +391,6 @@ export const getPOS = async () => {
   })
   return allPOS
 }
-
-import { PointOfSale } from '@prisma/client'
 
 export const addNewPOS = async (formData: PointOfSale) => {
   const allPOS = await db.pointOfSale.create({ data: formData })

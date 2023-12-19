@@ -68,7 +68,8 @@ export enum URL_PARAMS_KEYS {
 
   POS_TO_DELETE = 'POSToDelete',
 
-  STAFF_ONLY = 'staffOnly',
+  ACCOUNT_TYPE = 'accountType',
+  POS_TO_EXCLUDE = 'POSToExclude',
 }
 
 // export const NAV_LINKS = [
