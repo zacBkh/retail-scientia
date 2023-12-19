@@ -19,8 +19,6 @@ import { Input } from '@/components/shad/ui/input'
 
 import { Button } from '@/components/shad/ui/button'
 
-import { APIResponseBasic } from '@/types'
-
 const formSchema = z.object({
   name: z
     .string()
@@ -43,7 +41,6 @@ interface AddFormProps {
 }
 
 const NewPOSForm: FC<AddFormProps> = ({ onFormAdded }) => {
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,7 +49,6 @@ const NewPOSForm: FC<AddFormProps> = ({ onFormAdded }) => {
     },
   })
 
-  // 2. Define a submit handler.
   const onSubmitNewPOS = async (newPOS: z.infer<typeof formSchema>) => {
     onFormAdded(newPOS)
   }
