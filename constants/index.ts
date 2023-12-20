@@ -1,3 +1,5 @@
+import { ConnectOrDisconnect } from './enums'
+
 export {
   URL_PARAMS_KEYS,
   APP_LINKS,
@@ -12,3 +14,5 @@ export { ModeOfProductTable, DB_QUERIES } from './db-queries'
 export { zIndexes } from './z-indexes'
 
 export { SHORTCUT_LABELS } from './date-picker'
+
+export { ConnectOrDisconnect } from './enums'

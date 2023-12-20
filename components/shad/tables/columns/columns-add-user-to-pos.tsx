@@ -42,7 +42,7 @@ export const columnAddUserToPOS: columnAddUserToPOSTypes = (
 
       return (
         <UserPlus
-          className="mx-auto"
+          className="mx-auto cursor-pointer"
           size={15}
           strokeWidth={2}
           onClick={() => handleConnectUserToPOS(user)}

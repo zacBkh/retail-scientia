@@ -14,20 +14,20 @@ import {
 
 import useSWRImmutable from 'swr/immutable'
 
-import { AddOrRemove } from '@/constants/enums'
-const { ADD_USER_TO_POS, REMOVE_USER_FROM_POS } = AddOrRemove
+import { ConnectOrDisconnect } from '@/constants/enums'
+const { CONNECT, DISCONNECT } = ConnectOrDisconnect
 
 import { SWR_KEYS } from '@/constants'
 
 import { getAllUsers } from '@/services/fetchers-api'
 
 interface EditUserOfPOSProps {
-  mode: AddOrRemove
+  mode: ConnectOrDisconnect
   usersOfThisPOS?: User[]
 
   POSId: number
 
-  onClickActionTable?: (mode: AddOrRemove, user: User) => void
+  onClickActionTable?: (mode: ConnectOrDisconnect, user: User) => void
 }
 
 import { AccountType } from '@prisma/client'
@@ -40,12 +40,12 @@ const EditUserOfPOS: FC<EditUserOfPOSProps> = ({
   onClickActionTable,
 }) => {
   const {
-    data: allUsers,
+    data: usersNotFromThisPOS,
     error,
     isLoading,
     isValidating,
   } = useSWRImmutable(
-    mode === ADD_USER_TO_POS ? SWR_KEYS.GET_USERS : null,
+    mode === CONNECT ? SWR_KEYS.GET_USERS : null,
     () => getAllUsers([Staff], POSId),
     {
       revalidateOnMount: true,
@@ -53,28 +53,28 @@ const EditUserOfPOS: FC<EditUserOfPOSProps> = ({
   )
 
   const handleConnectUserToPOS = (userToConnect: User) => {
-    onClickActionTable && onClickActionTable(ADD_USER_TO_POS, userToConnect)
+    onClickActionTable && onClickActionTable(CONNECT, userToConnect)
   }
 
   const handleRemoveUserFromPOS = (userToRemove: User) => {
-    onClickActionTable && onClickActionTable(REMOVE_USER_FROM_POS, userToRemove)
+    onClickActionTable && onClickActionTable(DISCONNECT, userToRemove)
   }
 
   if (!usersOfThisPOS) {
     return <p>No user have been found for this POS</p>
   }
 
-  if (mode === ADD_USER_TO_POS) {
+  if (mode === CONNECT) {
     return (
       <DataTableEditUserPOS
         isLoading={isLoading || isValidating}
         columns={columnAddUserToPOS(handleConnectUserToPOS)}
-        data={allUsers?.result ?? []}
+        data={usersNotFromThisPOS?.result ?? []}
       />
     )
   }
 
-  if (mode === REMOVE_USER_FROM_POS) {
+  if (mode === DISCONNECT) {
     return (
       <>
         {/* <ScrollArea className="h-[200px] w-full rounded-md border"> */}

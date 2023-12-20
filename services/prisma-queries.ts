@@ -5,6 +5,10 @@ import { PrismaClient } from '@prisma/client'
 
 import { PointOfSale, AccountType } from '@prisma/client'
 
+import { DB_QUERIES } from '@/constants'
+
+import { ConnectOrDisconnect } from '@/constants/enums'
+
 // Hack so new prisma client is not created at every hot reload
 let db: PrismaClient
 if (process.env.NODE_ENV === 'production') {
@@ -22,8 +26,6 @@ if (process.env.NODE_ENV === 'production') {
   // @ts-ignore
   db = global.db
 }
-
-import { DB_QUERIES } from '@/constants'
 
 /*SC Products */
 export const getProducts = async (
@@ -404,6 +406,25 @@ export const deletePOS = async (POSId: number) => {
     },
   })
   return deletedPOS
+}
+
+export const editPOSUserRelation = async (
+  POSId: number,
+  userID: number,
+  connect: ConnectOrDisconnect
+) => {
+  const data =
+    connect === ConnectOrDisconnect.CONNECT
+      ? { users: { connect: { id: userID } } }
+      : { users: { disconnect: { id: userID } } }
+
+  const updatedPOS = await db.pointOfSale.update({
+    where: {
+      id: POSId,
+    },
+    data,
+  })
+  return updatedPOS
 }
 
 /* !SC */

@@ -1,4 +1,8 @@
-import { URL_PARAMS_KEYS, REST_API_LINKS } from '@/constants'
+import {
+  URL_PARAMS_KEYS,
+  REST_API_LINKS,
+  ConnectOrDisconnect,
+} from '@/constants'
 const {
   USER_ID,
   BRANDS_IDS,
@@ -26,9 +30,14 @@ import type {
   GetFilteredUserSalesInDB,
 } from '@/types'
 
+import { getSalesLSInJSObj } from '@/utils/local-storage'
+import type { User, AccountType, PointOfSale } from '@prisma/client'
+
 interface RegisterSalesTypes {
   (date: string, sales: SalesInLocalStorage): Promise<APIResponseRegisterSales>
 }
+
+/*SC Sale */
 
 // Add a sale in DB
 export const registerSale: RegisterSalesTypes = async (date, productIDs) => {
@@ -36,26 +45,6 @@ export const registerSale: RegisterSalesTypes = async (date, productIDs) => {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ date, productIDs }),
-  })
-  const data = await response.json()
-  return data
-}
-
-interface GetProductDetailsArgs {
-  (): Promise<APIResponseFindProducts>
-}
-
-import { getSalesLSInJSObj } from '@/utils/local-storage'
-
-// Get specific products details from DB, based on array of IDs
-// Used a POST request to pass body
-export const getProductDetails: GetProductDetailsArgs = async () => {
-  let productIDsInLS = getSalesLSInJSObj() ?? []
-
-  const response = await fetch(`${PRODUCTS}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ productIDsInLS }),
   })
   const data = await response.json()
   return data
@@ -82,6 +71,30 @@ export const getUserSalesInDB: GetFilteredUserSalesInDB = async (
 
   return data
 }
+
+/* !SC */
+
+/*SC Products */
+
+interface GetProductDetailsArgs {
+  (): Promise<APIResponseFindProducts>
+}
+
+// Get specific products details from DB, based on array of IDs
+// Used a POST request to pass body
+export const getProductDetails: GetProductDetailsArgs = async () => {
+  let productIDsInLS = getSalesLSInJSObj() ?? []
+
+  const response = await fetch(`${PRODUCTS}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ productIDsInLS }),
+  })
+  const data = await response.json()
+  return data
+}
+
+/* !SC */
 
 interface GetFavProductArgs {
   // (productID: number): Promise<APIResponseGetFav>
@@ -202,8 +215,9 @@ interface AddNewPOSArgs {
   >
 }
 
+/*SC POS */
+
 export const addNewPOS: AddNewPOSArgs = async (formData) => {
-  console.log('formData', formData)
   const response = await fetch(`${POINT_OF_SALE}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -232,7 +246,29 @@ export const deletePOS: DeletePOSType = async (POSId) => {
   }
 }
 
-import type { User, AccountType, PointOfSale } from '@prisma/client'
+export interface UpdatePOSTypes {
+  (
+    posID: number,
+    userID: number,
+    connectOrDisconnect: ConnectOrDisconnect
+  ): Promise<APIResponseBasic<string>>
+}
+
+export const editUserPOSRelation: UpdatePOSTypes = async (
+  posID,
+  userID,
+  connectOrDisconnect
+) => {
+  const response = await fetch(`${POINT_OF_SALE}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ posID, userID, connectOrDisconnect }),
+  })
+  const data = await response.json()
+  return data
+}
+
+/* !SC */
 
 interface GetUserType {
   (

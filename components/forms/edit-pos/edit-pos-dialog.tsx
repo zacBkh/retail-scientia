@@ -13,7 +13,7 @@ interface ButtonCltProps {
   usersOfThisPOS?: User[]
 }
 import { toast } from 'react-toastify'
-import { deletePOS } from '@/services/fetchers-api'
+import { deletePOS, editUserPOSRelation } from '@/services/fetchers-api'
 
 import {
   Dialog,
@@ -31,8 +31,8 @@ import { Button } from '@/components/shad/ui/button'
 
 import EditUserOfPOS from './edit-user-of-pos'
 
-import { AddOrRemove } from '@/constants/enums'
-const { ADD_USER_TO_POS, REMOVE_USER_FROM_POS } = AddOrRemove
+import { ConnectOrDisconnect } from '@/constants'
+const { CONNECT, DISCONNECT } = ConnectOrDisconnect
 
 const EditPOSDialog: FC<ButtonCltProps> = ({
   POSId,
@@ -109,10 +109,29 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
   }
 
   // TO DO close modal, display toaster
-  const handleConnectUserToPOS = (mode: AddOrRemove, user: User) => {
-    console.log('You want to add user', user)
+  const handleConnectUserToPOS = async (
+    mode: ConnectOrDisconnect,
+    user: User
+  ) => {
+    await toast.promise(editUserPOSRelation(POSId, user.id, CONNECT), {
+      pending: 'Wait a minute...',
+
+      success: {
+        render({ data }) {
+          return `${data?.result} 👌`
+        },
+      },
+      error: {
+        render({ data }) {
+          return `${data}`
+        },
+      },
+    })
+
+    setIsDialogOpen(false)
+    router.refresh()
   }
-  const handleRemoveUserFromPOS = (mode: AddOrRemove, user: User) => {
+  const handleRemoveUserFromPOS = (mode: ConnectOrDisconnect, user: User) => {
     console.log('You want to remove user', user)
   }
 
@@ -151,7 +170,7 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
 
           {isAddUserToPOSActive ? (
             <EditUserOfPOS
-              mode={ADD_USER_TO_POS}
+              mode={CONNECT}
               usersOfThisPOS={usersOfThisPOS}
               POSId={POSId}
               onClickActionTable={handleConnectUserToPOS}
@@ -177,7 +196,7 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
 
           {isRemoveUserFromPOSActive ? (
             <EditUserOfPOS
-              mode={REMOVE_USER_FROM_POS}
+              mode={DISCONNECT}
               usersOfThisPOS={usersOfThisPOS}
               POSId={POSId}
               onClickActionTable={handleRemoveUserFromPOS}
