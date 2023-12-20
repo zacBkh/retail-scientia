@@ -5,7 +5,7 @@ import { Button } from '@/components/shad/ui/button'
 
 import type { User } from '@prisma/client'
 
-import { DataTable } from '@/components/shad/tables/data-table'
+import { DataTableEditUserPOS } from '@/components/shad/tables/data-table-edit-user-pos'
 
 import {
   columnRemoveUserFromPOS,
@@ -26,15 +26,18 @@ interface EditUserOfPOSProps {
   usersOfThisPOS?: User[]
 
   POSId: number
+
+  onClickActionTable?: (mode: AddOrRemove, user: User) => void
 }
 
 import { AccountType } from '@prisma/client'
-const { Staff, Marketing, Admin } = AccountType
+const { Staff } = AccountType
 
 const EditUserOfPOS: FC<EditUserOfPOSProps> = ({
   usersOfThisPOS,
   mode,
   POSId,
+  onClickActionTable,
 }) => {
   const {
     data: allUsers,
@@ -49,15 +52,23 @@ const EditUserOfPOS: FC<EditUserOfPOSProps> = ({
     }
   )
 
+  const handleConnectUserToPOS = (userToConnect: User) => {
+    onClickActionTable && onClickActionTable(ADD_USER_TO_POS, userToConnect)
+  }
+
+  const handleRemoveUserFromPOS = (userToRemove: User) => {
+    onClickActionTable && onClickActionTable(REMOVE_USER_FROM_POS, userToRemove)
+  }
+
   if (!usersOfThisPOS) {
     return <p>No user have been found for this POS</p>
   }
 
   if (mode === ADD_USER_TO_POS) {
     return (
-      <DataTable
+      <DataTableEditUserPOS
         isLoading={isLoading || isValidating}
-        columns={columnAddUserToPOS}
+        columns={columnAddUserToPOS(handleConnectUserToPOS)}
         data={allUsers?.result ?? []}
       />
     )
@@ -68,7 +79,10 @@ const EditUserOfPOS: FC<EditUserOfPOSProps> = ({
       <>
         {/* <ScrollArea className="h-[200px] w-full rounded-md border"> */}
         {/* <div className="p-2 flex flex-col gap-y-2 items-center"> */}
-        <DataTable columns={columnRemoveUserFromPOS} data={usersOfThisPOS} />
+        <DataTableEditUserPOS
+          columns={columnRemoveUserFromPOS(handleRemoveUserFromPOS)}
+          data={usersOfThisPOS}
+        />
         {/* </div> */}
         {/* </ScrollArea> */}
       </>

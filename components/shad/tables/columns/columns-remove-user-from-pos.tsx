@@ -8,11 +8,13 @@ import { ArrowUpDown, UserX } from 'lucide-react'
 
 import { Button } from '@/components/shad/ui/button'
 
-const handleRemoveUserFromPOS = (userID: number) => {
-  console.log('you want to remove User', userID)
+interface columnRemoveUserFromPOSTypes {
+  (handleRemoveUserFromPOS: (user: User) => void): ColumnDef<User>[]
 }
 
-export const columnRemoveUserFromPOS: ColumnDef<User>[] = [
+export const columnRemoveUserFromPOS: columnRemoveUserFromPOSTypes = (
+  handleRemoveUserFromPOS
+) => [
   {
     accessorKey: 'name',
     // header: 'Name',
@@ -37,14 +39,14 @@ export const columnRemoveUserFromPOS: ColumnDef<User>[] = [
     id: 'actions',
     header: 'Remove from POS',
     cell: ({ row }) => {
-      const payment = row.original
+      const user = row.original
 
       return (
         <UserX
           className="mx-auto"
           size={15}
           strokeWidth={2}
-          onClick={() => handleRemoveUserFromPOS(payment.id)}
+          onClick={() => handleRemoveUserFromPOS(user)}
         />
         // <DropdownMenu>
         //   <DropdownMenuTrigger asChild>

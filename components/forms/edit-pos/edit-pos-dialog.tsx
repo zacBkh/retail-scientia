@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 
-import { FC, useState } from 'react'
+import { FC, useState, useEffect } from 'react'
 
 import type { User } from '@prisma/client'
 
@@ -32,6 +32,7 @@ import { Button } from '@/components/shad/ui/button'
 import EditUserOfPOS from './edit-user-of-pos'
 
 import { AddOrRemove } from '@/constants/enums'
+const { ADD_USER_TO_POS, REMOVE_USER_FROM_POS } = AddOrRemove
 
 const EditPOSDialog: FC<ButtonCltProps> = ({
   POSId,
@@ -39,6 +40,19 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
   usersOfThisPOS,
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  const [isRemoveUserFromPOSActive, setIsRemoveUserFromPOSActive] =
+    useState(false)
+
+  const [isAddUserToPOSActive, setIsAddUserToPOSActive] = useState(false)
+
+  // Reset modal state when close it
+  useEffect(() => {
+    if (!isDialogOpen) {
+      setIsRemoveUserFromPOSActive(false)
+      setIsAddUserToPOSActive(false)
+    }
+  }, [isDialogOpen])
 
   const router = useRouter()
 
@@ -62,15 +76,6 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
 
     router.refresh()
   }
-
-  const handleConnectUserToPOS = async () => {
-    console.log('connect')
-  }
-
-  const [isRemoveUserFromPOSActive, setIsRemoveUserFromPOSActive] =
-    useState(false)
-
-  const [isAddUserToPOSActive, setIsAddUserToPOSActive] = useState(false)
 
   const displayElementsStateWise = () => {
     const content = {
@@ -101,6 +106,14 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
     }
 
     return content
+  }
+
+  // TO DO close modal, display toaster
+  const handleConnectUserToPOS = (mode: AddOrRemove, user: User) => {
+    console.log('You want to add user', user)
+  }
+  const handleRemoveUserFromPOS = (mode: AddOrRemove, user: User) => {
+    console.log('You want to remove user', user)
   }
 
   return (
@@ -138,9 +151,10 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
 
           {isAddUserToPOSActive ? (
             <EditUserOfPOS
-              mode={AddOrRemove.ADD_USER_TO_POS}
+              mode={ADD_USER_TO_POS}
               usersOfThisPOS={usersOfThisPOS}
               POSId={POSId}
+              onClickActionTable={handleConnectUserToPOS}
             />
           ) : (
             ''
@@ -163,9 +177,10 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
 
           {isRemoveUserFromPOSActive ? (
             <EditUserOfPOS
-              mode={AddOrRemove.REMOVE_USER_FROM_POS}
+              mode={REMOVE_USER_FROM_POS}
               usersOfThisPOS={usersOfThisPOS}
               POSId={POSId}
+              onClickActionTable={handleRemoveUserFromPOS}
             />
           ) : (
             ''

@@ -32,7 +32,7 @@ interface DataTableProps<TData, TValue> {
   isLoading?: boolean
 }
 
-export function DataTable<TData, TValue>({
+export function DataTableEditUserPOS<TData, TValue>({
   columns,
   data,
   isLoading,

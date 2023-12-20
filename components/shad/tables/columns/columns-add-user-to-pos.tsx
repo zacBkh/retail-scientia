@@ -8,11 +8,13 @@ import { ArrowUpDown, UserPlus } from 'lucide-react'
 
 import { Button } from '@/components/shad/ui/button'
 
-const handleAddUserToPOS = (userID: User) => {
-  console.log('you want to add User', userID)
+interface columnAddUserToPOSTypes {
+  (handleConnectUserToPOS: (user: User) => void): ColumnDef<User>[]
 }
 
-export const columnAddUserToPOS: ColumnDef<User>[] = [
+export const columnAddUserToPOS: columnAddUserToPOSTypes = (
+  handleConnectUserToPOS
+) => [
   {
     accessorKey: 'name',
     header: ({ column }) => {
@@ -43,7 +45,7 @@ export const columnAddUserToPOS: ColumnDef<User>[] = [
           className="mx-auto"
           size={15}
           strokeWidth={2}
-          onClick={() => handleAddUserToPOS(user)}
+          onClick={() => handleConnectUserToPOS(user)}
         />
         // <DropdownMenu>
         //   <DropdownMenuTrigger asChild>
