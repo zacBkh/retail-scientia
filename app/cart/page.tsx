@@ -1,6 +1,6 @@
 'use client'
 
-import { SWR_KEYS } from '@/constants'
+import { SWR_KEYS, PROMISE_TOAST_WAIT } from '@/constants'
 import useSWR, { mutate } from 'swr'
 
 import { useState } from 'react'
@@ -74,7 +74,7 @@ const Cart = ({}) => {
     const registrationSale = await toast.promise(
       registerSale(finalDate, finalSales),
       {
-        pending: 'Wait a minute...',
+        pending: PROMISE_TOAST_WAIT,
 
         success: {
           render({ data }) {

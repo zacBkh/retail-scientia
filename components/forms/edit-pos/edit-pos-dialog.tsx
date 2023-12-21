@@ -6,6 +6,8 @@ import { FC, useState, useEffect } from 'react'
 
 import type { User } from '@prisma/client'
 
+import { PROMISE_TOAST_WAIT } from '@/constants'
+
 interface ButtonCltProps {
   POSId: number
   POSName: string
@@ -63,7 +65,7 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
     setIsDialogOpen(false)
 
     await toast.promise(deletePOS(POSId), {
-      pending: 'Wait a minute...',
+      pending: PROMISE_TOAST_WAIT,
 
       success: {
         render({ data }) {
@@ -94,7 +96,7 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
     if (isRemoveUserFromPOSActive) {
       content.header = 'Remove users from '
       content.subHeader =
-        'You are about to disconnect a user from his/her point of sale. This will not delete the user.'
+        'You are about to disconnect a user from his/her point of sale. This will not delete the user. The user will not be affected to a POS anymore.'
       content.buttonAction = 'Cancel'
       return content
     }
@@ -117,7 +119,7 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
     user: User
   ) => {
     await toast.promise(editUserPOSRelation(POSId, user.id, CONNECT), {
-      pending: 'Wait a minute...',
+      pending: PROMISE_TOAST_WAIT,
 
       success: {
         render({ data }) {
@@ -141,7 +143,7 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
     console.log('You want to remove user', user)
 
     await toast.promise(editUserPOSRelation(POSId, user.id, DISCONNECT), {
-      pending: 'Wait a minute...',
+      pending: PROMISE_TOAST_WAIT,
 
       success: {
         render({ data }) {

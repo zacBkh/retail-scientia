@@ -11,6 +11,8 @@ import { toast } from 'react-toastify'
 
 import { addNewPOS } from '@/services/fetchers-api'
 
+import { PROMISE_TOAST_WAIT } from '@/constants'
+
 import {
   Dialog,
   DialogContent,
@@ -34,7 +36,7 @@ const AddPOSDialog = ({}) => {
     setIsDialogOpen(false)
 
     await toast.promise(addNewPOS(newPOS), {
-      pending: 'Wait a minute...',
+      pending: PROMISE_TOAST_WAIT,
 
       success: {
         render({ data }) {

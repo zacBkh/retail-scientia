@@ -9,6 +9,8 @@ export {
 
 export { SWR_KEYS } from './SWR-keys'
 
+export { PROMISE_TOAST_WAIT } from './strings'
+
 export { ModeOfProductTable, DB_QUERIES } from './db-queries'
 
 export { zIndexes } from './z-indexes'
