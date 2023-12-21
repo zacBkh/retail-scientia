@@ -34,6 +34,9 @@ import EditUserOfPOS from './edit-user-of-pos'
 import { ConnectOrDisconnect } from '@/constants'
 const { CONNECT, DISCONNECT } = ConnectOrDisconnect
 
+import { mutate } from 'swr'
+import { SWR_KEYS } from '@/constants'
+
 const EditPOSDialog: FC<ButtonCltProps> = ({
   POSId,
   POSName,
@@ -128,11 +131,31 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
       },
     })
 
-    setIsDialogOpen(false)
     router.refresh()
+    mutate(SWR_KEYS.GET_USERS)
   }
-  const handleRemoveUserFromPOS = (mode: ConnectOrDisconnect, user: User) => {
+  const handleRemoveUserFromPOS = async (
+    mode: ConnectOrDisconnect,
+    user: User
+  ) => {
     console.log('You want to remove user', user)
+
+    await toast.promise(editUserPOSRelation(POSId, user.id, DISCONNECT), {
+      pending: 'Wait a minute...',
+
+      success: {
+        render({ data }) {
+          return `${data?.result} 👌`
+        },
+      },
+      error: {
+        render({ data }) {
+          return `${data}`
+        },
+      },
+    })
+    router.refresh()
+    mutate(SWR_KEYS.GET_USERS)
   }
 
   return (
@@ -171,7 +194,6 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
           {isAddUserToPOSActive ? (
             <EditUserOfPOS
               mode={CONNECT}
-              usersOfThisPOS={usersOfThisPOS}
               POSId={POSId}
               onClickActionTable={handleConnectUserToPOS}
             />

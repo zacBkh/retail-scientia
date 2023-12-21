@@ -19,6 +19,8 @@ import { Prisma } from '@prisma/client'
 
 import type { UpdatePOSTypes } from '@/services/fetchers-api'
 
+import { ConnectOrDisconnect } from '@/constants'
+
 export async function POST(request: Request) {
   try {
     const currentSession = await getServerSession(authOptions)
@@ -49,9 +51,11 @@ export async function POST(request: Request) {
   }
 }
 
-// export async function GET(request: NextRequest) {
-
-// }
+interface RequestUpdatePOSUserType {
+  posID: number
+  userID: number
+  connectOrDisconnect: ConnectOrDisconnect
+}
 
 export async function PATCH(request: NextRequest) {
   try {
@@ -61,13 +65,11 @@ export async function PATCH(request: NextRequest) {
       throw new Error('You cannot edit a POS due to your account level.')
     }
 
-    // const editRelationData: UpdatePOSTypesArgs = await request.json()
-    // const [posID, userID, connectOrDisconnect] = await request.json()
+    const req: RequestUpdatePOSUserType = await request.json()
 
-    const req = await request.json()
-    // if (!POSIdToDelete) {
-    //   throw new Error('There has been an error deleting the POS')
-    // }
+    if (!req.posID || !req.userID || !req.connectOrDisconnect) {
+      throw new Error('You cannot edit a POS due to a server error.')
+    }
 
     const deletePOSFetch = await editPOSUserRelation(
       req.posID,
@@ -75,23 +77,26 @@ export async function PATCH(request: NextRequest) {
       req.connectOrDisconnect
     )
 
-    console.log('deletePOSFetch', deletePOSFetch)
+    const resultMessageDiff =
+      req.connectOrDisconnect === ConnectOrDisconnect.CONNECT
+        ? 'added to'
+        : 'removed from'
+
     return NextResponse.json(
       {
         success: true,
-        result: `User has successfully been added to ${deletePOSFetch.name}`,
+        result: `User has successfully been ${resultMessageDiff} ${deletePOSFetch.name}`,
       },
       { status: 201 }
     )
   } catch (error) {
-    console.log('error -->', error)
     // // if prisma db error
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       return NextResponse.json(
         {
           success: false,
           result:
-            'There has been a server error connecting the user to the POS.',
+            'There has been a server error connecting or disconnecting the user to the POS.',
         },
         { status: 500 }
       )

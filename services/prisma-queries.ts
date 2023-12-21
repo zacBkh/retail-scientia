@@ -363,18 +363,29 @@ export const getUniqueAxis = async (userBrandsIDs: string[]) => {
   return uniqueAxis
 }
 
-export const getUsers = async (
+export const getUsersPrisma = async (
   accType?: AccountType[],
   excludePOS?: PointOfSale['id'][]
 ) => {
-  const users = await db.user.findMany({
-    ...(accType && {
-      where: { accountType: { in: accType } },
-    }),
+  // Building cumulative where condition
+  let whereConditions = {}
+  if (excludePOS) {
+    whereConditions = {
+      OR: [{ pointOfSaleId: { notIn: excludePOS } }, { pointOfSaleId: null }],
+    }
+  }
 
-    ...(excludePOS && {
-      where: { pointOfSaleId: { notIn: excludePOS } },
-    }),
+  if (accType) {
+    whereConditions = {
+      ...whereConditions,
+      accountType: { in: accType },
+    }
+  }
+
+  const users = await db.user.findMany({
+    where: {
+      AND: [whereConditions],
+    },
 
     include: { pointOfSale: true },
   })

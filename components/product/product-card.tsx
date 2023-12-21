@@ -18,7 +18,6 @@ import { toast } from 'react-toastify'
 
 import { mutate } from 'swr'
 import useSWRImmutable from 'swr/immutable'
-
 import { SWR_KEYS } from '@/constants'
 
 type ProductWithFav = Product & { isFav: boolean }

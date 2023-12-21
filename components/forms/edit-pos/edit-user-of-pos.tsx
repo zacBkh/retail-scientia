@@ -19,7 +19,7 @@ const { CONNECT, DISCONNECT } = ConnectOrDisconnect
 
 import { SWR_KEYS } from '@/constants'
 
-import { getAllUsers } from '@/services/fetchers-api'
+import { getUsers } from '@/services/fetchers-api'
 
 interface EditUserOfPOSProps {
   mode: ConnectOrDisconnect
@@ -46,7 +46,7 @@ const EditUserOfPOS: FC<EditUserOfPOSProps> = ({
     isValidating,
   } = useSWRImmutable(
     mode === CONNECT ? SWR_KEYS.GET_USERS : null,
-    () => getAllUsers([Staff], POSId),
+    () => getUsers([Staff], POSId),
     {
       revalidateOnMount: true,
     }
@@ -60,10 +60,6 @@ const EditUserOfPOS: FC<EditUserOfPOSProps> = ({
     onClickActionTable && onClickActionTable(DISCONNECT, userToRemove)
   }
 
-  if (!usersOfThisPOS) {
-    return <p>No user have been found for this POS</p>
-  }
-
   if (mode === CONNECT) {
     return (
       <DataTableEditUserPOS
@@ -75,6 +71,10 @@ const EditUserOfPOS: FC<EditUserOfPOSProps> = ({
   }
 
   if (mode === DISCONNECT) {
+    if (!usersOfThisPOS) {
+      return <p>No user have been found for this POS</p>
+    }
+
     return (
       <>
         {/* <ScrollArea className="h-[200px] w-full rounded-md border"> */}

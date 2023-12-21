@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { URL_PARAMS_KEYS } from '@/constants'
 const { USER_ID, BRANDS_NAME_ONLY, ACCOUNT_TYPE, POS_TO_EXCLUDE } =
   URL_PARAMS_KEYS
-import { getUsers, getUniqueBrands } from '@/services/prisma-queries'
+import { getUsersPrisma, getUniqueBrands } from '@/services/prisma-queries'
 
 import { AccountType } from '@prisma/client'
 
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
 
   // If does not want unique brands
   if (!userID) {
-    const allUsers = await getUsers(
+    const allUsers = await getUsersPrisma(
       specificAccTypes?.split(',') as AccountType[],
       posToExcludeNumb
     )

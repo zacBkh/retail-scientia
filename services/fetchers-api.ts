@@ -278,7 +278,7 @@ interface GetUserType {
 }
 
 // Get all users
-export const getAllUsers: GetUserType = async (
+export const getUsers: GetUserType = async (
   accTypesToInclude,
   posToExclude
 ) => {
