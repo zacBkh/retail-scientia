@@ -12,15 +12,23 @@ import {
   CardTitle,
 } from '@/components/shad/ui/card'
 
+import { Separator } from '@/components/shad/ui/separator'
+
 const Dashboard = async () => {
   const allStaff = await getUsersPrisma([AccountType.Staff])
   return (
     <>
       <Card className="col-span-3">
-        <CardHeader>
-          <CardTitle>{'Your Staff'}</CardTitle>
-          <CardDescription>You have {allStaff.length} staff.</CardDescription>
-        </CardHeader>
+        <div className="p-4 mb-3">
+          <CardHeader>
+            <CardTitle>{'Your Staffs'}</CardTitle>
+            <CardDescription>
+              You have {allStaff.length} staffs.
+            </CardDescription>
+            <Separator className="w-[90%] mx-auto !mt-3" />
+          </CardHeader>
+        </div>
+
         <CardContent>
           {allStaff.map((elem) => (
             <ModelItem

@@ -19,6 +19,20 @@ import { Input } from '@/components/shad/ui/input'
 
 import { Button } from '@/components/shad/ui/button'
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/shad/ui/select'
+
+import worldCountries from '@/constants/countries-data'
+
+import Image from 'next/image'
+
 const formSchema = z.object({
   name: z
     .string()
@@ -75,15 +89,51 @@ const NewPOSForm: FC<AddFormProps> = ({ onFormAdded }) => {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="country"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Country</FormLabel>
-              <FormControl>
-                <Input placeholder="United Arab Emirates" {...field} />
-              </FormControl>
+              <FormLabel className="font-semibold">
+                Country of the POS
+              </FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger className="w-52">
+                    <SelectValue placeholder="Select a country" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent
+                  position="popper"
+                  align="start"
+                  side="top"
+                  className="h-80 w-64"
+                >
+                  <SelectGroup>
+                    <SelectLabel>Countries</SelectLabel>
+                    {worldCountries.map((country) => (
+                      <SelectItem
+                        className="cursor-pointer px-2"
+                        key={country.iso3}
+                        value={country.iso3}
+                      >
+                        <div className="flex items-center gap-x-3 my-2">
+                          <Image
+                            objectFit="contain"
+                            src={country.flag}
+                            alt={`Flag of ${country.name}`}
+                            width={30}
+                            height={30}
+                          />
+                          <div>{country.name}</div>
+                          <div></div>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
               <div className="flex flex-col mt-1">
                 <FormDescription>Country of your new POS.</FormDescription>
                 <FormMessage />
@@ -91,7 +141,7 @@ const NewPOSForm: FC<AddFormProps> = ({ onFormAdded }) => {
             </FormItem>
           )}
         />
-        <Button className="flex items-center mt-6" size={'sm'} type="submit">
+        <Button className="flex items-center" size={'sm'} type="submit">
           Create
         </Button>
       </form>

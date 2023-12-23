@@ -10,9 +10,11 @@ import {
   CardTitle,
 } from '@/components/shad/ui/card'
 
+import { Separator } from '@/components/shad/ui/separator'
+
 import AddPOSDialog from '@/components/forms/add-pos/add-pos-dialog'
 
-import { Separator } from '@/components/shad/ui/separator'
+import { getCountryDetails } from '@/utils/countries'
 
 const Dashboard = async () => {
   const allPOS = await getPOS()
@@ -38,7 +40,7 @@ const Dashboard = async () => {
               key={elem.id}
               elemID={elem.id}
               line1={elem.name}
-              line2={elem.country}
+              line2={getCountryDetails(elem.country)?.name ?? ''}
               line3={`${elem.users.length} staff`}
               list={elem.users} // list of staff of this POS
             />
