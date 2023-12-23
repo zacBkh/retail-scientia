@@ -17,8 +17,6 @@ import {
 
 import { Prisma } from '@prisma/client'
 
-import type { UpdatePOSTypes } from '@/services/fetchers-api'
-
 import { ConnectOrDisconnect } from '@/constants'
 
 export async function POST(request: Request) {

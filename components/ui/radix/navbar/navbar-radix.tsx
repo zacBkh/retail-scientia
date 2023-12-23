@@ -29,11 +29,16 @@ import getCloudiImg from '@/utils/transform-cloudi-img'
 
 import OverlayDarkener from '../../overlay-darkener'
 
+import { AccountType } from '@prisma/client'
+const { Staff } = AccountType
+
 interface NavbarRxProps {
   session: Session | null
 }
 
 const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
+  const isStaff = session?.user.accountType === Staff
+
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const brandName = session?.user.brands[0].name
@@ -104,7 +109,7 @@ const NavbarRx: FC<NavbarRxProps> = ({ session }) => {
                       title="Dashboard"
                       icon={<RiDashboard3Line />}
                     >
-                      See your performance.
+                      {isStaff ? 'See your performance.' : 'Manage & Monitor.'}
                     </ListItem>
 
                     <ListItem link="/" title="Profile" icon={<AiOutlineUser />}>
