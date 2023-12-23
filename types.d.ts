@@ -56,5 +56,3 @@ export type AllPOS = Prisma.$PointOfSalePayload
 export type POSWithUsers = Prisma.PointOfSaleGetPayload<{
   include: { users: true }
 }>
-
-// When add or rm user from POS
