@@ -40,9 +40,9 @@ export enum REST_API_LINKS {
   SALE = 'api/sales',
   PRODUCTS = 'api/products',
   PRODUCTS_FAV = 'api/products/fav',
-  USERS = 'api/users',
 
   // Don't include active path --> '/'
+  USERS = '/api/users',
   POINT_OF_SALE = '/api/point-of-sale',
   USERS_WO_PATH = '/api/users',
 }

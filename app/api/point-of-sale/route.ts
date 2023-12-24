@@ -13,11 +13,55 @@ import {
   addNewPOS,
   deletePOS,
   editPOSUserRelation,
+  getPOS,
 } from '@/services/prisma-queries'
 
 import { Prisma } from '@prisma/client'
 
 import { ConnectOrDisconnect } from '@/constants'
+
+export async function GET(request: NextRequest) {
+  try {
+    const currentSession = await getServerSession(authOptions)
+    const isAdmin = currentSession?.user.accountType === Admin
+
+    if (!isAdmin || !currentSession) {
+      throw new Error(
+        'You cannot access this resource for authorization/authentication reason [POS].'
+      )
+    }
+
+    // const userID = request.nextUrl.searchParams.get(USER_ID) ?? null
+
+    const allPOS = await getPOS()
+    return NextResponse.json(
+      {
+        success: true,
+        result: allPOS,
+      },
+      { status: 201 }
+    )
+  } catch (error) {
+    // if prisma db error
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return NextResponse.json(
+        {
+          success: false,
+          result: 'There has been a server error fetching the POS.',
+        },
+        { status: 500 }
+      )
+    }
+    // if app error
+    return NextResponse.json(
+      {
+        success: false,
+        result: error,
+      },
+      { status: 500 }
+    )
+  }
+}
 
 export async function POST(request: Request) {
   try {
@@ -34,7 +78,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: true,
-        result: `${newPOSFetch.name} has been successfully added`,
+        result: `${newPOSFetch.name} has been successfully created`,
       },
       { status: 201 }
     )

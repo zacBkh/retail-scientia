@@ -1,12 +1,9 @@
 import { getUsersPrisma } from '@/services/prisma-queries'
 
-import { ModelItem } from '@/components/dashboards'
-
 import { AccountType } from '@prisma/client'
 
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -14,8 +11,13 @@ import {
 
 import { Separator } from '@/components/shad/ui/separator'
 
+import AddUserDialog from '@/components/forms/add-user/add-user-dialog'
+
+import DataTableCltWrapper from '@/components/dashboards/data-table-clt-wrapper'
+
 const Dashboard = async () => {
   const allStaff = await getUsersPrisma([AccountType.Staff])
+
   return (
     <>
       <Card className="col-span-3">
@@ -25,21 +27,14 @@ const Dashboard = async () => {
             <CardDescription>
               You have {allStaff.length} staffs.
             </CardDescription>
+            <CardDescription>
+              <AddUserDialog />
+            </CardDescription>
             <Separator className="w-[90%] mx-auto !mt-3" />
+
+            <DataTableCltWrapper data={allStaff} />
           </CardHeader>
         </div>
-
-        <CardContent>
-          {allStaff.map((elem) => (
-            <ModelItem
-              key={elem.id}
-              elemID={elem.id}
-              line1={elem.name}
-              line2={elem.pointOfSale?.name ?? 'N/A'}
-              line3={elem.staffID ?? ''}
-            />
-          ))}
-        </CardContent>
       </Card>
     </>
   )

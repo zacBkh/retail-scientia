@@ -18,6 +18,7 @@ export const SWR_KEYS = {
   // Users & Staff
   GET_USERS: 'GET_USERS',
 
-  //
+  GET_POS: 'GET_POS',
+
   EDIT_USER_POS_RELATION: 'EDIT_USER_POS_RELATION',
 }
