@@ -80,7 +80,7 @@ export function DataTableAddNewUser<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead className="!p-0" key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -102,7 +102,7 @@ export function DataTableAddNewUser<TData, TValue>({
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell className="px-1 py-3" key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
