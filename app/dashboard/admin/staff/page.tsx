@@ -21,7 +21,7 @@ const Dashboard = async () => {
   return (
     <>
       <Card className="col-span-3">
-        <div className="p-4 mb-3">
+        <div className="p-2 mb-3">
           <CardHeader>
             <CardTitle>{'Your Staffs'}</CardTitle>
             <CardDescription>
