@@ -28,6 +28,7 @@ import type {
   APIResponseToggleFav,
   APIResponseGetFav,
   GetFilteredUserSalesInDB,
+  UserWithBrands,
 } from '@/types'
 
 import { getSalesLSInJSObj } from '@/utils/local-storage'
@@ -187,6 +188,7 @@ export const getUniqueBrandsOfUser: GetUniqueBrandsOfUserArgs = async (
   })
 
   const data = await response.json()
+  console.log('data UNQIUE BRANDS', data)
   return data
 }
 
@@ -216,6 +218,15 @@ interface AddNewPOSArgs {
 }
 
 /*SC POS */
+
+export const getPOS: GetUserType = async () => {
+  const response = await fetch(`${POINT_OF_SALE}`, {
+    method: 'GET',
+  })
+
+  const data = await response.json()
+  return data
+}
 
 export const addNewPOS: AddNewPOSArgs = async (formData) => {
   const response = await fetch(`${POINT_OF_SALE}`, {
@@ -270,6 +281,7 @@ export const editUserPOSRelation: UpdatePOSTypes = async (
 
 /* !SC */
 
+/*SC USERS */
 interface GetUserType {
   (
     accTypesToInclude?: AccountType[],
@@ -292,3 +304,20 @@ export const getUsers: GetUserType = async (
   const data = await response.json()
   return data
 }
+
+interface RegisterNewUserTypes {
+  (userData: TypeAddUser): Promise<APIResponseBasic<string>>
+}
+
+import { TypeAddUser } from '@/components/forms/add-user/form-add-user'
+
+export const registerNewUser: RegisterNewUserTypes = async (userData) => {
+  const response = await fetch(`${USERS_WO_PATH}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(userData),
+  })
+  const data = await response.json()
+  return data
+}
+/* !SC */

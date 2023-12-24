@@ -1,4 +1,4 @@
-import type { Prisma, Product, Sales } from '@prisma/client'
+import type { Prisma, Product, Sales, User } from '@prisma/client'
 
 // Using generics (make this type flexible)
 export type APIResponseBasic<T> = {
@@ -56,3 +56,17 @@ export type AllPOS = Prisma.$PointOfSalePayload
 export type POSWithUsers = Prisma.PointOfSaleGetPayload<{
   include: { users: true }
 }>
+
+// User with brands
+export type UserWithBrands = Prisma.UserGetPayload<{
+  include: {
+    brands: {
+      select: {
+        id: true
+      }
+    }
+  }
+}>
+
+// User without pwd
+export type UserWithoutPwd = Omit<User, 'password'>

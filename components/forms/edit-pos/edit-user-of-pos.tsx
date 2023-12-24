@@ -1,16 +1,15 @@
 import { FC } from 'react'
 
-import { ScrollArea } from '@/components/shad/ui/scroll-area'
-import { Button } from '@/components/shad/ui/button'
-
 import type { User } from '@prisma/client'
 
-import { DataTableEditUserPOS } from '@/components/shad/tables/data-table-edit-user-pos'
+import { DataTableEditUserPOS } from '@/components/shad/tables/tables-wrapper/data-table-edit-user-pos'
 
 import {
   columnRemoveUserFromPOS,
   columnAddUserToPOS,
 } from '@/components/shad/tables/columns'
+
+import { columnAddNewUser } from '@/components/shad/tables/columns/add-new-user/columns-add-new-user'
 
 import useSWRImmutable from 'swr/immutable'
 

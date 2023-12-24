@@ -3,11 +3,15 @@ export const dynamic = 'force-dynamic'
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { PrismaClient } from '@prisma/client'
 
-import { PointOfSale, AccountType } from '@prisma/client'
+import { PointOfSale, AccountType, User } from '@prisma/client'
 
 import { DB_QUERIES } from '@/constants'
 
 import { ConnectOrDisconnect } from '@/constants/enums'
+
+import { hash } from 'bcrypt'
+
+import type { UserWithBrands } from '@/types'
 
 // Hack so new prisma client is not created at every hot reload
 let db: PrismaClient
@@ -276,6 +280,30 @@ export const getSalesByBestSellerSku: GetSalesByTopSoldSKU = async (
 /* !SC */
 
 /*SC User */
+
+export const createUser = async (formValues: UserWithBrands) => {
+  const { name, email, accountType, password, staffID, pointOfSaleId, brands } =
+    formValues
+
+  const hashedPwd = await hash(password, 6)
+  const newUser = await db.user.create({
+    data: {
+      name,
+      email,
+      accountType,
+      password: hashedPwd,
+      staffID,
+
+      pointOfSale: pointOfSaleId
+        ? { connect: { id: +pointOfSaleId } }
+        : undefined,
+
+      brands: pointOfSaleId ? { connect: brands } : undefined,
+    },
+  })
+  return newUser
+}
+
 export const findAUser = async (email: string) => {
   const user = await db.user.findUnique({
     include: { brands: true },
@@ -302,7 +330,7 @@ export const getFavOfUser = async (
       },
     },
   })
-  console.log('product ', product)
+
   const mappedProducts = product?.favouritedBy.map((product) => product.id)
   if (mappedProducts?.includes(currentUserID)) {
     return true
