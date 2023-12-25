@@ -9,8 +9,6 @@ import {
   columnAddUserToPOS,
 } from '@/components/shad/tables/columns'
 
-import { columnAddNewUser } from '@/components/shad/tables/columns/add-new-user/columns-add-new-user'
-
 import useSWRImmutable from 'swr/immutable'
 
 import { ConnectOrDisconnect } from '@/constants/enums'
@@ -26,10 +24,11 @@ interface EditUserOfPOSProps {
 
   POSId: number
 
-  onClickActionTable?: (mode: ConnectOrDisconnect, user: User) => void
+  onClickActionTable?: (mode: ConnectOrDisconnect, user: UserWithoutPwd) => void
 }
 
 import { AccountType } from '@prisma/client'
+import { UserWithoutPwd } from '@/types'
 const { Staff } = AccountType
 
 const EditUserOfPOS: FC<EditUserOfPOSProps> = ({
@@ -51,11 +50,11 @@ const EditUserOfPOS: FC<EditUserOfPOSProps> = ({
     }
   )
 
-  const handleConnectUserToPOS = (userToConnect: User) => {
+  const handleConnectUserToPOS = (userToConnect: UserWithoutPwd) => {
     onClickActionTable && onClickActionTable(CONNECT, userToConnect)
   }
 
-  const handleRemoveUserFromPOS = (userToRemove: User) => {
+  const handleRemoveUserFromPOS = (userToRemove: UserWithoutPwd) => {
     onClickActionTable && onClickActionTable(DISCONNECT, userToRemove)
   }
 

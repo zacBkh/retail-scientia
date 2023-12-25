@@ -26,36 +26,19 @@ import {
 import NewUserForm from './form-add-user'
 
 import type { TypeAddUser } from './form-add-user'
-import { AccountType } from '@prisma/client'
 
 import { ScrollArea } from '@/components/shad/ui/scroll-area'
+
+import { getAsyncToast } from '@/utils/get-async-toaster'
 
 const AddUserDialog = ({}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  // const [isStaff, setIsStaff] = useState(true)
-
   const router = useRouter()
-
-  // const accTypeSelectionHandler = (accType: AccountType) => {
-  //   setIsStaff(accType === AccountType.Staff ? true : false)
-  // }
 
   const handleFormAddedComplete = async (newUser: TypeAddUser) => {
     setIsDialogOpen(false)
-
-    await toast.promise(registerNewUser(newUser), {
-      pending: PROMISE_TOAST_WAIT,
-
-      success: {
-        render({ data }) {
-          return `${data?.result} 👌`
-        },
-      },
-
-      error: 'There has been an issue, try again later',
-    })
-
+    await getAsyncToast(() => registerNewUser(newUser))
     router.refresh()
   }
 

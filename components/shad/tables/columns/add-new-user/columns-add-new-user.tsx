@@ -50,6 +50,10 @@ export const columnAddNewUser: columnAddUserToPOSTypes = (
     header: 'Point of Sale',
   },
   {
+    accessorKey: 'accountType',
+    header: 'Acc. type',
+  },
+  {
     accessorKey: 'staffID',
     header: 'ID',
   },

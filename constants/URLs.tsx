@@ -11,10 +11,10 @@ export enum APP_LINKS {
   CART = '/cart',
   DASHBOARD = '/dashboard',
   POINT_OF_SALES = `${DASHBOARD}/admin/point-of-sales`,
-  STAFF = `${DASHBOARD}/admin/staff`,
+  USERS = `${DASHBOARD}/admin/users`,
 }
 
-const { DASHBOARD, POINT_OF_SALES, STAFF } = APP_LINKS
+const { DASHBOARD, POINT_OF_SALES, USERS } = APP_LINKS
 
 import { BarChart, Store, UserRound } from 'lucide-react'
 
@@ -30,8 +30,8 @@ export const DASHBOARD_LINKS = [
     icon: <Store strokeWidth={2} />,
   },
   {
-    displayName: 'Staff',
-    link: STAFF,
+    displayName: 'Users',
+    link: USERS,
     icon: <UserRound strokeWidth={2} />,
   },
 ]
@@ -70,6 +70,7 @@ export enum URL_PARAMS_KEYS {
 
   ACCOUNT_TYPE = 'accountType',
   POS_TO_EXCLUDE = 'POSToExclude',
+  USER_TO_DELETE = 'userToDelete',
 }
 
 // export const NAV_LINKS = [

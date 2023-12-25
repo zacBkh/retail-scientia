@@ -2,14 +2,15 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 
-import { User } from '@prisma/client'
-
 import { ArrowUpDown, UserPlus } from 'lucide-react'
 
 import { Button } from '@/components/shad/ui/button'
+import { UserWithoutPwd } from '@/types'
 
 interface columnAddUserToPOSTypes {
-  (handleConnectUserToPOS: (user: User) => void): ColumnDef<User>[]
+  (
+    handleConnectUserToPOS: (user: UserWithoutPwd) => void
+  ): ColumnDef<UserWithoutPwd>[]
 }
 
 export const columnAddUserToPOS: columnAddUserToPOSTypes = (
