@@ -27,6 +27,8 @@ import NewPOSForm from '@/components/forms/add-pos/form-add-pos'
 
 import type { TypeAddPostData } from '@/components/forms/add-pos/form-add-pos'
 
+import { getAsyncToast } from '@/utils/get-async-toaster'
+
 const AddPOSDialog = ({}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -34,19 +36,7 @@ const AddPOSDialog = ({}) => {
 
   const handleFormAddedComplete = async (newPOS: TypeAddPostData) => {
     setIsDialogOpen(false)
-
-    await toast.promise(addNewPOS(newPOS), {
-      pending: PROMISE_TOAST_WAIT,
-
-      success: {
-        render({ data }) {
-          return `${data?.result} 👌`
-        },
-      },
-
-      error: 'There has been an issue, try again later',
-    })
-
+    await getAsyncToast(() => addNewPOS(newPOS))
     router.refresh()
   }
 

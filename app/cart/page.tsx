@@ -23,6 +23,8 @@ import CartTable from '@/components/cart/cart-table'
 import { dateStringForQueryToDate, checkIfDateIsAfter } from '@/utils/dates'
 import { sumSalesValueFromProdDetails } from '@/utils/db-data'
 
+import { getAsyncToast } from '@/utils/get-async-toaster'
+
 const Cart = ({}) => {
   const [disabledValidBtn, setDisabledValidBtn] = useState(false)
 
@@ -71,6 +73,7 @@ const Cart = ({}) => {
       //  ALERT SOMETHING WENT WRONG
       return
     }
+
     const registrationSale = await toast.promise(
       registerSale(finalDate, finalSales),
       {

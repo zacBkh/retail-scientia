@@ -76,10 +76,7 @@ const formSchemaAddUser = z
 
     brands: z
       .array(z.number())
-      .nonempty()
-      .refine((data) => data.length > 0, {
-        message: 'At least one brand is required.',
-      }),
+      .nonempty({ message: 'At least one Brand is required.' }),
     // refine if is not included in result of getUniqueBrands
     // .refine((data) => data.length > 0, {
     //   message: 'Name is required.',
@@ -136,8 +133,6 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
 
   const isStaffDirty = subscribeAccountType !== undefined
   const isStaff = subscribeAccountType === AccountType.Staff
-
-  console.log('formValues', formValues)
 
   const accountTypeChangeHandler = (accType: AccountType) => {
     form.resetField('pointOfSaleId')
@@ -249,7 +244,7 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
                 <FormItem>
                   <FormLabel className="font-semibold">Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Jovia Espino" {...field} />
+                    <Input placeholder="jovia@live.fr" {...field} />
                   </FormControl>
                   <div className="flex flex-col mt-1">
                     <FormMessage />
@@ -266,7 +261,7 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
                     Password of the user
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="********" {...field} />
+                    <Input type="password" placeholder="********" {...field} />
                   </FormControl>
                   <div className="flex flex-col mt-1">
                     <FormDescription>

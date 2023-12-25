@@ -397,6 +397,7 @@ export const getUsersPrisma = async (
 ) => {
   // Building cumulative where condition
   let whereConditions = {}
+  console.log('excludePOS ****', excludePOS)
   if (excludePOS) {
     whereConditions = {
       OR: [{ pointOfSaleId: { notIn: excludePOS } }, { pointOfSaleId: null }],
@@ -420,6 +421,15 @@ export const getUsersPrisma = async (
 
   const usersWithoutPwd = users.map(({ password, ...user }) => user)
   return usersWithoutPwd
+}
+
+export const deleteUser = async (userID: number) => {
+  const deletedUser = await db.user.delete({
+    where: {
+      id: userID,
+    },
+  })
+  return deletedUser
 }
 
 /* !SC */

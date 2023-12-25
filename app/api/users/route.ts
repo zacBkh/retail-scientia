@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { URL_PARAMS_KEYS } from '@/constants'
-const { USER_ID, BRANDS_NAME_ONLY, ACCOUNT_TYPE, POS_TO_EXCLUDE } =
-  URL_PARAMS_KEYS
+const {
+  USER_ID,
+  BRANDS_NAME_ONLY,
+  ACCOUNT_TYPE,
+  POS_TO_EXCLUDE,
+  USER_TO_DELETE,
+} = URL_PARAMS_KEYS
 import {
   getUsersPrisma,
   getUniqueBrands,
   createUser,
+  deleteUser,
 } from '@/services/prisma-queries'
 
 import { Prisma, AccountType } from '@prisma/client'
@@ -84,9 +90,13 @@ export async function GET(request: NextRequest) {
   const specificAccTypes = request.nextUrl.searchParams.get(ACCOUNT_TYPE)
 
   const posToExclude = request.nextUrl.searchParams.get(POS_TO_EXCLUDE)
-  const posToExcludeNumb = posToExclude
-    ? posToExclude?.split(',')?.map((pos) => +pos)
-    : undefined
+
+  const posToExcludeNumb =
+    posToExclude && eval(posToExclude)
+      ? posToExclude?.split(',')?.map((pos) => +pos)
+      : undefined
+
+  console.log('posToExcludeNumb', posToExcludeNumb)
 
   // If does not want unique brands but look for user
   if (!userID) {
@@ -117,4 +127,53 @@ export async function GET(request: NextRequest) {
     },
     { status: 201 }
   )
+}
+
+export async function DELETE(request: NextRequest) {
+  console.log('989898')
+  try {
+    const currentSession = await getServerSession(authOptions)
+    const isAdmin = currentSession?.user.accountType === Admin
+
+    if (!isAdmin || !currentSession) {
+      throw new Error('You cannot delete a user due to your account level.')
+    }
+    const userToDelete =
+      request.nextUrl.searchParams.get(USER_TO_DELETE) ?? null
+    console.log('userToDelete', userToDelete)
+
+    if (!userToDelete) {
+      throw new Error('There has been an error deleting the user')
+    }
+
+    const deleteUserQuery = await deleteUser(+userToDelete)
+    console.log('deleteUserQuery -->', deleteUserQuery)
+    return NextResponse.json(
+      {
+        success: true,
+        result: `${deleteUserQuery.name} has been successfully deleted`,
+      },
+      { status: 201 }
+    )
+  } catch (error) {
+    console.log('error', error)
+    // if prisma db error
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return NextResponse.json(
+        {
+          success: false,
+          result: 'There has been a server error deleting the user',
+        },
+        { status: 500 }
+      )
+    }
+    // if app error
+    return NextResponse.json(
+      {
+        success: false,
+        result: error,
+      },
+      { status: 500 }
+    )
+  }
 }

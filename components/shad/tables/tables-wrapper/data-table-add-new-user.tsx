@@ -94,7 +94,7 @@ export function DataTableAddNewUser<TData, TValue>({
             ))}
           </TableHeader>
 
-          <TableBody>
+          <TableBody className="text-xs">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow

@@ -33,11 +33,13 @@ import { Button } from '@/components/shad/ui/button'
 
 import EditUserOfPOS from './edit-user-of-pos'
 
-import { ConnectOrDisconnect } from '@/constants'
+import { ConnectOrDisconnect, SWR_KEYS } from '@/constants'
 const { CONNECT, DISCONNECT } = ConnectOrDisconnect
 
 import { mutate } from 'swr'
-import { SWR_KEYS } from '@/constants'
+import { UserWithoutPwd } from '@/types'
+
+import { getAsyncToast } from '@/utils/get-async-toaster'
 
 const EditPOSDialog: FC<ButtonCltProps> = ({
   POSId,
@@ -63,22 +65,7 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
 
   const handleDeletePOS = async () => {
     setIsDialogOpen(false)
-
-    await toast.promise(deletePOS(POSId), {
-      pending: PROMISE_TOAST_WAIT,
-
-      success: {
-        render({ data }) {
-          return `${data?.result} 👌`
-        },
-      },
-      error: {
-        render({ data }) {
-          return `${data}`
-        },
-      },
-    })
-
+    await getAsyncToast(() => deletePOS(POSId))
     router.refresh()
   }
 
@@ -116,46 +103,19 @@ const EditPOSDialog: FC<ButtonCltProps> = ({
   // TO DO close modal, display toaster
   const handleConnectUserToPOS = async (
     mode: ConnectOrDisconnect,
-    user: User
+    user: UserWithoutPwd
   ) => {
-    await toast.promise(editUserPOSRelation(POSId, user.id, CONNECT), {
-      pending: PROMISE_TOAST_WAIT,
-
-      success: {
-        render({ data }) {
-          return `${data?.result} 👌`
-        },
-      },
-      error: {
-        render({ data }) {
-          return `${data}`
-        },
-      },
-    })
+    await getAsyncToast(() => editUserPOSRelation(POSId, user.id, CONNECT))
 
     router.refresh()
     mutate(SWR_KEYS.GET_USERS)
   }
   const handleRemoveUserFromPOS = async (
     mode: ConnectOrDisconnect,
-    user: User
+    user: UserWithoutPwd
   ) => {
     console.log('You want to remove user', user)
-
-    await toast.promise(editUserPOSRelation(POSId, user.id, DISCONNECT), {
-      pending: PROMISE_TOAST_WAIT,
-
-      success: {
-        render({ data }) {
-          return `${data?.result} 👌`
-        },
-      },
-      error: {
-        render({ data }) {
-          return `${data}`
-        },
-      },
-    })
+    await getAsyncToast(() => editUserPOSRelation(POSId, user.id, DISCONNECT))
     router.refresh()
     mutate(SWR_KEYS.GET_USERS)
   }

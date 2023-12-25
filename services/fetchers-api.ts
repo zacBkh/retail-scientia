@@ -15,6 +15,7 @@ const {
   POS_TO_DELETE,
   ACCOUNT_TYPE,
   POS_TO_EXCLUDE,
+  USER_TO_DELETE,
 } = URL_PARAMS_KEYS
 
 const { PRODUCTS, SALE, PRODUCTS_FAV, USERS, USERS_WO_PATH, POINT_OF_SALE } =
@@ -32,7 +33,11 @@ import type {
 } from '@/types'
 
 import { getSalesLSInJSObj } from '@/utils/local-storage'
-import type { User, AccountType, PointOfSale } from '@prisma/client'
+import type { AccountType, PointOfSale } from '@prisma/client'
+
+import { TypeAddUser } from '@/components/forms/add-user/form-add-user'
+
+import type { UserWithoutPwd } from '@/types'
 
 interface RegisterSalesTypes {
   (date: string, sales: SalesInLocalStorage): Promise<APIResponseRegisterSales>
@@ -286,7 +291,7 @@ interface GetUserType {
   (
     accTypesToInclude?: AccountType[],
     posToExclude?: PointOfSale['id']
-  ): Promise<APIResponseBasic<User[]>>
+  ): Promise<APIResponseBasic<UserWithoutPwd[]>>
 }
 
 // Get all users
@@ -309,8 +314,6 @@ interface RegisterNewUserTypes {
   (userData: TypeAddUser): Promise<APIResponseBasic<string>>
 }
 
-import { TypeAddUser } from '@/components/forms/add-user/form-add-user'
-
 export const registerNewUser: RegisterNewUserTypes = async (userData) => {
   const response = await fetch(`${USERS_WO_PATH}`, {
     method: 'POST',
@@ -318,6 +321,27 @@ export const registerNewUser: RegisterNewUserTypes = async (userData) => {
     body: JSON.stringify(userData),
   })
   const data = await response.json()
-  return data
+
+  if (!data.success) {
+    return Promise.reject(data.result)
+  } else {
+    return data
+  }
 }
+
+export const deleteUser: DeletePOSType = async (userID) => {
+  const response = await fetch(`${USERS_WO_PATH}?${USER_TO_DELETE}=${userID}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+  const deletedUser: APIResponseBasic<string> = await response.json()
+
+  if (!deletedUser.success) {
+    return Promise.reject(deletedUser.result)
+  } else {
+    return deletedUser
+  }
+}
+
 /* !SC */
