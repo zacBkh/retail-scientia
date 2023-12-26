@@ -1,6 +1,6 @@
 'use client'
 
-import { FC } from 'react'
+import { FC, useState } from 'react'
 
 import type { UserWithoutPwd } from '@/types'
 
@@ -8,12 +8,12 @@ import { mutate } from 'swr'
 import useSWRImmutable from 'swr/immutable'
 import { SWR_KEYS } from '@/constants'
 
-interface propsType {
+interface DataTableCltWrapperProps {
   data: UserWithoutPwd[]
 }
 
-import { DataTableAddNewUser } from '@/components/shad/tables/tables-wrapper/data-table-add-new-user'
-import { columnAddNewUser } from '@/components/shad/tables/columns/add-new-user/columns-add-new-user'
+import { DataTableManageUsers } from '@/components/shad/tables/tables-wrapper/data-table-manage-users'
+import { columnManageUsers } from '@/components/shad/tables/columns/add-new-user/columns-manage-users'
 
 import { deleteUser } from '@/services/fetchers-api'
 
@@ -23,7 +23,12 @@ import { getUsers } from '@/services/fetchers-api'
 
 import { getAsyncToast } from '@/utils/get-async-toaster'
 
-const DataTableCltWrapper: FC<propsType> = ({ data }) => {
+import EditUserDialog from '../forms/edit-user/edit-user-dialog'
+
+const DataTableCltWrapper: FC<DataTableCltWrapperProps> = ({ data }) => {
+  const [isDialogEditUserOpen, setIsDialogEditUserOpen] = useState(false)
+  const [userUnderEdition, setUserUnderEdition] = useState<UserWithoutPwd>()
+
   const { data: users } = useSWRImmutable(
     SWR_KEYS.GET_USERS,
     async () => {
@@ -38,17 +43,22 @@ const DataTableCltWrapper: FC<propsType> = ({ data }) => {
     mutate(SWR_KEYS.GET_USERS)
   }
 
-  const onEditUserRequest = (userID: number) => {
-    console.log('edit user request', userID)
+  const onEditUserRequest = (userDataToEdit: UserWithoutPwd) => {
+    setIsDialogEditUserOpen(true)
+    setUserUnderEdition(userDataToEdit)
   }
 
   return (
-    <>
-      <DataTableAddNewUser
-        columns={columnAddNewUser(onDeleteUserRequest, onEditUserRequest)}
-        data={users ?? []}
+    <DataTableManageUsers
+      columns={columnManageUsers(onDeleteUserRequest, onEditUserRequest)}
+      data={users ?? []}
+    >
+      <EditUserDialog
+        isOpen={isDialogEditUserOpen}
+        userUnderEdition={userUnderEdition}
+        onOpenChangeHandler={setIsDialogEditUserOpen}
       />
-    </>
+    </DataTableManageUsers>
   )
 }
 

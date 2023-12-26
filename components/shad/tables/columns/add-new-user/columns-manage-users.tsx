@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table'
 
 import type { UserWithoutPwd } from '@/types'
 
-import { ArrowUpDown, UserPlus } from 'lucide-react'
+import { ArrowUpDown } from 'lucide-react'
 
 import { Button } from '@/components/shad/ui/button'
 
@@ -22,11 +22,11 @@ import {
 interface columnAddUserToPOSTypes {
   (
     onDeleteUserRequest: (userID: number) => void,
-    onEditUserRequest: (userID: number) => void
+    onEditUserRequest: (userID: UserWithoutPwd) => void
   ): ColumnDef<UserWithoutPwd>[]
 }
 
-export const columnAddNewUser: columnAddUserToPOSTypes = (
+export const columnManageUsers: columnAddUserToPOSTypes = (
   onDeleteUserRequest,
   onEditUserRequest
 ) => [
@@ -76,7 +76,7 @@ export const columnAddNewUser: columnAddUserToPOSTypes = (
             <DropdownMenuItem onClick={() => onDeleteUserRequest(user.id)}>
               Delete User
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onEditUserRequest(user.id)}>
+            <DropdownMenuItem onClick={() => onEditUserRequest(user)}>
               Edit User
             </DropdownMenuItem>
             {/* <DropdownMenuSeparator /> */}

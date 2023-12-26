@@ -42,100 +42,98 @@ import { SWR_KEYS } from '@/constants'
 import { getUniqueBrandsOfUser, getPOS } from '@/services/fetchers-api'
 
 import type { GetUniqueBrandsRespFull } from '@/services/fetchers-api'
-import { APIResponseBasic } from '@/types'
+import { APIResponseBasic, UserWithoutPwd } from '@/types'
 
 import { useSession } from 'next-auth/react'
 
-const formSchemaAddUser = z
-  .object({
-    accountType: z.nativeEnum(AccountType, {
-      invalid_type_error: 'Account Type is invalid.',
-      required_error: 'Account Type is required.',
-      description: 'Please select one Account Type',
+const formSchemaAddUser = z.object({
+  accountType: z.nativeEnum(AccountType, {
+    invalid_type_error: 'Account Type is invalid.',
+    required_error: 'Account Type is required.',
+    description: 'Please select one Account Type',
+  }),
+
+  name: z
+    .string()
+    .trim()
+    .refine((data) => data.length > 0, {
+      message: 'Name is required.',
     }),
 
-    name: z
-      .string()
-      .trim()
-      .refine((data) => data.length > 0, {
-        message: 'Name is required.',
-      }),
+  email: z.string().trim().email({ message: 'Invalid email address' }),
 
-    email: z.string().trim().email({ message: 'Invalid email address' }),
+  // password: z
+  //   .string()
+  //   .trim()
+  //   .min(8, { message: 'Password must be at least 8 characters long' })
+  //   .regex(
+  //     /^(?=.*[!@#$%^&*()_+{}[\]:;<>,.?~\\-])(?=.*\d)(?=.*[A-Z])/,
+  //     'Your password requires one number, one uppercase letter and one special character.'
+  //   ),
 
-    password: z
-      .string()
-      .trim()
-      .min(8, { message: 'Password must be at least 8 characters long' })
-      .regex(
-        /^(?=.*[!@#$%^&*()_+{}[\]:;<>,.?~\\-])(?=.*\d)(?=.*[A-Z])/,
-        'Your password requires one number, one uppercase letter and one special character.'
-      ),
+  staffID: z.string().trim().optional(),
 
-    staffID: z.string().trim().optional(),
+  brands: z
+    .array(z.number())
+    .nonempty({ message: 'At least one Brand is required.' }),
 
-    brands: z
-      .array(z.number())
-      .nonempty({ message: 'At least one Brand is required.' }),
-    // refine if is not included in result of getUniqueBrands
-    // .refine((data) => data.length > 0, {
-    //   message: 'Name is required.',
-    // }),
-
-    pointOfSaleId: z.string().optional(),
-    // refine if is not included in result of getUniqueBrands
-    // .refine((data) => data.length > 0, {
-    //   message: 'Name is required.',
-    // }),
-  })
-  .refine(
-    (schema) =>
-      //  allows pointOfSaleId to be optional when accountType is 'Staff'
-      // if send true it means it will pass
-      schema.accountType !== 'Staff' ||
-      (schema.accountType === 'Staff' && schema.pointOfSaleId),
-    {
-      message: 'Required when Account Type is Staff.',
-      path: ['pointOfSaleId'], // path of error
-    }
-  )
+  // pointOfSaleId: z.string().optional(),
+})
+// .refine(
+//   (schema) =>
+//     //  allows pointOfSaleId to be optional when accountType is 'Staff'
+//     // if send true it means it will pass
+//     schema.accountType !== 'Staff' ||
+//     (schema.accountType === 'Staff' && schema.pointOfSaleId),
+//   {
+//     message: 'Required when Account Type is Staff.',
+//     path: ['pointOfSaleId'], // path of error
+//   }
+// )
 
 export type TypeAddEditUser = z.infer<typeof formSchemaAddUser>
 
 interface AddFormProps {
-  onConfirmForm: (newUser: z.infer<typeof formSchemaAddUser>) => void
+  onConfirmForm: (editedUserData: z.infer<typeof formSchemaAddUser>) => void
+  defaultValuesUser: UserWithoutPwd | undefined
 }
 
-const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
+const EdtiUserForm: FC<AddFormProps> = ({
+  onConfirmForm,
+  defaultValuesUser,
+}) => {
   const { data: session } = useSession()
+
+  const { accountType, name, email, staffID } = defaultValuesUser || {}
+  let staffIDDefVal = staffID ?? ''
 
   const form = useForm<z.infer<typeof formSchemaAddUser>>({
     resolver: zodResolver(formSchemaAddUser),
     defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-      staffID: '',
-      accountType: undefined,
-      brands: [],
-      pointOfSaleId: undefined,
+      name,
+      email,
+      // password: '',
+      staffID: staffIDDefVal,
+      // accountType,
+      accountType: defaultValuesUser?.accountType,
+      brands: [], // SHOULD GET BRAND
+      // pointOfSaleId: undefined,
     },
   })
 
-  const onSubmitNewUser = async (
-    newUser: z.infer<typeof formSchemaAddUser>
+  const onSubmitEditUser = async (
+    editedUserData: z.infer<typeof formSchemaAddUser>
   ) => {
-    onConfirmForm(newUser)
+    onConfirmForm(editedUserData)
   }
 
-  const formValues = form.getValues()
   const subscribeAccountType = form.watch('accountType')
 
   const isStaffDirty = subscribeAccountType !== undefined
   const isStaff = subscribeAccountType === AccountType.Staff
 
   const accountTypeChangeHandler = (accType: AccountType) => {
-    form.resetField('pointOfSaleId')
+    // form.resetField('pointOfSaleId')
     form.resetField('staffID')
   }
 
@@ -166,7 +164,7 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmitNewUser)}
+        onSubmit={form.handleSubmit(onSubmitEditUser)}
         className="flex flex-col gap-y-6 px-1"
       >
         <FormField
@@ -252,7 +250,7 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
@@ -271,7 +269,7 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
                   </div>
                 </FormItem>
               )}
-            />
+            /> */}
             {isStaff && (
               <FormField
                 control={form.control}
@@ -351,7 +349,7 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
               )}
             />
 
-            {isStaff ? (
+            {/* {isStaff ? (
               <FormField
                 control={form.control}
                 name="pointOfSaleId"
@@ -399,17 +397,17 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
               />
             ) : (
               ''
-            )}
+            )} */}
           </>
         ) : (
           ''
         )}
 
         <Button className="flex items-center" size={'sm'} type="submit">
-          Create User
+          Edit User
         </Button>
       </form>
     </Form>
   )
 }
-export default NewUserForm
+export default EdtiUserForm

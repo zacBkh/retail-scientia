@@ -33,9 +33,9 @@ import type {
 } from '@/types'
 
 import { getSalesLSInJSObj } from '@/utils/local-storage'
-import type { AccountType, PointOfSale } from '@prisma/client'
+import type { AccountType, PointOfSale, User } from '@prisma/client'
 
-import { TypeAddUser } from '@/components/forms/add-user/form-add-user'
+import { TypeAddEditUser } from '@/components/forms/add-user/form-add-user'
 
 import type { UserWithoutPwd } from '@/types'
 
@@ -193,7 +193,6 @@ export const getUniqueBrandsOfUser: GetUniqueBrandsOfUserArgs = async (
   })
 
   const data = await response.json()
-  console.log('data UNQIUE BRANDS', data)
   return data
 }
 
@@ -311,7 +310,7 @@ export const getUsers: GetUserType = async (
 }
 
 interface RegisterNewUserTypes {
-  (userData: TypeAddUser): Promise<APIResponseBasic<string>>
+  (userData: TypeAddEditUser): Promise<APIResponseBasic<string>>
 }
 
 export const registerNewUser: RegisterNewUserTypes = async (userData) => {
@@ -342,6 +341,20 @@ export const deleteUser: DeletePOSType = async (userID) => {
   } else {
     return deletedUser
   }
+}
+
+export interface EditUserTypes {
+  (userID: number, userData: TypeAddEditUser): Promise<APIResponseBasic<string>>
+}
+
+export const editUser: EditUserTypes = async (userID, userData) => {
+  const response = await fetch(`${USERS_WO_PATH}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userID, userData }),
+  })
+  const data = await response.json()
+  return data
 }
 
 /* !SC */
