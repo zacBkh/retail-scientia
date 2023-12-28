@@ -1,54 +1,84 @@
 'use client'
 
-import { FC } from 'react'
+import { FC, useState } from 'react'
 
-import type { UserWithoutPwd } from '@/types'
+import type { UserWithPOSAndBrands } from '@/types'
 
 import { mutate } from 'swr'
 import useSWRImmutable from 'swr/immutable'
 import { SWR_KEYS } from '@/constants'
 
-interface propsType {
-  data: UserWithoutPwd[]
+import { TypeAddEditUser } from '../forms/edit-user/form-edit-user'
+
+interface DataTableCltWrapperProps {
+  data: UserWithPOSAndBrands[]
 }
 
-import { DataTableAddNewUser } from '@/components/shad/tables/tables-wrapper/data-table-add-new-user'
-import { columnAddNewUser } from '@/components/shad/tables/columns/add-new-user/columns-add-new-user'
+import { DataTableManageUsers } from '@/components/shad/tables/tables-wrapper/data-table-manage-users'
+import { columnManageUsers } from '@/components/shad/tables/columns/add-new-user/columns-manage-users'
 
-import { deleteUser } from '@/services/fetchers-api'
+import { deleteUser, EditUserTypes } from '@/services/fetchers-api'
 
 import { AccountType } from '@prisma/client'
 
-import { getUsers } from '@/services/fetchers-api'
+import { getUsers, editUser } from '@/services/fetchers-api'
 
 import { getAsyncToast } from '@/utils/get-async-toaster'
 
-const DataTableCltWrapper: FC<propsType> = ({ data }) => {
+import EditUserDialog from '../forms/edit-user/edit-user-dialog'
+
+const DataTableCltWrapper: FC<DataTableCltWrapperProps> = ({ data }) => {
+  const [isDialogEditUserOpen, setIsDialogEditUserOpen] = useState(false)
+  const [userUnderEdition, setUserUnderEdition] =
+    useState<UserWithPOSAndBrands>()
+
   const { data: users } = useSWRImmutable(
     SWR_KEYS.GET_USERS,
     async () => {
       const users = await getUsers(Object.values(AccountType))
       return users.result
     },
-    { fallbackData: data }
+    { fallbackData: data, revalidateOnMount: true }
   )
 
-  const onDeleteUserRequest = async (userID: number) => {
+  const onDeleteUserConfirmation = async (userID: number) => {
     await getAsyncToast(() => deleteUser(userID))
     mutate(SWR_KEYS.GET_USERS)
   }
 
-  const onEditUserRequest = (userID: number) => {
-    console.log('edit user request', userID)
+  // Will open modal
+  const onEditUserRequest = (userDataToEdit: UserWithPOSAndBrands) => {
+    setIsDialogEditUserOpen(true)
+    setUserUnderEdition(userDataToEdit)
+  }
+
+  // Query db to update && mutate list of users
+  const editUserConfirmationHandler = async (
+    editedUserData: Omit<TypeAddEditUser, 'password'>
+  ) => {
+    setIsDialogEditUserOpen(false)
+
+    console.log(' userUnderEdition?.id', userUnderEdition?.id)
+    console.log('editedUserData', editedUserData)
+    if (userUnderEdition?.id && editedUserData) {
+      await getAsyncToast(() => editUser(userUnderEdition?.id, editedUserData))
+
+      mutate(SWR_KEYS.GET_USERS)
+    }
   }
 
   return (
-    <>
-      <DataTableAddNewUser
-        columns={columnAddNewUser(onDeleteUserRequest, onEditUserRequest)}
-        data={users ?? []}
+    <DataTableManageUsers
+      columns={columnManageUsers(onDeleteUserConfirmation, onEditUserRequest)}
+      data={users ?? []}
+    >
+      <EditUserDialog
+        isOpen={isDialogEditUserOpen}
+        userUnderEdition={userUnderEdition}
+        onOpenChangeHandler={setIsDialogEditUserOpen}
+        editUserConfirmationHandler={editUserConfirmationHandler}
       />
-    </>
+    </DataTableManageUsers>
   )
 }
 

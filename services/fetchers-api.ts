@@ -30,14 +30,13 @@ import type {
   APIResponseGetFav,
   GetFilteredUserSalesInDB,
   UserWithBrands,
+  UserWithPOSAndBrands,
 } from '@/types'
 
 import { getSalesLSInJSObj } from '@/utils/local-storage'
-import type { AccountType, PointOfSale } from '@prisma/client'
+import type { AccountType, PointOfSale, User } from '@prisma/client'
 
-import { TypeAddUser } from '@/components/forms/add-user/form-add-user'
-
-import type { UserWithoutPwd } from '@/types'
+import { TypeAddEditUser } from '@/components/forms/add-user/form-add-user'
 
 interface RegisterSalesTypes {
   (date: string, sales: SalesInLocalStorage): Promise<APIResponseRegisterSales>
@@ -164,13 +163,13 @@ export const getUniqueCategories: GetUniqueBrandsOrAxisOfUserArgs = async (
 export interface GetUniqueBrandsRespFull {
   name: string
   logo: string
-  id: string
+  id: number
 }
 
 interface GetUniqueBrandsOfUserArgs {
   (userID: string | undefined, brandsNameOnly?: boolean): Promise<
     APIResponseBasic<GetUniqueBrandsRespFull[] | string[]>
-  > // enum of brands ??
+  >
 }
 
 // Get a unique list of brands of a user
@@ -193,7 +192,6 @@ export const getUniqueBrandsOfUser: GetUniqueBrandsOfUserArgs = async (
   })
 
   const data = await response.json()
-  console.log('data UNQIUE BRANDS', data)
   return data
 }
 
@@ -291,7 +289,7 @@ interface GetUserType {
   (
     accTypesToInclude?: AccountType[],
     posToExclude?: PointOfSale['id']
-  ): Promise<APIResponseBasic<UserWithoutPwd[]>>
+  ): Promise<APIResponseBasic<UserWithPOSAndBrands[]>>
 }
 
 // Get all users
@@ -311,7 +309,7 @@ export const getUsers: GetUserType = async (
 }
 
 interface RegisterNewUserTypes {
-  (userData: TypeAddUser): Promise<APIResponseBasic<string>>
+  (userData: TypeAddEditUser): Promise<APIResponseBasic<string>>
 }
 
 export const registerNewUser: RegisterNewUserTypes = async (userData) => {
@@ -341,6 +339,28 @@ export const deleteUser: DeletePOSType = async (userID) => {
     return Promise.reject(deletedUser.result)
   } else {
     return deletedUser
+  }
+}
+
+export interface EditUserTypes {
+  (userID: number, userData: Omit<TypeAddEditUser, 'password'>): Promise<
+    APIResponseBasic<string>
+  >
+}
+
+export const editUser: EditUserTypes = async (userID, userData) => {
+  console.log('userData fetcher api', userData)
+  const response = await fetch(`${USERS_WO_PATH}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userID, userData }),
+  })
+  const data = await response.json()
+
+  if (!data.success) {
+    return Promise.reject(data.result)
+  } else {
+    return data
   }
 }
 

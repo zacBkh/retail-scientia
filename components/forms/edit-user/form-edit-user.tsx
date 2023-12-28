@@ -42,7 +42,7 @@ import { SWR_KEYS } from '@/constants'
 import { getUniqueBrandsOfUser, getPOS } from '@/services/fetchers-api'
 
 import type { GetUniqueBrandsRespFull } from '@/services/fetchers-api'
-import { APIResponseBasic } from '@/types'
+import { APIResponseBasic, UserWithPOSAndBrands } from '@/types'
 
 import { useSession } from 'next-auth/react'
 
@@ -63,30 +63,14 @@ const formSchemaAddUser = z
 
     email: z.string().trim().email({ message: 'Invalid email address' }),
 
-    password: z
-      .string()
-      .trim()
-      .min(8, { message: 'Password must be at least 8 characters long' })
-      .regex(
-        /^(?=.*[!@#$%^&*()_+{}[\]:;<>,.?~\\-])(?=.*\d)(?=.*[A-Z])/,
-        'Your password requires one number, one uppercase letter and one special character.'
-      ),
-
     staffID: z.string().trim().optional(),
 
     brands: z
       .array(z.number())
+      // .array(z.string())
       .nonempty({ message: 'At least one Brand is required.' }),
-    // refine if is not included in result of getUniqueBrands
-    // .refine((data) => data.length > 0, {
-    //   message: 'Name is required.',
-    // }),
 
     pointOfSaleId: z.string().optional(),
-    // refine if is not included in result of getUniqueBrands
-    // .refine((data) => data.length > 0, {
-    //   message: 'Name is required.',
-    // }),
   })
   .refine(
     (schema) =>
@@ -103,44 +87,59 @@ const formSchemaAddUser = z
 export type TypeAddEditUser = z.infer<typeof formSchemaAddUser>
 
 interface AddFormProps {
-  onConfirmForm: (newUser: z.infer<typeof formSchemaAddUser>) => void
+  onConfirmForm: (editedUserData: z.infer<typeof formSchemaAddUser>) => void
+  defaultValuesUser: UserWithPOSAndBrands | undefined
 }
 
-const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
+const EdtiUserForm: FC<AddFormProps> = ({
+  onConfirmForm,
+  defaultValuesUser,
+}) => {
+  // console.log('defaultValuesUser', defaultValuesUser)
+
   const { data: session } = useSession()
+
+  const { accountType, name, email, staffID, pointOfSale, brands } =
+    defaultValuesUser || {}
+
+  const arrayOfBrandNames = brands?.map((brand) => brand.id) ?? []
 
   const form = useForm<z.infer<typeof formSchemaAddUser>>({
     resolver: zodResolver(formSchemaAddUser),
     defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-      staffID: '',
-      accountType: undefined,
-      brands: [],
-      pointOfSaleId: undefined,
+      name,
+      email,
+      staffID: staffID ?? '',
+      accountType: accountType,
+      brands: arrayOfBrandNames,
+      pointOfSaleId: pointOfSale?.id.toString(),
     },
   })
 
-  const onSubmitNewUser = async (
-    newUser: z.infer<typeof formSchemaAddUser>
+  const onSubmitEditUser = async (
+    editedUserData: z.infer<typeof formSchemaAddUser>
   ) => {
-    onConfirmForm(newUser)
+    onConfirmForm(editedUserData)
   }
 
-  const formValues = form.getValues()
   const subscribeAccountType = form.watch('accountType')
 
-  const isStaffDirty = subscribeAccountType !== undefined
+  const isAccountTypeDirty = subscribeAccountType !== undefined
   const isStaff = subscribeAccountType === AccountType.Staff
 
-  const accountTypeChangeHandler = (accType: AccountType) => {
-    form.resetField('pointOfSaleId')
-    form.resetField('staffID')
+  const accountTypeChangeHandler = (newAccType: AccountType) => {
+    // If go back to staff, reset to initial values for posid & SN
+    if (newAccType === AccountType.Staff) {
+      form.resetField('pointOfSaleId')
+      form.resetField('staffID')
+    } else {
+      form.setValue('pointOfSaleId', undefined)
+      form.setValue('staffID', '')
+    }
   }
 
   const {
-    data: brands,
+    data: brandsOfUser,
     error: errorBrands,
     isLoading: isLoadingBrands,
     isValidating: isValidatingBrands,
@@ -154,6 +153,7 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
       revalidateOnMount: true,
     }
   )
+
   const {
     data: POS,
     error: errorPOS,
@@ -166,7 +166,7 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmitNewUser)}
+        onSubmit={form.handleSubmit(onSubmitEditUser)}
         className="flex flex-col gap-y-6 px-1"
       >
         <FormField
@@ -217,7 +217,7 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
           )}
         />
 
-        {isStaffDirty ? (
+        {isAccountTypeDirty ? (
           <>
             <FormField
               control={form.control}
@@ -231,7 +231,7 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
                     <Input placeholder="Jovia Espino" {...field} />
                   </FormControl>
                   <div className="flex flex-col mt-1">
-                    <FormDescription>Name of your new user.</FormDescription>
+                    <FormDescription>Name of your user.</FormDescription>
                     <FormMessage />
                   </div>
                 </FormItem>
@@ -252,7 +252,7 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
@@ -271,7 +271,7 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
                   </div>
                 </FormItem>
               )}
-            />
+            /> */}
             {isStaff && (
               <FormField
                 control={form.control}
@@ -308,7 +308,7 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
                           Select brand(s) you want to associate this user with.
                         </FormDescription>
                       </div>
-                      {brands?.result?.map((item) => (
+                      {brandsOfUser?.result?.map((item) => (
                         <FormField
                           key={item.id}
                           control={form.control}
@@ -321,7 +321,7 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
                               >
                                 <FormControl>
                                   <Checkbox
-                                    checked={field.value?.includes(+item.id)}
+                                    checked={field.value?.includes(item.id)}
                                     onCheckedChange={(checked) => {
                                       return checked
                                         ? field.onChange([
@@ -330,7 +330,7 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
                                           ])
                                         : field.onChange(
                                             field.value?.filter(
-                                              (value) => value !== +item.id
+                                              (value) => value !== item.id
                                             )
                                           )
                                     }}
@@ -360,7 +360,10 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
                     <FormLabel className="font-semibold">
                       Point of Sale
                     </FormLabel>
-                    <Select onValueChange={field.onChange}>
+                    <Select
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                    >
                       <FormControl>
                         <SelectTrigger className="w-52">
                           <SelectValue placeholder="Select a POS" />
@@ -406,10 +409,10 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
         )}
 
         <Button className="flex items-center" size={'sm'} type="submit">
-          Create User
+          Edit User
         </Button>
       </form>
     </Form>
   )
 }
-export default NewUserForm
+export default EdtiUserForm

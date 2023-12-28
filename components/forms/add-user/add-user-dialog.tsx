@@ -25,7 +25,7 @@ import {
 
 import NewUserForm from './form-add-user'
 
-import type { TypeAddUser } from './form-add-user'
+import type { TypeAddEditUser } from './form-add-user'
 
 import { ScrollArea } from '@/components/shad/ui/scroll-area'
 
@@ -36,7 +36,7 @@ const AddUserDialog = ({}) => {
 
   const router = useRouter()
 
-  const handleFormAddedComplete = async (newUser: TypeAddUser) => {
+  const handleFormAddedComplete = async (newUser: TypeAddEditUser) => {
     setIsDialogOpen(false)
     await getAsyncToast(() => registerNewUser(newUser))
     router.refresh()
