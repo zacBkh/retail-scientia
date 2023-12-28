@@ -6,10 +6,6 @@ import {
   AvatarImage,
 } from '@/components/shad/ui/avatar'
 
-import EditPOSDialog from '@/components/forms/edit-pos/edit-pos-dialog'
-
-import type { User } from '@prisma/client'
-
 interface ModelItemProps {
   line1: string
   line2: string
@@ -34,11 +30,6 @@ const ModelItem: FC<ModelItemProps> = ({ line1, line2, line3, children }) => {
         </div>
         <div className="ml-auto">{line3}</div>
         {children}
-        {/* <EditPOSDialog
-          POSName={line1}
-          POSId={elemID}
-          usersOfThisPOS={usersOfThisPOS}
-        /> */}
       </div>
     </>
   )

@@ -13,7 +13,7 @@ import {
 import { Separator } from '@/components/shad/ui/separator'
 
 import AddPOSDialog from '@/components/forms/add-pos/add-pos-dialog'
-import EditPOSDialog from '@/components/forms/edit-pos/edit-pos-dialog'
+import { EditPosDialog } from '@/components/forms/edit-pos/edit-pos-dialog'
 
 import { getCountryDetails } from '@/utils/countries'
 
@@ -43,7 +43,7 @@ const Dashboard = async () => {
               line2={getCountryDetails(elem.country)?.name ?? ''}
               line3={`${elem.users.length} staff`}
             >
-              <EditPOSDialog
+              <EditPosDialog
                 POSName={elem.name}
                 POSId={elem.id}
                 usersOfThisPOS={elem.users}

@@ -62,7 +62,7 @@ export function DataTableEditUserPOS<TData, TValue>({
   return (
     <div>
       {/* Sorting */}
-      <div className="flex items-center py-4">
+      <div className="flex items-center">
         <Input
           placeholder="Search staff name..."
           value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}

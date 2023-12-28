@@ -10,7 +10,7 @@ import { SWR_KEYS } from '@/constants'
 
 import { TypeAddEditUser } from '../forms/edit-user/form-edit-user'
 
-interface DataTableCltWrapperProps {
+interface DataTableUsersProps {
   data: UserWithPOSAndBrands[]
 }
 
@@ -27,7 +27,7 @@ import { getAsyncToast } from '@/utils/get-async-toaster'
 
 import EditUserDialog from '../forms/edit-user/edit-user-dialog'
 
-const DataTableCltWrapper: FC<DataTableCltWrapperProps> = ({ data }) => {
+const DataTableUsers: FC<DataTableUsersProps> = ({ data }) => {
   const [isDialogEditUserOpen, setIsDialogEditUserOpen] = useState(false)
   const [userUnderEdition, setUserUnderEdition] =
     useState<UserWithPOSAndBrands>()
@@ -82,4 +82,4 @@ const DataTableCltWrapper: FC<DataTableCltWrapperProps> = ({ data }) => {
   )
 }
 
-export default DataTableCltWrapper
+export default DataTableUsers

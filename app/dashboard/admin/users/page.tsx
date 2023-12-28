@@ -1,7 +1,6 @@
 import { getUsersPrisma } from '@/services/prisma-queries'
 
 import { AccountType } from '@prisma/client'
-const { Admin, Marketing, Sales, Staff, Training } = AccountType
 
 import {
   Card,
@@ -14,7 +13,7 @@ import { Separator } from '@/components/shad/ui/separator'
 
 import AddUserDialog from '@/components/forms/add-user/add-user-dialog'
 
-import DataTableCltWrapper from '@/components/dashboards/data-table-clt-wrapper'
+import DataTableUsers from '@/components/dashboards/data-table-clt-wrapper'
 
 const Dashboard = async () => {
   const allUsers = await getUsersPrisma(Object.values(AccountType))
@@ -31,7 +30,7 @@ const Dashboard = async () => {
             </CardDescription>
             <Separator className="w-[90%] mx-auto !mt-3" />
 
-            <DataTableCltWrapper data={allUsers} />
+            <DataTableUsers data={allUsers} />
           </CardHeader>
         </div>
       </Card>
