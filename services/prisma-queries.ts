@@ -314,6 +314,34 @@ export const findAUser = async (email: string) => {
   return user
 }
 
+import { TypeAddEditUser } from '@/components/forms/add-user/form-add-user'
+
+export const updateUser = async (
+  userID: number,
+  newUserData: TypeAddEditUser
+) => {
+  const brandIDFormatted = newUserData.brands.map((brand) => ({
+    id: brand,
+  }))
+
+  const correctedDataShape = {
+    ...newUserData,
+    // If no pointofsaleid supplier, disconnect
+    pointOfSaleId: newUserData?.pointOfSaleId
+      ? +newUserData?.pointOfSaleId
+      : null,
+    brands: { connect: brandIDFormatted },
+  }
+
+  const updatedUser = await db.user.update({
+    where: {
+      id: userID,
+    },
+    data: correctedDataShape,
+  })
+  return updatedUser
+}
+
 export const getFavOfUser = async (
   currentUserID: number,
   productID: number
@@ -397,7 +425,6 @@ export const getUsersPrisma = async (
 ) => {
   // Building cumulative where condition
   let whereConditions = {}
-  console.log('excludePOS ****', excludePOS)
   if (excludePOS) {
     whereConditions = {
       OR: [{ pointOfSaleId: { notIn: excludePOS } }, { pointOfSaleId: null }],
@@ -416,11 +443,12 @@ export const getUsersPrisma = async (
       AND: [whereConditions],
     },
 
-    include: { pointOfSale: true },
+    include: { pointOfSale: true, brands: true },
   })
 
-  const usersWithoutPwd = users.map(({ password, ...user }) => user)
-  return usersWithoutPwd
+  // const usersWithoutPwd = users.map(({ password, ...user }) => user)
+  return users
+  // return usersWithoutPwd
 }
 
 export const deleteUser = async (userID: number) => {

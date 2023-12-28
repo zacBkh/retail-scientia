@@ -57,6 +57,11 @@ export type POSWithUsers = Prisma.PointOfSaleGetPayload<{
   include: { users: true }
 }>
 
+// Users with POS
+export type UserWithPOSAndBrands = Prisma.UserGetPayload<{
+  include: { pointOfSale: true; brands: true }
+}>
+
 // User with brands
 export type UserWithBrands = Prisma.UserGetPayload<{
   include: {

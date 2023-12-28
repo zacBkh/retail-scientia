@@ -2,13 +2,13 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 
-import type { UserWithoutPwd } from '@/types'
+import type { UserWithPOSAndBrands } from '@/types'
 
 import { ArrowUpDown } from 'lucide-react'
 
 import { Button } from '@/components/shad/ui/button'
 
-import { MoreHorizontal } from 'lucide-react'
+import { MoreHorizontal, UserCog } from 'lucide-react'
 
 import {
   DropdownMenu,
@@ -21,13 +21,13 @@ import {
 
 interface columnAddUserToPOSTypes {
   (
-    onDeleteUserRequest: (userID: number) => void,
-    onEditUserRequest: (userID: UserWithoutPwd) => void
-  ): ColumnDef<UserWithoutPwd>[]
+    onDeleteUserConfirmation: (userID: number) => void,
+    onEditUserRequest: (userID: UserWithPOSAndBrands) => void
+  ): ColumnDef<UserWithPOSAndBrands>[]
 }
 
 export const columnManageUsers: columnAddUserToPOSTypes = (
-  onDeleteUserRequest,
+  onDeleteUserConfirmation,
   onEditUserRequest
 ) => [
   {
@@ -59,7 +59,8 @@ export const columnManageUsers: columnAddUserToPOSTypes = (
   },
   {
     id: 'actions',
-    header: 'Manage',
+    // header: 'Manage',
+    header: () => <UserCog className="mx-auto" size={21} />,
     cell: ({ row }) => {
       const user = row.original
 
@@ -73,7 +74,7 @@ export const columnManageUsers: columnAddUserToPOSTypes = (
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => onDeleteUserRequest(user.id)}>
+            <DropdownMenuItem onClick={() => onDeleteUserConfirmation(user.id)}>
               Delete User
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onEditUserRequest(user)}>

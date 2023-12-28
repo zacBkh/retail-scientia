@@ -1,17 +1,8 @@
 'use client'
 
-import { useState, FC, Dispatch, SetStateAction } from 'react'
+import { FC, Dispatch, SetStateAction } from 'react'
 
 import { useRouter } from 'next/navigation'
-
-import { Button } from '@/components/shad/ui/button'
-import { Plus } from 'lucide-react'
-
-import { toast } from 'react-toastify'
-
-import { registerNewUser } from '@/services/fetchers-api'
-
-import { PROMISE_TOAST_WAIT } from '@/constants'
 
 import {
   Dialog,
@@ -28,30 +19,28 @@ import type { TypeAddEditUser } from './form-edit-user'
 
 import { ScrollArea } from '@/components/shad/ui/scroll-area'
 
-import { getAsyncToast } from '@/utils/get-async-toaster'
-
-import { editUser } from '@/services/fetchers-api'
-import { UserWithoutPwd } from '@/types'
+import { UserWithPOSAndBrands } from '@/types'
 
 interface EditUserDialogProps {
   isOpen: boolean
-  userUnderEdition: UserWithoutPwd | undefined
+  userUnderEdition: UserWithPOSAndBrands | undefined
   onOpenChangeHandler: Dispatch<SetStateAction<boolean>>
+  editUserConfirmationHandler: (
+    editedUserData: Omit<TypeAddEditUser, 'password'>
+  ) => void
 }
 
 const EditUserDialog: FC<EditUserDialogProps> = ({
   isOpen,
   userUnderEdition,
   onOpenChangeHandler,
+  editUserConfirmationHandler,
 }) => {
   const router = useRouter()
 
-  const handleEditUserConfirm = async (editedUserData: TypeAddEditUser) => {
-    console.log(' userUnderEdition?.id', userUnderEdition?.id)
+  const handleEditUserConfirm = (editedUserData: TypeAddEditUser) => {
     console.log('editedUserData', editedUserData)
-    // const a = editUser(editedUserID, editedUserData)
-    // await getAsyncToast(() => registerNewUser(newUser))
-    // router.refresh()
+    editUserConfirmationHandler(editedUserData)
   }
 
   return (

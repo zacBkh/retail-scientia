@@ -42,82 +42,77 @@ import { SWR_KEYS } from '@/constants'
 import { getUniqueBrandsOfUser, getPOS } from '@/services/fetchers-api'
 
 import type { GetUniqueBrandsRespFull } from '@/services/fetchers-api'
-import { APIResponseBasic, UserWithoutPwd } from '@/types'
+import { APIResponseBasic, UserWithPOSAndBrands } from '@/types'
 
 import { useSession } from 'next-auth/react'
 
-const formSchemaAddUser = z.object({
-  accountType: z.nativeEnum(AccountType, {
-    invalid_type_error: 'Account Type is invalid.',
-    required_error: 'Account Type is required.',
-    description: 'Please select one Account Type',
-  }),
-
-  name: z
-    .string()
-    .trim()
-    .refine((data) => data.length > 0, {
-      message: 'Name is required.',
+const formSchemaAddUser = z
+  .object({
+    accountType: z.nativeEnum(AccountType, {
+      invalid_type_error: 'Account Type is invalid.',
+      required_error: 'Account Type is required.',
+      description: 'Please select one Account Type',
     }),
 
-  email: z.string().trim().email({ message: 'Invalid email address' }),
+    name: z
+      .string()
+      .trim()
+      .refine((data) => data.length > 0, {
+        message: 'Name is required.',
+      }),
 
-  // password: z
-  //   .string()
-  //   .trim()
-  //   .min(8, { message: 'Password must be at least 8 characters long' })
-  //   .regex(
-  //     /^(?=.*[!@#$%^&*()_+{}[\]:;<>,.?~\\-])(?=.*\d)(?=.*[A-Z])/,
-  //     'Your password requires one number, one uppercase letter and one special character.'
-  //   ),
+    email: z.string().trim().email({ message: 'Invalid email address' }),
 
-  staffID: z.string().trim().optional(),
+    staffID: z.string().trim().optional(),
 
-  brands: z
-    .array(z.number())
-    .nonempty({ message: 'At least one Brand is required.' }),
+    brands: z
+      .array(z.number())
+      // .array(z.string())
+      .nonempty({ message: 'At least one Brand is required.' }),
 
-  // pointOfSaleId: z.string().optional(),
-})
-// .refine(
-//   (schema) =>
-//     //  allows pointOfSaleId to be optional when accountType is 'Staff'
-//     // if send true it means it will pass
-//     schema.accountType !== 'Staff' ||
-//     (schema.accountType === 'Staff' && schema.pointOfSaleId),
-//   {
-//     message: 'Required when Account Type is Staff.',
-//     path: ['pointOfSaleId'], // path of error
-//   }
-// )
+    pointOfSaleId: z.string().optional(),
+  })
+  .refine(
+    (schema) =>
+      //  allows pointOfSaleId to be optional when accountType is 'Staff'
+      // if send true it means it will pass
+      schema.accountType !== 'Staff' ||
+      (schema.accountType === 'Staff' && schema.pointOfSaleId),
+    {
+      message: 'Required when Account Type is Staff.',
+      path: ['pointOfSaleId'], // path of error
+    }
+  )
 
 export type TypeAddEditUser = z.infer<typeof formSchemaAddUser>
 
 interface AddFormProps {
   onConfirmForm: (editedUserData: z.infer<typeof formSchemaAddUser>) => void
-  defaultValuesUser: UserWithoutPwd | undefined
+  defaultValuesUser: UserWithPOSAndBrands | undefined
 }
 
 const EdtiUserForm: FC<AddFormProps> = ({
   onConfirmForm,
   defaultValuesUser,
 }) => {
+  // console.log('defaultValuesUser', defaultValuesUser)
+
   const { data: session } = useSession()
 
-  const { accountType, name, email, staffID } = defaultValuesUser || {}
-  let staffIDDefVal = staffID ?? ''
+  const { accountType, name, email, staffID, pointOfSale, brands } =
+    defaultValuesUser || {}
+
+  const arrayOfBrandNames = brands?.map((brand) => brand.id) ?? []
 
   const form = useForm<z.infer<typeof formSchemaAddUser>>({
     resolver: zodResolver(formSchemaAddUser),
     defaultValues: {
       name,
       email,
-      // password: '',
-      staffID: staffIDDefVal,
-      // accountType,
-      accountType: defaultValuesUser?.accountType,
-      brands: [], // SHOULD GET BRAND
-      // pointOfSaleId: undefined,
+      staffID: staffID ?? '',
+      accountType: accountType,
+      brands: arrayOfBrandNames,
+      pointOfSaleId: pointOfSale?.id.toString(),
     },
   })
 
@@ -129,16 +124,22 @@ const EdtiUserForm: FC<AddFormProps> = ({
 
   const subscribeAccountType = form.watch('accountType')
 
-  const isStaffDirty = subscribeAccountType !== undefined
+  const isAccountTypeDirty = subscribeAccountType !== undefined
   const isStaff = subscribeAccountType === AccountType.Staff
 
-  const accountTypeChangeHandler = (accType: AccountType) => {
-    // form.resetField('pointOfSaleId')
-    form.resetField('staffID')
+  const accountTypeChangeHandler = (newAccType: AccountType) => {
+    // If go back to staff, reset to initial values for posid & SN
+    if (newAccType === AccountType.Staff) {
+      form.resetField('pointOfSaleId')
+      form.resetField('staffID')
+    } else {
+      form.setValue('pointOfSaleId', undefined)
+      form.setValue('staffID', '')
+    }
   }
 
   const {
-    data: brands,
+    data: brandsOfUser,
     error: errorBrands,
     isLoading: isLoadingBrands,
     isValidating: isValidatingBrands,
@@ -152,6 +153,7 @@ const EdtiUserForm: FC<AddFormProps> = ({
       revalidateOnMount: true,
     }
   )
+
   const {
     data: POS,
     error: errorPOS,
@@ -215,7 +217,7 @@ const EdtiUserForm: FC<AddFormProps> = ({
           )}
         />
 
-        {isStaffDirty ? (
+        {isAccountTypeDirty ? (
           <>
             <FormField
               control={form.control}
@@ -229,7 +231,7 @@ const EdtiUserForm: FC<AddFormProps> = ({
                     <Input placeholder="Jovia Espino" {...field} />
                   </FormControl>
                   <div className="flex flex-col mt-1">
-                    <FormDescription>Name of your new user.</FormDescription>
+                    <FormDescription>Name of your user.</FormDescription>
                     <FormMessage />
                   </div>
                 </FormItem>
@@ -306,7 +308,7 @@ const EdtiUserForm: FC<AddFormProps> = ({
                           Select brand(s) you want to associate this user with.
                         </FormDescription>
                       </div>
-                      {brands?.result?.map((item) => (
+                      {brandsOfUser?.result?.map((item) => (
                         <FormField
                           key={item.id}
                           control={form.control}
@@ -319,7 +321,7 @@ const EdtiUserForm: FC<AddFormProps> = ({
                               >
                                 <FormControl>
                                   <Checkbox
-                                    checked={field.value?.includes(+item.id)}
+                                    checked={field.value?.includes(item.id)}
                                     onCheckedChange={(checked) => {
                                       return checked
                                         ? field.onChange([
@@ -328,7 +330,7 @@ const EdtiUserForm: FC<AddFormProps> = ({
                                           ])
                                         : field.onChange(
                                             field.value?.filter(
-                                              (value) => value !== +item.id
+                                              (value) => value !== item.id
                                             )
                                           )
                                     }}
@@ -349,7 +351,7 @@ const EdtiUserForm: FC<AddFormProps> = ({
               )}
             />
 
-            {/* {isStaff ? (
+            {isStaff ? (
               <FormField
                 control={form.control}
                 name="pointOfSaleId"
@@ -358,7 +360,10 @@ const EdtiUserForm: FC<AddFormProps> = ({
                     <FormLabel className="font-semibold">
                       Point of Sale
                     </FormLabel>
-                    <Select onValueChange={field.onChange}>
+                    <Select
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                    >
                       <FormControl>
                         <SelectTrigger className="w-52">
                           <SelectValue placeholder="Select a POS" />
@@ -397,7 +402,7 @@ const EdtiUserForm: FC<AddFormProps> = ({
               />
             ) : (
               ''
-            )} */}
+            )}
           </>
         ) : (
           ''

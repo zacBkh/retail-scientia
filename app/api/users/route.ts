@@ -13,6 +13,7 @@ import {
   getUniqueBrands,
   createUser,
   deleteUser,
+  updateUser,
 } from '@/services/prisma-queries'
 
 import { Prisma, AccountType } from '@prisma/client'
@@ -41,8 +42,6 @@ export async function GET(request: NextRequest) {
     posToExclude && eval(posToExclude)
       ? posToExclude?.split(',')?.map((pos) => +pos)
       : undefined
-
-  console.log('posToExcludeNumb', posToExcludeNumb)
 
   // If does not want unique brands but look for user
   if (!userID) {
@@ -144,38 +143,29 @@ export async function PATCH(request: NextRequest) {
     }
 
     const req: RequestBodyEditUserTypes = await request.json()
+    console.log('req ROUTE ', req)
 
     if (!req.userID || !req.userData) {
       throw new Error('You cannot edit a user due to a server error.')
     }
 
-    // const deletePOSFetch = await editPOSUserRelation(
-    //   req.posID,
-    //   req.userID,
-    //   req.connectOrDisconnect
-    // )
-
-    // const resultMessageDiff =
-    //   req.connectOrDisconnect === ConnectOrDisconnect.CONNECT
-    //     ? 'added to'
-    //     : 'removed from'
+    const updateUserQuery = await updateUser(req.userID, req.userData)
 
     return NextResponse.json(
       {
         success: true,
-        // result: `User has successfully been ${resultMessageDiff} ${deletePOSFetch.name}`,
-        result: `User edited inshallahd`,
+        result: `The user has been edited`,
       },
       { status: 201 }
     )
   } catch (error) {
+    console.log('error', error)
     // // if prisma db error
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       return NextResponse.json(
         {
           success: false,
-          result:
-            'There has been a server error connecting or disconnecting the user to the POS.',
+          result: 'There has been a server error editing the user.',
         },
         { status: 500 }
       )
@@ -192,7 +182,6 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  console.log('989898')
   try {
     const currentSession = await getServerSession(authOptions)
     const isAdmin = currentSession?.user.accountType === Admin
