@@ -79,7 +79,6 @@ export const columnManageUsers: columnAddUserToPOSTypes = (
               Edit User
             </DropdownMenuItem>
             <DropdownMenuItem
-              // className="text-red-600"
               className="text-red-500"
               onClick={() => onDeleteUserConfirmation(user.id)}
             >
