@@ -2,8 +2,6 @@
 
 import { FC, Dispatch, SetStateAction } from 'react'
 
-import { useRouter } from 'next/navigation'
-
 import {
   Dialog,
   DialogContent,
@@ -15,7 +13,7 @@ import {
 
 import EdtiUserForm from './form-edit-user'
 
-import type { TypeAddEditUser } from './form-edit-user'
+import type { TypeEditUserForm } from './form-edit-user'
 
 import { ScrollArea } from '@/components/shad/ui/scroll-area'
 
@@ -25,9 +23,7 @@ interface EditUserDialogProps {
   isOpen: boolean
   userUnderEdition: UserWithPOSAndBrands | undefined
   onOpenChangeHandler: Dispatch<SetStateAction<boolean>>
-  editUserConfirmationHandler: (
-    editedUserData: Omit<TypeAddEditUser, 'password'>
-  ) => void
+  editUserConfirmationHandler: (editedUserData: TypeEditUserForm) => void
 }
 
 const EditUserDialog: FC<EditUserDialogProps> = ({
@@ -36,9 +32,7 @@ const EditUserDialog: FC<EditUserDialogProps> = ({
   onOpenChangeHandler,
   editUserConfirmationHandler,
 }) => {
-  const router = useRouter()
-
-  const handleEditUserConfirm = (editedUserData: TypeAddEditUser) => {
+  const handleEditUserConfirm = (editedUserData: TypeEditUserForm) => {
     console.log('editedUserData', editedUserData)
     editUserConfirmationHandler(editedUserData)
   }

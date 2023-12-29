@@ -84,7 +84,7 @@ const formSchemaAddUser = z
     }
   )
 
-export type TypeAddEditUser = z.infer<typeof formSchemaAddUser>
+export type TypeEditUserForm = z.infer<typeof formSchemaAddUser>
 
 interface AddFormProps {
   onConfirmForm: (editedUserData: z.infer<typeof formSchemaAddUser>) => void

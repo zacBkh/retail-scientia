@@ -1,5 +1,7 @@
 import type { Prisma, Product, Sales, User } from '@prisma/client'
 
+import { TypeEditUserForm } from './components/forms/add-user/form-add-user'
+
 // Using generics (make this type flexible)
 export type APIResponseBasic<T> = {
   success: boolean

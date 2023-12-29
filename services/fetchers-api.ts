@@ -38,6 +38,8 @@ import type { AccountType, PointOfSale, User } from '@prisma/client'
 
 import { TypeAddEditUser } from '@/components/forms/add-user/form-add-user'
 
+import type { TypeEditUserForm } from '@/components/forms/edit-user/form-edit-user'
+
 interface RegisterSalesTypes {
   (date: string, sales: SalesInLocalStorage): Promise<APIResponseRegisterSales>
 }
@@ -343,7 +345,7 @@ export const deleteUser: DeletePOSType = async (userID) => {
 }
 
 export interface EditUserTypes {
-  (userID: number, userData: Omit<TypeAddEditUser, 'password'>): Promise<
+  (userID: number, userData: TypeEditUserForm): Promise<
     APIResponseBasic<string>
   >
 }
