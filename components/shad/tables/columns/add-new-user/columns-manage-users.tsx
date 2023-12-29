@@ -74,11 +74,16 @@ export const columnManageUsers: columnAddUserToPOSTypes = (
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => onDeleteUserConfirmation(user.id)}>
-              Delete User
-            </DropdownMenuItem>
+
             <DropdownMenuItem onClick={() => onEditUserRequest(user)}>
               Edit User
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              // className="text-red-600"
+              className="text-red-500"
+              onClick={() => onDeleteUserConfirmation(user.id)}
+            >
+              Delete User
             </DropdownMenuItem>
             {/* <DropdownMenuSeparator /> */}
           </DropdownMenuContent>
