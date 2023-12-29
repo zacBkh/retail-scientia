@@ -33,7 +33,6 @@ const EditUserDialog: FC<EditUserDialogProps> = ({
   editUserConfirmationHandler,
 }) => {
   const handleEditUserConfirm = (editedUserData: TypeEditUserForm) => {
-    console.log('editedUserData', editedUserData)
     editUserConfirmationHandler(editedUserData)
   }
 

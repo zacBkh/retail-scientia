@@ -35,8 +35,6 @@ import {
   SelectValue,
 } from '@/components/shad/ui/select'
 
-import Image from 'next/image'
-
 import { SWR_KEYS } from '@/constants'
 
 import { getUniqueBrandsOfUser, getPOS } from '@/services/fetchers-api'
@@ -45,6 +43,8 @@ import type { GetUniqueBrandsRespFull } from '@/services/fetchers-api'
 import { APIResponseBasic } from '@/types'
 
 import { useSession } from 'next-auth/react'
+
+import Spinner from '@/components/ui/spinner'
 
 const formSchemaAddUser = z
   .object({
@@ -297,57 +297,45 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
               control={form.control}
               name="brands"
               render={({ field }) => (
-                <FormField
-                  control={form.control}
-                  name="brands"
-                  render={() => (
-                    <FormItem>
-                      <div className="mb-4 flex flex-col">
-                        <FormLabel className="text-base">Brands</FormLabel>
-                        <FormDescription>
-                          Select brand(s) you want to associate this user with.
-                        </FormDescription>
-                      </div>
-                      {brands?.result?.map((item) => (
-                        <FormField
-                          key={item.id}
-                          control={form.control}
-                          name="brands"
-                          render={({ field }) => {
-                            return (
-                              <FormItem
-                                key={item.id}
-                                className="flex flex-row items-start space-x-3 space-y-0 mt-2"
-                              >
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value?.includes(+item.id)}
-                                    onCheckedChange={(checked) => {
-                                      return checked
-                                        ? field.onChange([
-                                            ...field.value,
-                                            item.id,
-                                          ])
-                                        : field.onChange(
-                                            field.value?.filter(
-                                              (value) => value !== +item.id
-                                            )
-                                          )
-                                    }}
-                                  />
-                                </FormControl>
-                                <FormLabel className="font-normal cursor-pointer">
-                                  {item.name}
-                                </FormLabel>
-                              </FormItem>
-                            )
-                          }}
-                        />
-                      ))}
-                      <FormMessage />
-                    </FormItem>
+                <FormItem>
+                  <div className="mb-4 flex flex-col">
+                    <FormLabel className="text-base">Brands</FormLabel>
+                    <FormDescription>
+                      Select brand(s) you want to associate this user with.
+                    </FormDescription>
+                  </div>
+
+                  {isLoadingBrands ? (
+                    <Spinner size="w-5 h-5" />
+                  ) : (
+                    brands?.result?.map((item) => (
+                      <FormItem
+                        key={item.id}
+                        className="flex flex-row items-start space-x-3 space-y-0 mt-2"
+                      >
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value?.includes(item.id)}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange([...field.value, item.id])
+                                : field.onChange(
+                                    field.value?.filter(
+                                      (value) => value !== item.id
+                                    )
+                                  )
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal cursor-pointer">
+                          {item.name}
+                        </FormLabel>
+                      </FormItem>
+                    ))
                   )}
-                />
+
+                  <FormMessage />
+                </FormItem>
               )}
             />
 
@@ -360,40 +348,44 @@ const NewUserForm: FC<AddFormProps> = ({ onConfirmForm }) => {
                     <FormLabel className="font-semibold">
                       Point of Sale
                     </FormLabel>
-                    <Select onValueChange={field.onChange}>
-                      <FormControl>
-                        <SelectTrigger className="w-52">
-                          <SelectValue placeholder="Select a POS" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent
-                        position="popper"
-                        align="start"
-                        side="top"
-                        className="h-fit w-64"
-                      >
-                        <SelectGroup>
-                          <SelectLabel className="-ml-5">
-                            Point of Sale
-                          </SelectLabel>
-                          {POS?.result?.map((pos) => (
-                            <SelectItem
-                              className="cursor-pointer"
-                              key={pos.id}
-                              value={`${pos.id}`}
-                            >
-                              <span>{pos.name}</span>
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                    <div className="flex flex-col mt-1">
+                    <div className="flex flex-col mb-1">
                       <FormDescription>
                         On which POS is this person working?
                       </FormDescription>
                       <FormMessage />
                     </div>
+                    {isLoadingPOS ? (
+                      <Spinner size="w-5 h-5" />
+                    ) : (
+                      <Select onValueChange={field.onChange}>
+                        <FormControl>
+                          <SelectTrigger className="w-52">
+                            <SelectValue placeholder="Select a POS" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent
+                          position="popper"
+                          align="start"
+                          side="top"
+                          className="h-fit w-64"
+                        >
+                          <SelectGroup>
+                            <SelectLabel className="-ml-5">
+                              Point of Sale
+                            </SelectLabel>
+                            {POS?.result?.map((pos) => (
+                              <SelectItem
+                                className="cursor-pointer"
+                                key={pos.id}
+                                value={`${pos.id}`}
+                              >
+                                <span>{pos.name}</span>
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    )}
                   </FormItem>
                 )}
               />

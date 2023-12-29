@@ -35,7 +35,7 @@ import {
   SelectValue,
 } from '@/components/shad/ui/select'
 
-import Image from 'next/image'
+import Spinner from '@/components/ui/spinner'
 
 import { SWR_KEYS } from '@/constants'
 
@@ -308,42 +308,35 @@ const EdtiUserForm: FC<AddFormProps> = ({
                           Select brand(s) you want to associate this user with.
                         </FormDescription>
                       </div>
-                      {brandsOfUser?.result?.map((item) => (
-                        <FormField
-                          key={item.id}
-                          control={form.control}
-                          name="brands"
-                          render={({ field }) => {
-                            return (
-                              <FormItem
-                                key={item.id}
-                                className="flex flex-row items-start space-x-3 space-y-0 mt-2"
-                              >
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value?.includes(item.id)}
-                                    onCheckedChange={(checked) => {
-                                      return checked
-                                        ? field.onChange([
-                                            ...field.value,
-                                            item.id,
-                                          ])
-                                        : field.onChange(
-                                            field.value?.filter(
-                                              (value) => value !== item.id
-                                            )
-                                          )
-                                    }}
-                                  />
-                                </FormControl>
-                                <FormLabel className="font-normal cursor-pointer">
-                                  {item.name}
-                                </FormLabel>
-                              </FormItem>
-                            )
-                          }}
-                        />
-                      ))}
+
+                      {isLoadingBrands ? (
+                        <Spinner size="w-5 h-5" />
+                      ) : (
+                        brandsOfUser?.result?.map((item) => (
+                          <FormItem
+                            key={item.id}
+                            className="flex flex-row items-start space-x-3 space-y-0 mt-2"
+                          >
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value?.includes(item.id)}
+                                onCheckedChange={(checked) => {
+                                  return checked
+                                    ? field.onChange([...field.value, item.id])
+                                    : field.onChange(
+                                        field.value?.filter(
+                                          (value) => value !== item.id
+                                        )
+                                      )
+                                }}
+                              />
+                            </FormControl>
+                            <FormLabel className="font-normal cursor-pointer">
+                              {item.name}
+                            </FormLabel>
+                          </FormItem>
+                        ))
+                      )}
                       <FormMessage />
                     </FormItem>
                   )}

@@ -115,7 +115,6 @@ export const fetchIsProductFav: GetFavProductArgs = async (productID) => {
   })
   const data = await response.json()
 
-  console.log('data favvv', data)
   return data
 }
 
@@ -351,7 +350,6 @@ export interface EditUserTypes {
 }
 
 export const editUser: EditUserTypes = async (userID, userData) => {
-  console.log('userData fetcher api', userData)
   const response = await fetch(`${USERS_WO_PATH}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },

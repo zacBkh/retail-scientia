@@ -45,7 +45,7 @@ const SearchBarMain: FC<SearchBarMainProps> = ({
           <TextField.Slot>
             {isSearching ? (
               <IconButton size="1" variant="ghost">
-                <Spinner style="border-gray-400 border-t-black !w-4 !h-4 mx-auto" />
+                <Spinner size="!w-4 !h-4 mx-auto" />
               </IconButton>
             ) : (
               <IconButton

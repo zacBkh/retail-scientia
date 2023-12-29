@@ -128,7 +128,7 @@ const Cart = ({}) => {
         }}
       />
 
-      {isValidating ? <Spinner style="border-t-black !w-5 !h-5 mx-auto" /> : ''}
+      {isValidating ? <Spinner size="w-5 h-5" /> : ''}
 
       {isCartEmpty ? (
         <div className="text-center">Your cart is empty... 😭</div>

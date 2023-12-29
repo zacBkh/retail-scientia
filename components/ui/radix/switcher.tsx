@@ -52,9 +52,7 @@ const Switcher: FC<SwitcherProps> = ({ disable }) => {
           Favourites only
         </Flex>
       </Text>
-      {isPending && (
-        <Spinner style="border-gray-400 border-t-black !w-4 !h-4" />
-      )}
+      {isPending && <Spinner size="w-4 h-4" />}
     </div>
   )
 }
