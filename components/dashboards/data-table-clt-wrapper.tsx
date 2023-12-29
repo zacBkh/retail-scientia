@@ -8,7 +8,7 @@ import { mutate } from 'swr'
 import useSWRImmutable from 'swr/immutable'
 import { SWR_KEYS } from '@/constants'
 
-import { TypeAddEditUser } from '../forms/edit-user/form-edit-user'
+import { TypeEditUserForm } from '../forms/edit-user/form-edit-user'
 
 interface DataTableUsersProps {
   data: UserWithPOSAndBrands[]
@@ -54,12 +54,10 @@ const DataTableUsers: FC<DataTableUsersProps> = ({ data }) => {
 
   // Query db to update && mutate list of users
   const editUserConfirmationHandler = async (
-    editedUserData: Omit<TypeAddEditUser, 'password'>
+    editedUserData: TypeEditUserForm
   ) => {
     setIsDialogEditUserOpen(false)
 
-    console.log(' userUnderEdition?.id', userUnderEdition?.id)
-    console.log('editedUserData', editedUserData)
     if (userUnderEdition?.id && editedUserData) {
       await getAsyncToast(() => editUser(userUnderEdition?.id, editedUserData))
 

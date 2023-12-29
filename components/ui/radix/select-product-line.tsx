@@ -110,9 +110,7 @@ const SelectProductLine: FC<SelectProductLineProps> = ({
               placeholder={placeholder}
             />
           )}
-          {isPending && (
-            <Spinner style="border-gray-400 border-t-black !w-4 !h-4" />
-          )}
+          {isPending && <Spinner size="w-4 h-4" />}
         </div>
         <Select.Content
           className={`${COLORS.turquoiseLight_bg} !shadow-2xl`}

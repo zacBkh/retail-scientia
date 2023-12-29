@@ -21,7 +21,6 @@ interface CSVExportProps {
 const CSVExport: FC<CSVExportProps> = ({ sales, userName, dates }) => {
   const isSingleDate = dates?.startDate === dates?.endDate
 
-  console.log('dates ***', dates)
   let exportedFileName
 
   if (dates?.startDate === null || dates?.endDate === null) {

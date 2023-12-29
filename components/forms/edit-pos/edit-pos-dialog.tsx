@@ -39,8 +39,7 @@ enum EditPosSteps {
   INDEX,
   ADD_USER_TO_POS,
   REMOVE_USER_FROM_POS,
-  DELETE_POS,
-  CONFIRM,
+  CONFIRM_DELETE_POS,
 }
 
 interface ButtonCltProps {
@@ -158,7 +157,7 @@ export const EditPosDialog: FC<ButtonCltProps> = ({
             variant="destructive"
             className="w-fit"
             size={'sm'}
-            onClick={handleDeletePOS}
+            onClick={() => setStep(EditPosSteps.CONFIRM_DELETE_POS)}
           >
             Delete POS
             <Trash2 strokeWidth={2} className="ml-4" />
@@ -204,28 +203,33 @@ export const EditPosDialog: FC<ButtonCltProps> = ({
       ),
     },
 
-    [EditPosSteps.DELETE_POS]: {
-      title: 'Edit this POS',
-      description:
-        'You can edit the name, country, add and remove staff or delete dadadzd from your point of sales.',
-      children: (
+    [EditPosSteps.CONFIRM_DELETE_POS]: {
+      title: `Delete ${POSName}`,
+      description: (
         <>
-          <Button onClick={() => setStep(EditPosSteps.CONFIRM)}>
-            Tu confirmes fdp?
-          </Button>
+          <span className="block">
+            You are about to delete the point of sale {POSName}.
+          </span>
+          <span className="block">
+            All the users of this POS will be unlinked from it, but will not be
+            deleted.
+          </span>
+          <span className="block">This action cannot be undone.</span>
         </>
       ),
-    },
 
-    [EditPosSteps.CONFIRM]: {
-      title: 'Edit this POS',
-      description:
-        'You can edit the name, country, add and remove staff or delete dadadzd from your point of sales.',
       children: (
         <>
-          <Button>Add a user to this POS</Button>
-          <Button>Remove a user from this POS</Button>
-          <Button>Delete POS</Button>
+          <Button
+            variant="destructive"
+            className="w-fit"
+            size={'sm'}
+            onClick={handleDeletePOS}
+          >
+            Confirm deletion of&nbsp;{'  '}
+            <span className="font-extrabold">{POSName}</span>
+            <Trash2 strokeWidth={2} className="ml-4" />
+          </Button>
         </>
       ),
     },

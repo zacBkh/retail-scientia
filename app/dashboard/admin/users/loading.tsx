@@ -1,7 +1,6 @@
-import LoadingViewServer from '@/components/ui/loading-files'
-
+import Spinner from '@/components/ui/spinner'
 const Loading = () => {
-  return <LoadingViewServer text="Your Users are loading... 💪🏼" />
+  return <Spinner isFullPage text="Your Users are loading... 💪🏼" />
 }
 
 export default Loading

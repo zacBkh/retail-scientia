@@ -58,7 +58,7 @@ export function DataTableManageUsers<TData, TValue>({
   })
 
   if (isLoading) {
-    return <Spinner style="border-t-black !w-10 !h-10 mx-auto" />
+    return <Spinner />
   }
 
   return (
