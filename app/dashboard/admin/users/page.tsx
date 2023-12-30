@@ -13,7 +13,7 @@ import { Separator } from '@/components/shad/ui/separator'
 
 import AddUserDialog from '@/components/forms/add-user/add-user-dialog'
 
-import DataTableUsers from '@/components/dashboards/data-table-clt-wrapper'
+import DataTableUsers from '@/components/dashboards/data-table-users'
 
 const Dashboard = async () => {
   const allUsers = await getUsersPrisma(Object.values(AccountType))

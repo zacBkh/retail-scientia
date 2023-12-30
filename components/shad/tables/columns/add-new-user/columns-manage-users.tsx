@@ -15,7 +15,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/shad/ui/dropdown-menu'
 
@@ -84,7 +83,6 @@ export const columnManageUsers: columnAddUserToPOSTypes = (
             >
               Delete User
             </DropdownMenuItem>
-            {/* <DropdownMenuSeparator /> */}
           </DropdownMenuContent>
         </DropdownMenu>
       )
