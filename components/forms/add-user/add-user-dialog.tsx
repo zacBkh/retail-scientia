@@ -2,16 +2,10 @@
 
 import { useState } from 'react'
 
-import { useRouter } from 'next/navigation'
-
 import { Button } from '@/components/shad/ui/button'
 import { Plus } from 'lucide-react'
 
-import { toast } from 'react-toastify'
-
 import { registerNewUser } from '@/services/fetchers-api'
-
-import { PROMISE_TOAST_WAIT } from '@/constants'
 
 import {
   Dialog,
@@ -31,15 +25,16 @@ import { ScrollArea } from '@/components/shad/ui/scroll-area'
 
 import { getAsyncToast } from '@/utils/get-async-toaster'
 
+import { mutate } from 'swr'
+import { SWR_KEYS } from '@/constants'
+
 const AddUserDialog = ({}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-
-  const router = useRouter()
 
   const handleFormAddedComplete = async (newUser: TypeAddEditUser) => {
     setIsDialogOpen(false)
     await getAsyncToast(() => registerNewUser(newUser))
-    router.refresh()
+    mutate(SWR_KEYS.GET_USERS)
   }
 
   return (

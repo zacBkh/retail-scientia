@@ -7,11 +7,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/shad/ui/button'
 import { Plus } from 'lucide-react'
 
-import { toast } from 'react-toastify'
-
 import { addNewPOS } from '@/services/fetchers-api'
-
-import { PROMISE_TOAST_WAIT } from '@/constants'
 
 import {
   Dialog,
