@@ -39,7 +39,7 @@ const DataTableUsers: FC<DataTableUsersProps> = ({ data }) => {
     { fallbackData: data, revalidateOnMount: true }
   )
 
-  const onDeleteUserRequest = async (userId: number) => {
+  const onDeleteUserConfirmation = async (userId: number) => {
     await getAsyncToast(() => deleteUser(userId))
     mutate(SWR_KEYS.GET_USERS)
   }
@@ -65,7 +65,7 @@ const DataTableUsers: FC<DataTableUsersProps> = ({ data }) => {
 
   return (
     <DataTableManageUsers
-      columns={columnManageUsers(onDeleteUserRequest, onEditUserRequest)}
+      columns={columnManageUsers(onDeleteUserConfirmation, onEditUserRequest)}
       data={users ?? []}
     >
       <EditUserDialog
