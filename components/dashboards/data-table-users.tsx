@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, useState, useEffect } from 'react'
+import { FC, useState } from 'react'
 
 import type { UserWithPOSAndBrands } from '@/types'
 
@@ -24,16 +24,11 @@ import { getUsers, editUser, deleteUser } from '@/services/fetchers-api'
 import { getAsyncToast } from '@/utils/get-async-toaster'
 
 import EditUserDialog from '../forms/edit-user/edit-user-dialog'
-import DialogDeleteUser from '../ui/alert-dialog-delete-user'
 
 const DataTableUsers: FC<DataTableUsersProps> = ({ data }) => {
   const [isDialogEditUserOpen, setIsDialogEditUserOpen] = useState(false)
   const [userUnderEdition, setUserUnderEdition] =
     useState<UserWithPOSAndBrands>()
-
-  const [isUderDeletionConfModalOpen, setIsUderDeletionConfModalOpen] =
-    useState(false)
-  const [userIDToDelete, setUserIDToDelete] = useState<number | null>(null)
 
   const { data: users } = useSWRImmutable(
     SWR_KEYS.GET_USERS,
@@ -44,16 +39,8 @@ const DataTableUsers: FC<DataTableUsersProps> = ({ data }) => {
     { fallbackData: data, revalidateOnMount: true }
   )
 
-  const onDeleteUserRequest = async (userID: number) => {
-    setIsUderDeletionConfModalOpen(true)
-    setUserIDToDelete(userID)
-  }
-  const deleteUserConfirmHandler = async () => {
-    if (!userIDToDelete) {
-      return
-    }
-    setIsUderDeletionConfModalOpen(false)
-    await getAsyncToast(() => deleteUser(userIDToDelete))
+  const onDeleteUserConfirmation = async (userId: number) => {
+    await getAsyncToast(() => deleteUser(userId))
     mutate(SWR_KEYS.GET_USERS)
   }
 
@@ -76,15 +63,9 @@ const DataTableUsers: FC<DataTableUsersProps> = ({ data }) => {
     }
   }
 
-  useEffect(() => {
-    if (!isUderDeletionConfModalOpen) {
-      setUserIDToDelete(null)
-    }
-  }, [isUderDeletionConfModalOpen])
-
   return (
     <DataTableManageUsers
-      columns={columnManageUsers(onDeleteUserRequest, onEditUserRequest)}
+      columns={columnManageUsers(onDeleteUserConfirmation, onEditUserRequest)}
       data={users ?? []}
     >
       <EditUserDialog
@@ -92,14 +73,6 @@ const DataTableUsers: FC<DataTableUsersProps> = ({ data }) => {
         userUnderEdition={userUnderEdition}
         onOpenChangeHandler={setIsDialogEditUserOpen}
         editUserConfirmationHandler={editUserConfirmationHandler}
-      />
-      <DialogDeleteUser
-        isOpen={isUderDeletionConfModalOpen}
-        onOpenChange={setIsUderDeletionConfModalOpen}
-        title={'Are you sure?'}
-        description="You are about to delete a user. This action cannot be undone."
-        handlerContinue={deleteUserConfirmHandler}
-        handlerCancel={() => setIsUderDeletionConfModalOpen(false)}
       />
     </DataTableManageUsers>
   )

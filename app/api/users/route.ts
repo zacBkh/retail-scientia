@@ -198,7 +198,6 @@ export async function DELETE(request: NextRequest) {
     }
 
     const deleteUserQuery = await deleteUser(+userToDelete)
-    console.log('deleteUserQuery -->', deleteUserQuery)
     return NextResponse.json(
       {
         success: true,

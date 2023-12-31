@@ -1,7 +1,8 @@
-import { FC, Dispatch, SetStateAction } from 'react'
+import { FC } from 'react'
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -12,28 +13,22 @@ import {
 import { Button } from '@/components/shad/ui/button'
 
 interface AlertModalProps {
-  trigger?: React.ReactNode
   title: string
   description: string
-  handlerCancel: () => void
   handlerContinue: () => void
-
-  isOpen: boolean
-  onOpenChange: Dispatch<SetStateAction<boolean>>
+  children?: React.ReactNode
 }
 
 const DialogDeleteUser: FC<AlertModalProps> = ({
-  trigger,
   title,
   description,
-  handlerCancel,
   handlerContinue,
-  isOpen,
-  onOpenChange,
+  children,
 }) => {
   return (
     <>
-      <Dialog onOpenChange={onOpenChange} open={isOpen}>
+      <Dialog>
+        {children}
         <DialogContent className="max-w-[90vw] sm:max-w-[425px]">
           <DialogHeader className="text-left">
             <DialogTitle>{title}</DialogTitle>
@@ -43,14 +38,10 @@ const DialogDeleteUser: FC<AlertModalProps> = ({
           </DialogHeader>
           <DialogFooter>
             <div className="flex gap-x-2 justify-end">
-              <Button size={'sm'} onClick={handlerCancel}>
-                Cancel
-              </Button>
-              <Button
-                size={'sm'}
-                onClick={handlerContinue}
-                variant="destructive"
-              >
+              <DialogClose asChild>
+                <Button size="sm">Cancel</Button>
+              </DialogClose>
+              <Button size="sm" onClick={handlerContinue} variant="destructive">
                 Delete User
               </Button>
             </div>

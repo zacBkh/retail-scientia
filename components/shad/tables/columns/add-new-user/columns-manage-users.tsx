@@ -17,6 +17,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/shad/ui/dropdown-menu'
+import DialogDeleteUser from '@/components/ui/alert-dialog-delete-user'
+import { DialogTrigger } from '@/components/shad/ui/dialog'
 
 interface columnAddUserToPOSTypes {
   (
@@ -64,27 +66,32 @@ export const columnManageUsers: columnAddUserToPOSTypes = (
       const user = row.original
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DialogDeleteUser
+          title="Are you sure?"
+          description="You are about to delete a user. This action cannot be undone."
+          handlerContinue={() => onDeleteUserConfirmation(user.id)}
+        >
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-            <DropdownMenuItem onClick={() => onEditUserRequest(user)}>
-              Edit User
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-red-500"
-              onClick={() => onDeleteUserConfirmation(user.id)}
-            >
-              Delete User
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuItem onClick={() => onEditUserRequest(user)}>
+                Edit User
+              </DropdownMenuItem>
+              <DialogTrigger asChild>
+                <DropdownMenuItem className="text-red-500">
+                  Delete User
+                </DropdownMenuItem>
+              </DialogTrigger>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </DialogDeleteUser>
       )
     },
   },
