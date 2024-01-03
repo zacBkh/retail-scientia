@@ -23,13 +23,7 @@ import { getUsers, editUser, deleteUser } from '@/services/fetchers-api'
 
 import { getAsyncToast } from '@/utils/get-async-toaster'
 
-import EditUserDialog from '../forms/edit-user/edit-user-dialog'
-
 const DataTableUsers: FC<DataTableUsersProps> = ({ data }) => {
-  const [isDialogEditUserOpen, setIsDialogEditUserOpen] = useState(false)
-  const [userUnderEdition, setUserUnderEdition] =
-    useState<UserWithPOSAndBrands>()
-
   const { data: users } = useSWRImmutable(
     SWR_KEYS.GET_USERS,
     async () => {
@@ -44,37 +38,23 @@ const DataTableUsers: FC<DataTableUsersProps> = ({ data }) => {
     mutate(SWR_KEYS.GET_USERS)
   }
 
-  // Open user edition modal
-  const onEditUserRequest = (userDataToEdit: UserWithPOSAndBrands) => {
-    setIsDialogEditUserOpen(true)
-    setUserUnderEdition(userDataToEdit)
-  }
-
   // Query db to update && mutate list of users
-  const editUserConfirmationHandler = async (
+  const onEditUserConfirmation = async (
+    userId: number,
     editedUserData: TypeEditUserForm
   ) => {
-    setIsDialogEditUserOpen(false)
-
-    if (userUnderEdition?.id && editedUserData) {
-      await getAsyncToast(() => editUser(userUnderEdition?.id, editedUserData))
-
-      mutate(SWR_KEYS.GET_USERS)
-    }
+    await getAsyncToast(() => editUser(userId, editedUserData))
+    mutate(SWR_KEYS.GET_USERS)
   }
 
   return (
     <DataTableManageUsers
-      columns={columnManageUsers(onDeleteUserConfirmation, onEditUserRequest)}
+      columns={columnManageUsers(
+        onDeleteUserConfirmation,
+        onEditUserConfirmation
+      )}
       data={users ?? []}
-    >
-      <EditUserDialog
-        isOpen={isDialogEditUserOpen}
-        userUnderEdition={userUnderEdition}
-        onOpenChangeHandler={setIsDialogEditUserOpen}
-        editUserConfirmationHandler={editUserConfirmationHandler}
-      />
-    </DataTableManageUsers>
+    />
   )
 }
 

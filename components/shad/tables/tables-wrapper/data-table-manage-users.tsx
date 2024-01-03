@@ -30,14 +30,12 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   isLoading?: boolean
-  children: ReactNode
 }
 
 export function DataTableManageUsers<TData, TValue>({
   columns,
   data,
   isLoading,
-  children: EditUserForm,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
 
@@ -63,7 +61,6 @@ export function DataTableManageUsers<TData, TValue>({
 
   return (
     <>
-      {EditUserForm}
       <div>
         {/* Sorting */}
         <div className="flex items-center py-4">
