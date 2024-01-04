@@ -42,28 +42,6 @@ export default function ManageUsersActions({
 }: Props) {
   const [dialogType, setDialogType] = useState<DialogType>(DialogType.EDIT_USER)
 
-  // return {
-  //   title: 'Are you sure?',
-  //   description:
-  //     'You are about to delete a user. This action cannot be undone.',
-  //   footer: (
-  // <DialogFooter>
-  //   <div className="flex gap-x-2 justify-end">
-  //     <DialogClose asChild>
-  //       <Button size="sm">Cancel</Button>
-  //     </DialogClose>
-  //     <Button
-  //       size="sm"
-  //       onClick={() => onUserDeleteConfirm(user.id)}
-  //       variant="destructive"
-  //     >
-  //       Delete User
-  //     </Button>
-  //   </div>
-  // </DialogFooter>
-  //   ),
-  // }
-
   const view_mapper_dialog = {
     [DialogType.EDIT_USER]: {
       title: `Edit  ${user.name}`,
@@ -99,47 +77,6 @@ export default function ManageUsersActions({
       ),
     },
   }
-
-  // const getDialogData = (dialogType: DialogType) => {
-  //   switch (dialogType) {
-  //     case DialogType.DELETE_USER:
-  //       return {
-  //         title: 'Are you sure?',
-  //         description:
-  //           'You are about to delete a user. This action cannot be undone.',
-  //         footer: (
-  //           <DialogFooter>
-  //             <div className="flex gap-x-2 justify-end">
-  //               <DialogClose asChild>
-  //                 <Button size="sm">Cancel</Button>
-  //               </DialogClose>
-  //               <Button
-  //                 size="sm"
-  //                 onClick={() => onUserDeleteConfirm(user.id)}
-  //                 variant="destructive"
-  //               >
-  //                 Delete User
-  //               </Button>
-  //             </div>
-  //           </DialogFooter>
-  //         ),
-  //       }
-
-  //     case DialogType.EDIT_USER:
-  //       return {
-  //         title: `Edit ${user.name}`,
-  //         description: 'Edit a user in one click',
-  //         content: (
-  //           <ScrollArea className="max-h-[60vh]">
-  //             <EdtiUserForm
-  //               defaultValuesUser={user}
-  //               onConfirmForm={onUserEditConfirm.bind(null, user.id)}
-  //             />
-  //           </ScrollArea>
-  //         ),
-  //       }
-  //   }
-  // }
 
   return (
     <Dialog>
