@@ -7,10 +7,10 @@ interface ExtractUniqueCategoryFromSalesArgs {
 export const extractUniqueCategoryFromSales: ExtractUniqueCategoryFromSalesArgs =
   (sales) => {
     const allCategories = sales.map((sale) => {
-      return sale.productSold.category1
+      return sale.productSold.map((product) => product.category1)
     })
 
-    return [...new Set(allCategories)]
+    return [...new Set(allCategories.flat())]
   }
 
 import type { SalesWithCategory } from '@/types'
@@ -40,31 +40,30 @@ interface CombineCategoriesAndSalesArgs {
     }
 ]
 */
-export const combineCategoriesAndSales: CombineCategoriesAndSalesArgs = (
-  categories,
-  sales
-) => {
-  const nonSortedSales = categories.map((category1) => {
-    // iterating through each category
+// export const combineCategoriesAndSales: CombineCategoriesAndSalesArgs = (
+//   categories,
+//   sales
+// ) => {
+//   const nonSortedSales = categories.map((category1) => {
+//     // iterating through each category
 
-    //
-    const onlySalesOfCurrentCat = sales
-      .filter((sale) => sale.productSold.category1 === category1) // grab the sales from this cat
-      .map((sale) => sale.productSold.currentPrice) // keep only their price
+//     const onlySalesOfCurrentCat = sales
+//       .filter((sale) => sale.productSold.category1 === category1) // grab the sales from this cat
+//       .map((sale) => sale.productSold.currentPrice) // keep only their price
 
-    // Sum their value
-    const matchingTtlSale = onlySalesOfCurrentCat.reduce(
-      (accumulator, currentValue) => accumulator + currentValue
-    )
+//     // Sum their value
+//     const matchingTtlSale = onlySalesOfCurrentCat.reduce(
+//       (accumulator, currentValue) => accumulator + currentValue
+//     )
 
-    return {
-      category1,
-      sales: matchingTtlSale ? matchingTtlSale : 0,
-    }
-  })
+//     return {
+//       category1,
+//       sales: matchingTtlSale ?? 0,
+//     }
+//   })
 
-  return nonSortedSales.sort((a, b) => b.sales - a.sales)
-}
+//   return nonSortedSales.sort((a, b) => b.sales - a.sales)
+// }
 
 type UserFav = {
   id: number

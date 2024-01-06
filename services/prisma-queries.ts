@@ -1,6 +1,5 @@
 export const dynamic = 'force-dynamic'
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { PrismaClient } from '@prisma/client'
 
 import { PointOfSale, AccountType, User } from '@prisma/client'
@@ -161,16 +160,17 @@ export const addSales = async (
   sellerId: number,
   productIDs: number[]
 ) => {
-  // Changing the shape
-  const finalObject = productIDs.map((skuID) => {
-    return { date, productId: skuID, sellerId }
+  await db.sale.create({
+    data: {
+      date,
+      sellerId,
+      productSold: {
+        connect: productIDs.map((productId) => ({ id: productId })),
+      },
+    },
   })
 
-  const createdSales = await db.sale.createMany({
-    data: finalObject,
-  })
-
-  return createdSales
+  return productIDs.length
 }
 
 import type { SalesWithProducts } from '@/types'
@@ -209,7 +209,9 @@ export const findSalesOfUser: FindSalesOfUserArgs = async (
       // Filter by brand(s)
       ...(brandsIDs && {
         productSold: {
-          brand: { name: { in: brandsIDs, mode: 'insensitive' } },
+          some: {
+            brand: { name: { in: brandsIDs, mode: 'insensitive' } },
+          },
         },
       }),
     },
@@ -217,6 +219,17 @@ export const findSalesOfUser: FindSalesOfUserArgs = async (
       createdAt: 'desc',
     },
   })
+
+  if (brandsIDs && brandsIDs.length > 0) {
+    return userSales.map((sale) => {
+      return {
+        ...sale,
+        productSold: sale.productSold.filter((product) =>
+          brandsIDs.includes(product.brand.name)
+        ),
+      }
+    })
+  }
 
   return userSales
 }
@@ -228,54 +241,54 @@ interface GetSalesByTopSoldSKU {
 // Getting the sales by order of SKU occurence for a certain user
 // Had to do 2 queries bcs prisma does not support groupBy & include: https://www.prisma.io/docs/concepts/components/prisma-client/aggregation-grouping-summarizing#groupby-faq:~:text=You%20cannot%20use%20select%20with%20groupBy
 
-export const getSalesByBestSellerSku: GetSalesByTopSoldSKU = async (
-  userID,
-  dateQuery
-) => {
-  const isSingleDate = dateQuery && dateQuery[0] === dateQuery[1]
+// export const getSalesByBestSellerSku: GetSalesByTopSoldSKU = async (
+//   userID,
+//   dateQuery
+// ) => {
+//   const isSingleDate = dateQuery && dateQuery[0] === dateQuery[1]
 
-  const salesByProduct = await db.sale.groupBy({
-    by: ['productId'],
+//   const salesByProduct = await db.sale.groupBy({
+//     by: ['productId'],
 
-    where: {
-      sellerId: userID,
+//     where: {
+//       sellerId: userID,
 
-      ...(dateQuery && {
-        date: {
-          gte: new Date(dateQuery[0]),
-          lte: new Date(isSingleDate ? dateQuery[0] : dateQuery[1]),
-        },
-      }),
-    },
-    _count: {
-      id: true,
-    },
-    orderBy: {
-      _count: {
-        id: 'desc', // Order by the count of sales in descending order
-      },
-    },
-    take: 6,
-  })
+//       ...(dateQuery && {
+//         date: {
+//           gte: new Date(dateQuery[0]),
+//           lte: new Date(isSingleDate ? dateQuery[0] : dateQuery[1]),
+//         },
+//       }),
+//     },
+//     _count: {
+//       id: true,
+//     },
+//     orderBy: {
+//       _count: {
+//         id: 'desc', // Order by the count of sales in descending order
+//       },
+//     },
+//     take: 6,
+//   })
 
-  // Get all products details whose id is included in the result of group query
-  const productsFetched = await db.product.findMany({
-    where: {
-      id: { in: salesByProduct.map((sku) => sku.productId) },
-    },
-  })
+//   // Get all products details whose id is included in the result of group query
+//   const productsFetched = await db.product.findMany({
+//     where: {
+//       id: { in: salesByProduct.map((sku) => sku.productId) },
+//     },
+//   })
 
-  // Map together the products and their count
-  const finalSKUOrder = salesByProduct.map((sku) => {
-    const productToAdd = productsFetched.find(
-      (product) => product.id === sku.productId
-    )
-    const count = sku._count.id
-    return { productSold: { ...productToAdd, count } }
-  })
+//   // Map together the products and their count
+//   const finalSKUOrder = salesByProduct.map((sku) => {
+//     const productToAdd = productsFetched.find(
+//       (product) => product.id === sku.productId
+//     )
+//     const count = sku._count.id
+//     return { productSold: { ...productToAdd, count } }
+//   })
 
-  return finalSKUOrder
-}
+//   return finalSKUOrder
+// }
 
 /* !SC */
 

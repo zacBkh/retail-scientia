@@ -5,7 +5,7 @@ import { authOptions } from '../auth/[...nextauth]/route'
 
 import {
   findSalesOfUser,
-  getSalesByBestSellerSku,
+  // getSalesByBestSellerSku,
   addSales,
 } from '@/services/prisma-queries'
 
@@ -40,8 +40,8 @@ export async function POST(request: Request) {
   return NextResponse.json(
     {
       success: true,
-      result: `You successfully added ${saleRegistration.count} ${
-        saleRegistration.count > 1 ? 'sales' : 'sale'
+      result: `You successfully registered a sale with ${saleRegistration} ${
+        saleRegistration > 1 ? 'products' : 'product'
       }`,
     },
     { status: 201 }
@@ -73,34 +73,34 @@ export async function GET(request: NextRequest) {
     const arrayQueryDates = isNoDate ? null : queryDates?.split(',')
 
     // If query param mentionned only top sellers should be sent
-    if (byTopSeller) {
-      const filteredSalesUserByTopSeller = await getSalesByBestSellerSku(
-        Number(currentSession?.user?.id),
-        arrayQueryDates
-      )
+    // if (byTopSeller) {
+    //   const filteredSalesUserByTopSeller = await getSalesByBestSellerSku(
+    //     Number(currentSession?.user?.id),
+    //     arrayQueryDates
+    //   )
 
-      return NextResponse.json(
-        {
-          success: true,
-          result: filteredSalesUserByTopSeller,
-        },
-        { status: 201 }
-      )
-    } else {
-      const filteredSalesUser = await findSalesOfUser(
-        Number(currentSession?.user?.id),
-        arrayQueryDates,
-        brandNamesArr
-      )
+    //   return NextResponse.json(
+    //     {
+    //       success: true,
+    //       result: filteredSalesUserByTopSeller,
+    //     },
+    //     { status: 201 }
+    //   )
+    // } else {
+    const filteredSalesUser = await findSalesOfUser(
+      Number(currentSession?.user?.id),
+      arrayQueryDates,
+      brandNamesArr
+    )
 
-      return NextResponse.json(
-        {
-          success: true,
-          result: filteredSalesUser,
-        },
-        { status: 201 }
-      )
-    }
+    return NextResponse.json(
+      {
+        success: true,
+        result: filteredSalesUser,
+      },
+      { status: 201 }
+    )
+    // }
   } catch (error) {
     return NextResponse.json(
       {

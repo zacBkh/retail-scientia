@@ -10,7 +10,7 @@ import useSWRImmutable from 'swr/immutable'
 import { sumSalesValue } from '@/utils/db-data'
 import {
   extractUniqueCategoryFromSales,
-  combineCategoriesAndSales,
+  // combineCategoriesAndSales,
 } from '@/utils/business'
 import { dateToStringForQuery } from '@/utils/dates'
 
@@ -129,14 +129,14 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
   const ttlSalesValue =
     filteredSalesUser && sumSalesValue(filteredSalesUser?.result ?? [])
 
-  const uniqueCategories = extractUniqueCategoryFromSales(
-    filteredSalesUser?.result ?? []
-  )
+  // const uniqueCategories = extractUniqueCategoryFromSales(
+  //   filteredSalesUser?.result ?? []
+  // )
 
-  const salesByLine = combineCategoriesAndSales(
-    uniqueCategories,
-    filteredSalesUser?.result ?? []
-  )
+  // const salesByLine = combineCategoriesAndSales(
+  //   uniqueCategories,
+  //   filteredSalesUser?.result ?? []
+  // )
 
   const isSalesEmpty = !filteredSalesUser?.result.length
 
@@ -230,11 +230,11 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
         </div>
 
         <div className="flex flex-col md:flex-row justify-center items-center md:items-stretch gap-x-4 gap-y-4 px-2">
-          <PieChart
+          {/* <PieChart
             isLoading={isLoading || isValidating}
             isSalesEmpty={isSalesEmpty}
             salesByLine={salesByLine}
-          />
+          /> */}
 
           {/* LAST SALES */}
           <div
@@ -243,16 +243,20 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
             <span className="text-lg font-bold my-2">Latest Sales</span>
             {filteredSalesUser?.result
               ?.slice(0, isShowLastSalesExpanded ? 6 : 3)
-              ?.map((item) => (
-                <TableOfSKUs
-                  mode={ModeOfProductTable.LatestProductsSold}
-                  isLoading={isLoading || isValidating}
-                  key={item.id}
-                  img={item.productSold.img}
-                  desc={item.productSold.description}
-                  subInfo={item.createdAt}
-                />
-              ))}
+              ?.map((item) =>
+                item.productSold
+                  .slice(0, isShowLastSalesExpanded ? 2 : 1)
+                  .map((product) => (
+                    <TableOfSKUs
+                      mode={ModeOfProductTable.LatestProductsSold}
+                      isLoading={isLoading || isValidating}
+                      key={item.id}
+                      img={product.img}
+                      desc={product.description}
+                      subInfo={item.createdAt}
+                    />
+                  ))
+              )}
             <ShowMoreButtonDashboard
               isDataEmpty={isSalesEmpty}
               onToggleBtn={(newState) => setIsShowLastSalesExpanded(newState)}
@@ -267,19 +271,24 @@ const DashboardClientWrapper: FC<DashboardClientWrapperProps> = ({
             <span className="text-lg font-bold my-2">Top Sellers</span>
             {sortedSalesBySKU?.result
               ?.slice(0, isShowTopSellersExpanded ? 6 : 3)
-              ?.map((item) => (
-                <TableOfSKUs
-                  mode={ModeOfProductTable.TopSellersProducts}
-                  isLoading={
-                    isLoadingSortedSalesBySKU || isValidatingSortedSalesBySKU
-                  }
-                  key={`${item.productSold.id}-1`}
-                  img={item.productSold.img}
-                  desc={item.productSold.description}
-                  // @ts-ignore
-                  subInfo={item.productSold?.count}
-                />
-              ))}
+              ?.map((item) =>
+                item.productSold
+                  .slice(0, isShowTopSellersExpanded ? 2 : 1)
+                  .map((product) => (
+                    <TableOfSKUs
+                      mode={ModeOfProductTable.TopSellersProducts}
+                      isLoading={
+                        isLoadingSortedSalesBySKU ||
+                        isValidatingSortedSalesBySKU
+                      }
+                      key={`${product.id}-1`}
+                      img={product.img}
+                      desc={product.description}
+                      // @ts-ignore
+                      subInfo={item.productSold?.count}
+                    />
+                  ))
+              )}
             <ShowMoreButtonDashboard
               isDataEmpty={isSalesEmpty}
               onToggleBtn={(newState) => setIsShowTopSellersExpanded(newState)}
